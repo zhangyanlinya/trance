@@ -12,6 +12,6 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new TranceGame(), config);
-		log("1","2");
+		log("1","sss");
 	}
 }
