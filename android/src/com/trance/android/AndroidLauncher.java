@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.trance.TranceGame;
+import com.trance.view.TranceGame;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -12,6 +12,5 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new TranceGame(), config);
-		log("1","sss");
 	}
 }
