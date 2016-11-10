@@ -126,6 +126,9 @@ public class LoginScreen implements Screen {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
+		if(Player.userName == null){
+			return;
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("userName", Player.userName);
 //		params.put("loginKey", loginMD5); //TODO 暂时不校验
