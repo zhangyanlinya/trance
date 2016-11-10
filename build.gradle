@@ -22,8 +22,9 @@ allprojects {
         aiVersion = '1.5.0'
     }
 
+
     repositories {
-        mavenCentral()
+        jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
@@ -44,6 +45,7 @@ project(":desktop") {
 project(":android") {
     apply plugin: "android"
 
+
     configurations { natives }
 
     dependencies {
@@ -56,6 +58,9 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
+
+        compile 'com.android.support:appcompat-v7:25.0.0'
+        compile 'com.google.android.gms:play-services-ads:9.8.0'
     }
 }
 
@@ -66,6 +71,14 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+
+        compile group: 'org.apache.mina', name: 'mina-core', version: '2.0.4'
+        compile group: 'com.alibaba', name: 'fastjson', version: '1.1.54.android'
+        compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.5'
+        compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.5'
+        compile group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'
+        compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+        compile group: 'com.googlecode.concurrentlinkedhashmap', name: 'concurrentlinkedhashmap-lru', version: '1.2'
     }
 }
 
