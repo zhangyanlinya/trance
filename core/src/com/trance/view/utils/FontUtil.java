@@ -1,6 +1,5 @@
 package com.trance.view.utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
@@ -10,7 +9,7 @@ import java.util.Set;
 public class FontUtil {
 	
 	private static BitmapFont font;
-	private static FreeTypeFontGener generator;
+//	private static FreeTypeFontGener generator;
 	private final static Set<String> set = new HashSet<String>();
 	
 	public static BitmapFont getSingleFont(){
@@ -36,16 +35,7 @@ public class FontUtil {
 				set.add(String.valueOf(c));
 			}
 		}
-		StringBuilder sb = new StringBuilder(FreeTypeFontGenerator.DEFAULT_CHARS);
-		for(String s : set){
-			sb.append(s);
-		}
-		generator = new FreeTypeFontGenerator(
-	               Gdx.files.internal("font/font.ttf"));
-		FreeTypeBitmapFontData fontData = generator.generateData(size,
-	              sb.toString(), false);
-		generator.dispose();
-		BitmapFont font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
+		BitmapFont font = new BitmapFont();
 		font.setColor(color);
 		return font;
 	}
@@ -63,12 +53,7 @@ public class FontUtil {
 	}
 	
 	public static BitmapFont getFont(int size){
-		generator = new FreeTypeFontGenerator(
-				Gdx.files.internal("font/font.ttf"));
-		FreeTypeBitmapFontData fontData = generator.generateData(size,
-				FreeTypeFontGenerator.DEFAULT_CHARS, false);
-		generator.dispose();
-		BitmapFont font = new BitmapFont(fontData, fontData.getTextureRegions(), false);
+		BitmapFont font = new BitmapFont();
 		return font;
 	}
 	

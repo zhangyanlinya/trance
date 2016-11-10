@@ -65,9 +65,9 @@ public class ClientServiceImpl implements ClientService{
 	@Override
 	public Response send(Request request, boolean showDialog) {
 		if(showDialog){
-			Message msg = Message.obtain();
-			msg.what = 1;
-			handler.sendMessage(msg);
+//			Message msg = Message.obtain();
+//			msg.what = 1;
+//			handler.sendMessage(msg);
 		}
 		
 		try {
@@ -77,9 +77,9 @@ public class ClientServiceImpl implements ClientService{
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}finally{
 			if(showDialog){
-				Message msg2 = Message.obtain();
-				msg2.what = 2;
-				handler.sendMessage(msg2);
+//				Message msg2 = Message.obtain();
+//				msg2.what = 2;
+//				handler.sendMessage(msg2);
 			}
 		}
 		return null;
