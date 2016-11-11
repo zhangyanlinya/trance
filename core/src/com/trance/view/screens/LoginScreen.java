@@ -16,10 +16,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
@@ -48,8 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import var3d.net.freefont.FreeFont;
-
 
 public class LoginScreen implements Screen {
 	
@@ -66,8 +62,6 @@ public class LoginScreen implements Screen {
   	
   	public static boolean loginSuccess;
 
-	private Label label;
-	
 	public LoginScreen(TranceGame tranceGame) {
 		this.tranceGame = tranceGame;
 	}
@@ -84,9 +78,6 @@ public class LoginScreen implements Screen {
 //				+ "论技术怎么给策划解释概率不稳 是 因为 电压不稳 造成的？游戏服务器是跑在linux上吧，linux的随机数是硬件随机吧，所以电压不稳，造成概率失控";
 		font = FontUtil.getFont(45, "点击图片开始游戏", Color.RED);
 
-		label = FreeFont.getLabel("hello world! 工作	");
-		label.setPosition(350, 240, Align.center);
-		
 		//GO
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
@@ -261,8 +252,6 @@ public class LoginScreen implements Screen {
 			spriteBatch.begin();
 			font.setColor(Color.GREEN);
 			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
-
-			label.draw(spriteBatch, 1);
 			spriteBatch.end();
 			finish = true;
 		}

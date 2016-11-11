@@ -3,15 +3,12 @@ package com.trance.view.utils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import java.util.HashSet;
-import java.util.Set;
+import var3d.net.freefont.FreeFont;
 
 public class FontUtil {
 	
 	private static BitmapFont font;
-//	private static FreeTypeFontGener generator;
-	private final static Set<String> set = new HashSet<String>();
-	
+
 	public static BitmapFont getSingleFont(){
 		if(font == null){
 			font = getFont();
@@ -28,14 +25,8 @@ public class FontUtil {
 	 * @return
 	 */
 	public static BitmapFont getFont(int size, String append, Color color){
-		set.clear();
-		for(int i = 0; i < append.length(); i++){
-			char c = append.charAt(i);
-			if(CharUtil.isChinese(c)){
-				set.add(String.valueOf(c));
-			}
-		}
-		BitmapFont font = new BitmapFont();
+
+		BitmapFont font = FreeFont.getBitmapFont();
 		font.setColor(color);
 		return font;
 	}
@@ -53,7 +44,7 @@ public class FontUtil {
 	}
 	
 	public static BitmapFont getFont(int size){
-		BitmapFont font = new BitmapFont();
+		BitmapFont font = FreeFont.getBitmapFont();
 		return font;
 	}
 	
