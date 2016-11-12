@@ -16,7 +16,7 @@ public class BuildingImage extends Image {
 	public BuildingImage(Texture texture, BuildingDto dto) {
 		super(texture);
 		this.dto = dto;
-		font = FontUtil.getSingleFont();
+		font = FontUtil.getFont();
 	}
 
 	@Override

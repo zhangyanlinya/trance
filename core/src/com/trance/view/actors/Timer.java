@@ -17,7 +17,7 @@ public class Timer extends Actor {
 	
 	public Timer(long expireTime) {
 		this.expireTime = expireTime;
-		font = FontUtil.getSingleFont();
+		font = FontUtil.getFont();
 	}
 	
 	@Override

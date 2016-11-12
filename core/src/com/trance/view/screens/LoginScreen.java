@@ -8,7 +8,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -46,13 +45,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import var3d.net.freefont.FreeBitmapFont;
+
 
 public class LoginScreen implements Screen {
 	
 	private Texture background;
 	private Image start;
 	private SpriteBatch spriteBatch;
-	private BitmapFont font;
+	private FreeBitmapFont font;
 	private Stage stage;
 	private boolean init;
 	private TranceGame tranceGame;
@@ -76,8 +77,8 @@ public class LoginScreen implements Screen {
 //		String code = "我养了一条鱼，死了[快哭了]，悲伤不已[快哭了]，我不想土葬，我想给它火葬，把鱼灰撒回海洋……" +
 //				" 谁知道那玩意越烤越香……后来我就买了瓶啤酒……太感人了！[流泪][流泪][流泪]"
 //				+ "论技术怎么给策划解释概率不稳 是 因为 电压不稳 造成的？游戏服务器是跑在linux上吧，linux的随机数是硬件随机吧，所以电压不稳，造成概率失控";
-		font = FontUtil.getFont(45, "点击图片开始游戏", Color.RED);
-
+		font = FontUtil.getFont();
+		font.appendText("[点击图片开始游戏]");
 		//GO
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
@@ -172,7 +173,7 @@ public class LoginScreen implements Screen {
 			playerDto.setMyself(true);
 			
 			
-			int[][] map = null;
+			int[][] map;
 			Object mobj = result.get("mapdata");
 			if (mobj == null) {
 				map = MapData.clonemap();

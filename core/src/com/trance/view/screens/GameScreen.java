@@ -172,7 +172,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
-		font = FontUtil.getFont(35, "点赞倒计时：", Color.RED);
+		font = FontUtil.getFont();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		stage = new Stage(new FillViewport(width * 2, height * 2));

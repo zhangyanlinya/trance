@@ -126,7 +126,7 @@ public class WorldScreen implements Screen, InputProcessor {
 			}
 		}
 		
-		font = FontUtil.getFont(25, sb.toString(), Color.WHITE);;
+		font = FontUtil.getFont();
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		stage = new Stage(new FillViewport(sw, sh));

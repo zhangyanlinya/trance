@@ -7,11 +7,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
@@ -64,6 +62,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import var3d.net.freefont.FreeBitmapFont;
+
 
 public class MapScreen implements Screen,InputProcessor {
 
@@ -88,7 +88,7 @@ public class MapScreen implements Screen,InputProcessor {
 	/** 菜单区域宽度 */
 	public static float control_height = 300;
 	private Stage stage;
-	private BitmapFont font;
+	private FreeBitmapFont font;
 	private SpriteBatch spriteBatch;
 	private Image attack;
 	private Image toWorld;
@@ -228,7 +228,8 @@ public class MapScreen implements Screen,InputProcessor {
 		
 		MapData.gamerunning = false;
 		//文字 
-		font = FontUtil.getFont(30, "可拖动建筑放置等级金银币粮食" + playerDto.getPlayerName(), Color.WHITE);
+		font = FontUtil.getFont();
+		font.appendText("可拖动建筑放置等级金银币粮食");
 		
 		stage.clear();
 		float w = bg.getWidth();

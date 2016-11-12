@@ -28,7 +28,7 @@ public class ArmyImage extends Image {
 		this.renderer = shapeRenderer;
 		this.needTime = needTime;
 		this.armyDto = armyDto;
-		this.font = FontUtil.getSingleFont();
+		this.font = FontUtil.getFont();
 	}
 	
 		

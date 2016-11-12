@@ -2,9 +2,7 @@ package com.trance.view.dialog;
 
 
 import com.alibaba.fastjson.JSON;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -27,6 +25,8 @@ import com.trance.view.utils.SocketUtil;
 import java.util.HashMap;
 import java.util.List;
 
+import var3d.net.freefont.FreeBitmapFont;
+
 /**
  *
  */
@@ -34,7 +34,7 @@ public class DialogRankUpStage extends BaseStage {
 
     private Image bgImage;
     private List<PlayerDto> players;
-    private BitmapFont font;
+    private FreeBitmapFont font;
     private static final int MAX_RANKING = 10;
     private boolean init;
     
@@ -50,7 +50,8 @@ public class DialogRankUpStage extends BaseStage {
         		sb.append(player.getPlayerName());
         	}
         }
-        font = FontUtil.getFont(30, sb.toString(), Color.RED);
+        font = FontUtil.getFont();
+		font.appendText(sb.toString());
         init = true;
     }
     
@@ -106,7 +107,6 @@ public class DialogRankUpStage extends BaseStage {
 		
 		byte[] bytes = response.getValueBytes();
 		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
 		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
 		if(result == null){
 			return null;
