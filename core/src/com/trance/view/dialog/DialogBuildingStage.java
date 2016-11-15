@@ -134,10 +134,7 @@ public class DialogBuildingStage extends BaseStage {
     
     private Timer timer;
     
-    public void hide(){
-    	this.setVisible(false);
-    }
-    
+
 
     @SuppressWarnings("unchecked")
 	private void updateBuilding(int buildingId){

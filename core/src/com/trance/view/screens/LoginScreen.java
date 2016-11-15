@@ -107,6 +107,7 @@ public class LoginScreen implements Screen {
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 
+
 	}
 
 	@Override
@@ -231,6 +232,7 @@ public class LoginScreen implements Screen {
 			Player.player = playerDto;
 			
 			loginSuccess = true;
+
 			SocketUtil.heartbeat = true;
 			Gdx.app.postRunnable(new Runnable() {
 				
@@ -255,6 +257,7 @@ public class LoginScreen implements Screen {
 			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
 			spriteBatch.end();
 			finish = true;
+			tranceGame.draw();
 		}
 
 		//draw progress
@@ -273,6 +276,8 @@ public class LoginScreen implements Screen {
 		renderer.begin(ShapeType.Filled);
 		renderer.rect(Gdx.graphics.getWidth() / 4 + 2, 104, percent * Gdx.graphics.getWidth()/2 - 6, 34);
 		renderer.end();
+
+
 	}
 	
 	@Override

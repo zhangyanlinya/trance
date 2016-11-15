@@ -95,10 +95,7 @@ public class DialogRankUpStage extends BaseStage {
     	}
     }
     
-	public void hide() {
-		this.setVisible(false);
-	}
-    
+
     private List<PlayerDto> getUpRank(){
     	Response response = SocketUtil.send(Request.valueOf(Module.RANKING, RankingCmd.GET_PLAYER_UP_RANKING, null),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
