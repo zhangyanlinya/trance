@@ -74,11 +74,9 @@ public class LoginScreen implements Screen {
 		
 		stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		spriteBatch = new SpriteBatch();
-//		String code = "我养了一条鱼，死了[快哭了]，悲伤不已[快哭了]，我不想土葬，我想给它火葬，把鱼灰撒回海洋……" +
-//				" 谁知道那玩意越烤越香……后来我就买了瓶啤酒……太感人了！[流泪][流泪][流泪]"
-//				+ "论技术怎么给策划解释概率不稳 是 因为 电压不稳 造成的？游戏服务器是跑在linux上吧，linux的随机数是硬件随机吧，所以电压不稳，造成概率失控";
 		font = FontUtil.getFont();
 		font.appendText("[点击图片开始游戏]");
+//		font.setSize(100);
 		//GO
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
@@ -244,7 +242,8 @@ public class LoginScreen implements Screen {
 		}
 	}
 
-	private boolean finish; 
+	private boolean finish;
+	private boolean show;
 	
 	@Override
 	public void render(float delta) {
@@ -257,6 +256,10 @@ public class LoginScreen implements Screen {
 			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
 			spriteBatch.end();
 			finish = true;
+			if(!show) {
+				tranceGame.showMsgDialog("helle 弱鸡~");
+				show = true;
+			}
 			tranceGame.draw();
 		}
 

@@ -159,7 +159,7 @@ public class MapScreen implements Screen,InputProcessor {
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-//				Gdx.input.getTextInput(listener, "请输入新名字", Player.player.getPlayerName());
+				Gdx.input.getTextInput(listener, "请输入新名字", Player.player.getPlayerName(),"input new name");
 			}
 		});
 		

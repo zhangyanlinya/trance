@@ -36,20 +36,7 @@ public class ElementUpgrade implements Basedb {
 	 */
 	private Integer time;
 	
-	/**
-	 * 提升的武将数量上限
-	 */
-	private int addedHeroLimit;
-	
-	/**
-	 * 非官府建筑升级条件
-	 */
-	private String upgradeCondition;
-	
-	/**
-	 * 建筑升级粮草，银元要求
-	 */
-	private String harvestCondition;
+
 
 	public Integer getId() {
 		return id;
@@ -91,28 +78,4 @@ public class ElementUpgrade implements Basedb {
 		this.time = time;
 	}
 
-	public int getAddedHeroLimit() {
-		return addedHeroLimit;
-	}
-
-	public void setAddedHeroLimit(int addedHeroLimit) {
-		this.addedHeroLimit = addedHeroLimit;
-	}
-
-	public String getUpgradeCondition() {
-		return upgradeCondition;
-	}
-
-	public void setUpgradeCondition(String upgradeCondition) {
-		this.upgradeCondition = upgradeCondition;
-	}
-
-	public String getHarvestCondition() {
-		return harvestCondition;
-	}
-
-	public void setHarvestCondition(String harvestCondition) {
-		this.harvestCondition = harvestCondition;
-	}
-	
 }
