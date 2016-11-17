@@ -47,6 +47,7 @@ public class BaseScreen extends ScreenAdapter{
     }
 
     private long showTime;
+    private long delayShow = 10000;
 
     @Override
     public void render(float delta) {
@@ -54,9 +55,18 @@ public class BaseScreen extends ScreenAdapter{
         if(msg != null && !msg.equals("")) {
             batch.begin();
             font.setColor(Color.RED);
+            font.setSize(50);
             font.draw(batch, msg, width / 2, height / 2);
             batch.end();
         }
+
+        long now = System.currentTimeMillis();
+        if((now - showTime) < delayShow){
+            msg = null;
+            return;
+        }
+        showTime = now;
+
     }
 
     @Override
