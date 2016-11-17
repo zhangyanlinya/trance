@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.StringBuilder;
@@ -105,20 +106,20 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		side = width / 8;
 		spriteBatch = new SpriteBatch();
 		
-//		StringBuilder sb = new StringBuilder();
-//		sb.append(Player.player.getPlayerName());
-//		if(!playerDtos.isEmpty()){
-//			for(PlayerDto dto : playerDtos.values() ){
-//				String name = dto.getPlayerName();
-//				sb.append(name);
-//			}
-//		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(Player.player.getPlayerName());
+		if(!playerDtos.isEmpty()){
+			for(PlayerDto dto : playerDtos.values() ){
+				String name = dto.getPlayerName();
+				sb.append(name);
+			}
+		}
 		
-//		font = FontUtil.getFont();
+		font.appendText(sb.toString());
 
 		camera = new OrthographicCamera(width, height);
-//		stage = new Stage(new FillViewport(sw, sh));
-		stage.setViewport(new FillViewport(sw, sh));
+		stage = new Stage(new FillViewport(sw, sh));
+//		stage.setViewport(new FillViewport(sw, sh));
 		camera.setToOrtho(false, width, height);
 		camera.translate(sw / 2 - 480, sh / 2 - 800);
 		stage.getViewport().setCamera(camera);
@@ -173,7 +174,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		
 		for(int x = 0; x < BASE; x ++){
 			for(int y = 0 ; y < BASE; y ++){
-				PlayerDto dto = null;
+				PlayerDto dto ;
 				if(x == BASE/2 && y == BASE/2){
 					dto = Player.player;
 				}else{
@@ -212,7 +213,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 						if(dto != null ){
 							if( ox == 5 && oy == 5){
 								dto.setMyself(true);
-								location.setColor(255, 255, 0, 1);
+								location.setColor(255, 0, 0, 1);
 								gotoHome();
 							}else{//spy get the map
 								HashMap<String,Object> params = new HashMap<String,Object>();
