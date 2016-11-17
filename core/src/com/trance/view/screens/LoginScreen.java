@@ -12,9 +12,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -46,6 +48,7 @@ import java.util.Map.Entry;
 public class LoginScreen extends BaseScreen {
 	
 	private Texture background;
+	private Stage stage;
 	private Image start;
 	private SpriteBatch spriteBatch;
 	private boolean init;
@@ -63,6 +66,7 @@ public class LoginScreen extends BaseScreen {
 		renderer = new ShapeRenderer();
 		resUtil = ResUtil.getInstance();
 		resUtil.init();
+		stage = new Stage(new FillViewport(width,height));
 		
 		spriteBatch = new SpriteBatch();
 		font.appendText("[点击图片开始游戏]");
@@ -263,6 +267,8 @@ public class LoginScreen extends BaseScreen {
 		renderer.begin(ShapeType.Filled);
 		renderer.rect(Gdx.graphics.getWidth() / 4 + 2, 104, percent * Gdx.graphics.getWidth()/2 - 6, 34);
 		renderer.end();
+
+		super.render(delta);
 	}
 
 	@Override

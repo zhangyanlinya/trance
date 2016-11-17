@@ -47,6 +47,7 @@ import java.util.Map;
 public class WorldScreen extends BaseScreen implements InputProcessor {
 	
 	private final static int BASE = 10;
+	private Stage stage;
 	private OrthographicCamera camera;
 	private SpriteBatch spriteBatch;
 	private boolean init;
@@ -119,7 +120,6 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 
 		camera = new OrthographicCamera(width, height);
 		stage = new Stage(new FillViewport(sw, sh));
-//		stage.setViewport(new FillViewport(sw, sh));
 		camera.setToOrtho(false, width, height);
 		camera.translate(sw / 2 - 480, sh / 2 - 800);
 		stage.getViewport().setCamera(camera);
@@ -335,6 +335,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		home.draw(spriteBatch, 1);
 		fixed.draw(spriteBatch, 1);
 		spriteBatch.end();
+		super.render(delatime);
 	}
 
 	

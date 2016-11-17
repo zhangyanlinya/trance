@@ -98,6 +98,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private OrthographicCamera camera;
 	private Image bg;
 	private GestureController controller;
+
+	private Stage stage;
 	
 	public ShapeRenderer shapeRenderer;
 	
@@ -119,7 +121,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		menu_width  = (width - game_width)/2;
 		control_height = height - game_height-length * 2;//再减2格
 		
-		stage = new Stage(new FillViewport( width, height));
+		stage = new Stage(new FillViewport(width, height));
 		camera = new OrthographicCamera(width, height);
 		stage.getViewport().setCamera(camera);
 		camera.setToOrtho(false, width, height);
@@ -411,6 +413,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			dialogRankUpStage.act();
 			dialogRankUpStage.draw();
 		}
+		super.render(delta);
 	}
 	
 	public void setRankUpDailog(boolean visible) {

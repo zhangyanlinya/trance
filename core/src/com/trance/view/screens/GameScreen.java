@@ -26,6 +26,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -78,7 +79,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	private Window window;
 	private SpriteBatch spriteBatch;
 	public static PlayerDto playerDto;
-	
+	private Stage stage;
 	
 	/** 数组宽数量 */
 	public final static int ARR_WIDTH_SIZE = 16;
@@ -167,8 +168,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 //		font = FontUtil.getFont();
 //		width = Gdx.graphics.getWidth(); // 720
 //		height = Gdx.graphics.getHeight(); // 1200
-//		stage = new Stage(new FillViewport(width * 2, height * 2));
-		stage.setViewport(new FillViewport(width * 2, height * 2));
+		stage = new Stage(new FillViewport(width * 2, height * 2));
 
 		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
@@ -511,6 +511,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         for(int i = 0 ; i < bodies.size ; i++){
         	destoryBody(bodies.get(i));
         }
+
+		super.render(delta);
 	}
 	
 	private void checkGameOver() {
