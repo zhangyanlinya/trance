@@ -4,18 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.StringBuilder;
@@ -37,7 +32,7 @@ import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
 import com.trance.view.controller.GestureController;
 import com.trance.view.mapdata.MapData;
-import com.trance.view.utils.FontUtil;
+import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
@@ -46,18 +41,13 @@ import com.trance.view.utils.SocketUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorldScreen implements Screen, InputProcessor {
+
+
+public class WorldScreen extends BaseScreen implements InputProcessor {
 	
 	private final static int BASE = 10;
-	private TranceGame tranceGame;
 	private OrthographicCamera camera;
-	private Stage stage;
-	private TiledMap tilemap;
-	private float WIDTH;
-	private float HEIGHT;
 	private SpriteBatch spriteBatch;
-	private BitmapFont font;
-	private Music music ;
 	private boolean init;
 	private Image home;
 	private Image fixed;
@@ -70,7 +60,7 @@ public class WorldScreen implements Screen, InputProcessor {
 	
 	
 	public WorldScreen(TranceGame tranceGame) {
-		this.tranceGame = tranceGame;
+		super(tranceGame);
 	}
 	
 	public static PlayerDto getWorldPlayerDto(int x, int y) {
@@ -112,25 +102,24 @@ public class WorldScreen implements Screen, InputProcessor {
 	}
 	
 	private void init(){
-		WIDTH = Gdx.graphics.getWidth();
-		HEIGHT = Gdx.graphics.getHeight();
-		side = WIDTH / 8;
+		side = width / 8;
 		spriteBatch = new SpriteBatch();
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append(Player.player.getPlayerName());
-		if(!playerDtos.isEmpty()){
-			for(PlayerDto dto : playerDtos.values() ){
-				String name = dto.getPlayerName();
-				sb.append(name);
-			}
-		}
+//		StringBuilder sb = new StringBuilder();
+//		sb.append(Player.player.getPlayerName());
+//		if(!playerDtos.isEmpty()){
+//			for(PlayerDto dto : playerDtos.values() ){
+//				String name = dto.getPlayerName();
+//				sb.append(name);
+//			}
+//		}
 		
-		font = FontUtil.getFont();
+//		font = FontUtil.getFont();
 
-		camera = new OrthographicCamera(WIDTH, HEIGHT);
-		stage = new Stage(new FillViewport(sw, sh));
-		camera.setToOrtho(false, WIDTH, HEIGHT);
+		camera = new OrthographicCamera(width, height);
+//		stage = new Stage(new FillViewport(sw, sh));
+		stage.setViewport(new FillViewport(sw, sh));
+		camera.setToOrtho(false, width, height);
 		camera.translate(sw / 2 - 480, sh / 2 - 800);
 		stage.getViewport().setCamera(camera);
 		
@@ -239,7 +228,7 @@ public class WorldScreen implements Screen, InputProcessor {
 								HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
 								int code = (Integer) result.get("result");
 								if(code != Result.SUCCESS){
-									MsgUtil.showMsg(Module.WORLD, code);
+									MsgUtil.getInstance().showMsg(Module.WORLD, code);
 									return;
 								}
 								Object mobj = result.get("content");
@@ -269,7 +258,7 @@ public class WorldScreen implements Screen, InputProcessor {
 							HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
 							int code = (Integer) result.get("result");
 							if(code != Result.SUCCESS){
-								MsgUtil.showMsg(Module.WORLD, code);
+								MsgUtil.getInstance().showMsg(Module.WORLD, code);
 								return;
 							}
 							
@@ -287,7 +276,7 @@ public class WorldScreen implements Screen, InputProcessor {
 		home.setBounds(10, 10, side, side);
 		
 		fixed = new Image(ResUtil.getInstance().getUi(UiType.FIXED));
-		fixed.setBounds(WIDTH - side , 10, side, side);
+		fixed.setBounds(width - side , 10, side, side);
 		
 		//itembox
 		dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
@@ -311,7 +300,7 @@ public class WorldScreen implements Screen, InputProcessor {
 				HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
 				int code = (Integer) result.get("result");
 				if(code != Result.SUCCESS){
-					MsgUtil.showMsg(Module.DAILY_REWARD, code);
+					MsgUtil.getInstance().showMsg(Module.DAILY_REWARD, code);
 					return;
 				}
 				
@@ -335,10 +324,6 @@ public class WorldScreen implements Screen, InputProcessor {
 		camera.position.set(sw / 2, sh / 2, 0);
 	}
 	
-	@Override
-	public void pause() {
-
-	}
 
 	@Override
 	public void render(float delatime) {
@@ -351,20 +336,6 @@ public class WorldScreen implements Screen, InputProcessor {
 		spriteBatch.end();
 	}
 
-	@Override
-	public void resize(int width, int height) {
-
-	}
-
-	@Override
-	public void resume() {
-
-	}
-
-	@Override
-	public void hide() {
-		
-	}
 	
 	@Override
 	public void dispose() {
@@ -372,18 +343,8 @@ public class WorldScreen implements Screen, InputProcessor {
 			return;
 		}
 		init = false;
-		if(tilemap != null)
-			tilemap.dispose();
-		if(stage !=  null)
-			stage.dispose();
 		if(spriteBatch != null)
 			spriteBatch.dispose();
-		if(font != null)
-			font.dispose();
-		if(music != null){
-			music.dispose();
-		}
-//		worldImages.clear();
 		playerDtos.clear();
 	}
 
@@ -407,9 +368,9 @@ public class WorldScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(screenX < side + 10  && screenY > HEIGHT - side ){
+		if(screenX < side + 10  && screenY > height - side ){
 			gotoHome();
-		}else if(screenX > WIDTH - side  && screenY > HEIGHT - side ){
+		}else if(screenX > width - side  && screenY > height - side ){
 			fixedToLacation();
 		}
 		return false;

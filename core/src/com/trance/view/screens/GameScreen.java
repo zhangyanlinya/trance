@@ -2,15 +2,13 @@ package com.trance.view.screens;
 
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -28,7 +26,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -62,7 +59,7 @@ import com.trance.view.actors.MapImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.controller.GestureController;
 import com.trance.view.mapdata.MapData;
-import com.trance.view.utils.FontUtil;
+import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
@@ -75,16 +72,11 @@ import java.util.List;
 import java.util.Map;
 
 
-public class GameScreen extends InputAdapter implements Screen,ContactListener {
-	
-	private TranceGame tranceGame;
-	public static int width;
-	public static int height;
-	private Stage stage;
+public class GameScreen extends BaseScreen implements ContactListener,InputProcessor{
+
 	private Image toWorld;
 	private Window window;
 	private SpriteBatch spriteBatch;
-	private BitmapFont font;
 	public static PlayerDto playerDto;
 	
 	
@@ -106,7 +98,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 	/** 控制区域高度 */
 	public static float control_height = 368;
 	
-	
+
     private World world;
     private ShapeRenderer shapeRenderer;
     private final float TIME_STEP = 1 / 50f;;
@@ -142,7 +134,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 	private static boolean finishBattle;
 	
 	public GameScreen(TranceGame tranceGame) {
-		this.tranceGame = tranceGame;
+		super(tranceGame);
 	}
 	
 	@Override
@@ -172,11 +164,12 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
-		font = FontUtil.getFont();
-		width = Gdx.graphics.getWidth(); // 720
-		height = Gdx.graphics.getHeight(); // 1200
-		stage = new Stage(new FillViewport(width * 2, height * 2));
-		
+//		font = FontUtil.getFont();
+//		width = Gdx.graphics.getWidth(); // 720
+//		height = Gdx.graphics.getHeight(); // 1200
+//		stage = new Stage(new FillViewport(width * 2, height * 2));
+		stage.setViewport(new FillViewport(width * 2, height * 2));
+
 		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
@@ -307,7 +300,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 		Object codeObject = result.get("result");
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
-			MsgUtil.showMsg(Module.BATTLE, code);
+			MsgUtil.getInstance().showMsg(Module.BATTLE, code);
 			finishBattle = true;
 			return;
 		}
@@ -636,7 +629,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 			return false;
 		}
 		
-		screenY = height - screenY;//y top to down
+		screenY = (int)height - screenY;//y top to down
 		Integer type = hitKeepArmy(screenX, screenY);
 		if(type != null){
 			chooseArmyId = type;	
@@ -661,9 +654,7 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 				armys.add(block);
 				stage.addActor(block);
 			}
-//			Point p = new Point(x, y);
-//			readytogoArmy.put(p, army);
-			
+
 			army.setGo(true);
 			gobattle = true;
 			
@@ -680,37 +671,27 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 		
 		return true;
 	}
-	
-	class Point{
-		public float x;
-		public float y;
-		public Point (float x, float y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
-	
-	@Override
-	public void resize(int width, int height) {
-		
-	}
 
-	@Override
-	public void hide() {
-		MapData.gamerunning = false;
-		finishBattle(false);
+	public boolean keyUp (int keycode){
+		return false;
 	}
-
-	@Override
-	public void pause() {
-		System.out.println("gameScreen pause!");
-//		TIME_STEP = 0;
+	public boolean mouseMoved (int screenX, int screenY){
+		return false;
 	}
-
-	@Override
-	public void resume() {
-		System.out.println("gameScreen resume!");
-//		TIME_STEP = 1 / 50f;
+	public boolean scrolled (int amount){
+		return false;
+	}
+	public boolean keyDown (int keycode){
+		return  false;
+	}
+	public boolean keyTyped (char character){
+		return  false;
+	}
+	public boolean touchUp (int screenX, int screenY, int pointer, int button){
+		return  false;
+	}
+	public boolean touchDragged (int screenX, int screenY, int pointer){
+		return false;
 	}
 
 	@Override
@@ -719,20 +700,11 @@ public class GameScreen extends InputAdapter implements Screen,ContactListener {
 			return;
 		}
 		init = false;
-		if (stage != null){
-			stage.dispose();
-		}
-		
+
 		if(spriteBatch != null){
 			spriteBatch.dispose();
 		}
-		
-//		music.dispose();
-		
-		if(font != null){
-			font.dispose();
-		}
-		
+
 		shapeRenderer.dispose();
 //		debugRenderer.dispose();
 		

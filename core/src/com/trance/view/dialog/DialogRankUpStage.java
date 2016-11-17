@@ -111,7 +111,7 @@ public class DialogRankUpStage extends BaseStage {
 		}
 		int code = Integer.valueOf(String.valueOf(result.get("result")));
 		if(code != Result.SUCCESS){
-			MsgUtil.showMsg(Module.RANKING,code);
+			MsgUtil.getInstance().showMsg(Module.RANKING,code);
 			return null;
 		}
 		

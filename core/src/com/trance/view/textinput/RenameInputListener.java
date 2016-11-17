@@ -42,7 +42,7 @@ public class RenameInputListener implements TextInputListener {
 		if(code == 0){
 			Player.player.setPlayerName(text);
 		}else{
-			MsgUtil.showMsg(Module.PLAYER, code);
+			MsgUtil.getInstance().showMsg(Module.PLAYER, code);
 		}
 	}
 

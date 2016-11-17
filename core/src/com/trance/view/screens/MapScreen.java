@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -50,6 +49,7 @@ import com.trance.view.dialog.DialogArmyStage;
 import com.trance.view.dialog.DialogBuildingStage;
 import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.mapdata.MapData;
+import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.textinput.RenameInputListener;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.FormulaUtil;
@@ -62,12 +62,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import var3d.net.freefont.FreeBitmapFont;
 
+public class MapScreen extends BaseScreen implements InputProcessor {
 
-public class MapScreen implements Screen,InputProcessor {
-
-	private TranceGame game;
 	public static float menu_width = 0;
 	/** 控制区域高度 */	
 	public static int width;
@@ -87,8 +84,6 @@ public class MapScreen implements Screen,InputProcessor {
 	public static float game_height = 900;
 	/** 菜单区域宽度 */
 	public static float control_height = 300;
-	private Stage stage;
-	private FreeBitmapFont font;
 	private SpriteBatch spriteBatch;
 	private Image attack;
 	private Image toWorld;
@@ -111,8 +106,8 @@ public class MapScreen implements Screen,InputProcessor {
     public DialogBuildingStage dialogBuildingStage;
     public DialogRankUpStage dialogRankUpStage;
 	
-	public MapScreen(TranceGame game){
-		this.game = game;
+	public MapScreen(TranceGame tranceGame){
+		super(tranceGame);
 	}
 	
 	public void init(){
@@ -133,9 +128,9 @@ public class MapScreen implements Screen,InputProcessor {
 		spriteBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		
-		dialogArmyStage = new DialogArmyStage(game);
-		dialogBuildingStage = new DialogBuildingStage(game);
-		dialogRankUpStage = new DialogRankUpStage(game);
+		dialogArmyStage = new DialogArmyStage(tranceGame);
+		dialogBuildingStage = new DialogBuildingStage(tranceGame);
+		dialogRankUpStage = new DialogRankUpStage(tranceGame);
 		
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
@@ -313,7 +308,7 @@ public class MapScreen implements Screen,InputProcessor {
 		Object codeObject = result.get("result");
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
-			MsgUtil.showMsg(Module.BATTLE, code);
+			MsgUtil.getInstance().showMsg(Module.BATTLE, code);
 			return;
 		}
 		
@@ -324,7 +319,7 @@ public class MapScreen implements Screen,InputProcessor {
 		}
 		
 		GameScreen.playerDto = playerDto;
-		game.setScreen(game.gameScreen);
+		tranceGame.setScreen(tranceGame.gameScreen);
 	}
 	
 	/**
@@ -346,7 +341,7 @@ public class MapScreen implements Screen,InputProcessor {
 		Object codeObject = result.get("result");
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
-			MsgUtil.showMsg(Module.WORLD, code);
+			MsgUtil.getInstance().showMsg(Module.WORLD, code);
 			return;
 		}
 		
@@ -384,7 +379,7 @@ public class MapScreen implements Screen,InputProcessor {
 	}
 	
 	private void toWorld(){
-		this.game.setScreen(game.worldScreen);
+		this.tranceGame.setScreen(tranceGame.worldScreen);
 	}
 
 	@Override
@@ -499,7 +494,7 @@ public class MapScreen implements Screen,InputProcessor {
 		if(result != null){
 			int code = Integer.valueOf(String.valueOf(result.get("result")));
 			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.BUILDING,code);
+				MsgUtil.getInstance().showMsg(Module.BUILDING,code);
 				return ;
 			}
 			Object valueResult = result.get("content");
@@ -817,24 +812,7 @@ public class MapScreen implements Screen,InputProcessor {
 		return false;
 	}
 	
-	
-	@Override
-	public void resize(int width, int height) {
-		
-	}
 
-	@Override
-	public void hide() {
-		
-	}
-
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void resume() {
-	}
 
 	@Override
 	public void dispose() {
@@ -842,10 +820,7 @@ public class MapScreen implements Screen,InputProcessor {
 			return;
 		}
 		init = false;
-		if (stage != null){
-			stage.dispose();
-		}
-		
+
 		if(spriteBatch != null){
 			spriteBatch.dispose();
 		}
@@ -854,9 +829,6 @@ public class MapScreen implements Screen,InputProcessor {
 			shapeRenderer.dispose();
 		}
 		
-		if(font != null){
-			font.dispose();
-		}
 		if(dialogArmyStage != null){
 			dialogArmyStage.dispose();
 		}

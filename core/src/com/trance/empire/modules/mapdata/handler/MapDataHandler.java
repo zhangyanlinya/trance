@@ -53,7 +53,7 @@ public class MapDataHandler extends HandlerSupport {
 					HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
 					int code = (Integer) result.get("result");
 					if (code != Result.SUCCESS) {
-						MsgUtil.showMsg(Module.MAP_DATA, code);
+						MsgUtil.getInstance().showMsg(Module.MAP_DATA, code);
 					}
 				}
 			}

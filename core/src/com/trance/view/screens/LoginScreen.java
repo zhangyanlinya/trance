@@ -4,7 +4,6 @@ package com.trance.view.screens;
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,11 +12,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -33,7 +30,7 @@ import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.view.TranceGame;
 import com.trance.view.mapdata.MapData;
-import com.trance.view.utils.FontUtil;
+import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
@@ -45,18 +42,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import var3d.net.freefont.FreeBitmapFont;
 
-
-public class LoginScreen implements Screen {
+public class LoginScreen extends BaseScreen {
 	
 	private Texture background;
 	private Image start;
 	private SpriteBatch spriteBatch;
-	private FreeBitmapFont font;
-	private Stage stage;
 	private boolean init;
-	private TranceGame tranceGame;
 	private ResUtil resUtil;
 	//画笔
   	public ShapeRenderer renderer;
@@ -64,19 +56,16 @@ public class LoginScreen implements Screen {
   	public static boolean loginSuccess;
 
 	public LoginScreen(TranceGame tranceGame) {
-		this.tranceGame = tranceGame;
+		super(tranceGame);
 	}
-	
+
 	public void init(){
 		renderer = new ShapeRenderer();
 		resUtil = ResUtil.getInstance();
 		resUtil.init();
 		
-		stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		spriteBatch = new SpriteBatch();
-		font = FontUtil.getFont();
 		font.appendText("[点击图片开始游戏]");
-//		font.setSize(100);
 		//GO
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
@@ -151,7 +140,7 @@ public class LoginScreen implements Screen {
 			
 			int code = result.getCode();
 			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.PLAYER, code);
+				MsgUtil.getInstance().showMsg(Module.PLAYER, code);
 				return;
 			}
 			
@@ -243,8 +232,8 @@ public class LoginScreen implements Screen {
 	}
 
 	private boolean finish;
-	private boolean show;
-	
+
+
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -256,11 +245,6 @@ public class LoginScreen implements Screen {
 			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
 			spriteBatch.end();
 			finish = true;
-			if(!show) {
-				tranceGame.showMsgDialog("helle 弱鸡~");
-				show = true;
-			}
-			tranceGame.draw();
 		}
 
 		//draw progress
@@ -279,40 +263,17 @@ public class LoginScreen implements Screen {
 		renderer.begin(ShapeType.Filled);
 		renderer.rect(Gdx.graphics.getWidth() / 4 + 2, 104, percent * Gdx.graphics.getWidth()/2 - 6, 34);
 		renderer.end();
-
-
-	}
-	
-	@Override
-	public void resize(int width, int height) {
-		
-	}
-
-	@Override
-	public void hide() {
-		
-	}
-
-	@Override
-	public void pause() {
-		
-	}
-
-	@Override
-	public void resume() {
-		
 	}
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		if(!init){
 			return;
 		}
 		init = false;
 		background.dispose();
-		stage.dispose();
 		spriteBatch.dispose();
-		font.dispose();
 		resUtil.dispose();
 		renderer.dispose();
 	}

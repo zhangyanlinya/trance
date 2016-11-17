@@ -84,7 +84,7 @@ public class PlayerHandler extends HandlerSupport {
 				}
 				int newLevel = (Integer) response.getValue();
 //				System.out.println("收到推送等级提升...新等级＝" +newLevel);
-				MsgUtil.showMsg("恭喜升级到"+newLevel +"级~");
+				MsgUtil.getInstance().showMsg("恭喜升级到"+newLevel +"级~");
 				Player.player.setLevel(newLevel);
 			}
 		});
@@ -135,7 +135,7 @@ public class PlayerHandler extends HandlerSupport {
 					msg ="正在遭受攻击中,等待4分钟 ...";
 					break;
 				}
-				MsgUtil.showMsg(msg);
+				MsgUtil.getInstance().showMsg(msg);
 			}
 		});
 

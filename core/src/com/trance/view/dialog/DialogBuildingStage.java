@@ -149,7 +149,7 @@ public class DialogBuildingStage extends BaseStage {
 		if(result != null){
 			int code = Integer.valueOf(String.valueOf(result.get("result")));
 			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.BUILDING,code);
+				MsgUtil.getInstance().showMsg(Module.BUILDING,code);
 				return ;
 			}
 			Object valueResult = result.get("valueResultSet");

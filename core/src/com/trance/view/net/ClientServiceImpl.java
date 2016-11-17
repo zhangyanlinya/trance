@@ -6,6 +6,7 @@ import com.trance.common.socket.handler.ResponseProcessor;
 import com.trance.common.socket.handler.ResponseProcessors;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
+import com.trance.view.utils.MsgUtil;
 
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
@@ -65,9 +66,7 @@ public class ClientServiceImpl implements ClientService{
 	@Override
 	public Response send(Request request, boolean showDialog) {
 		if(showDialog){
-//			Message msg = Message.obtain();
-//			msg.what = 1;
-//			handler.sendMessage(msg);
+			MsgUtil.getInstance().showMsg("loading...");
 		}
 		
 		try {
@@ -77,9 +76,7 @@ public class ClientServiceImpl implements ClientService{
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}finally{
 			if(showDialog){
-//				Message msg2 = Message.obtain();
-//				msg2.what = 2;
-//				handler.sendMessage(msg2);
+				MsgUtil.getInstance().hideMsg();
 			}
 		}
 		return null;

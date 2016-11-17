@@ -25,7 +25,7 @@ public class SocketUtil {
 	
 	private static ClientService clientService;
 	
-	public static boolean heartbeat; 
+	public static boolean heartbeat;
 	
 	public static void init(){
 		clientService = new ClientServiceImpl();
@@ -56,17 +56,16 @@ public class SocketUtil {
 		Response response = clientService.send(request,showDialog);
 		if(response == null){
 			if(showDialog) {
-				MsgUtil.showMsg("连接服务器失败！");
+				MsgUtil.getInstance().showMsg("连接服务器失败！");
 			}
 			return null;
 		}
 		
 		if(response.getStatus() == ResponseStatus.NO_RIGHT){
 			if(!heartbeat){//心跳死了。
-				MsgUtil.showMsg("请重新登录");
+				MsgUtil.getInstance().showMsg("请重新登录");
 				return null;
 			}
-//			offlineReconnect();
 		}
 		
 		return response;
@@ -104,8 +103,6 @@ public class SocketUtil {
 		params.put("server", "1");
 		Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, params), false, false);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-//			MsgUtil.showMsg("请重新登录");//心跳都超时了。
-//			heartbeat = false;
 			return false;
 		}
 		byte[] bytes = response.getValueBytes();
@@ -116,13 +113,13 @@ public class SocketUtil {
 					heartbeat = false;
 					return true;
 				}
-				MsgUtil.showMsg(Module.PLAYER, result.getCode());
+				MsgUtil.getInstance().showMsg(Module.PLAYER, result.getCode());
 				logger.error("断线重连失败 code =" + result.getCode());
 				return false;
 			}
 		}
 		logger.error("断线重连成功");
-		MsgUtil.showMsg("重新连接服务器成功");
+		MsgUtil.getInstance().showMsg("重新连接服务器成功");
 		return true;
 	
 	}  

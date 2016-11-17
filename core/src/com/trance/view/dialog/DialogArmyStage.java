@@ -103,7 +103,7 @@ public class DialogArmyStage extends BaseStage {
 				public void clicked(InputEvent event, float x, float y) {
 					int max = armyTrain.getMax();
 					if(armyDto.getAmout() >= max){
-						MsgUtil.showMsg("已达到最大训练数量");
+						MsgUtil.getInstance().showMsg("已达到最大训练数量");
 						return;
 					}
 					
@@ -168,7 +168,7 @@ public class DialogArmyStage extends BaseStage {
 		if(result != null){
 			int code = Integer.valueOf(String.valueOf(result.get("result")));
 			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.ARMY,code);
+				MsgUtil.getInstance().showMsg(Module.ARMY,code);
 				return ;
 			}
 			
@@ -213,7 +213,7 @@ public class DialogArmyStage extends BaseStage {
 		if(result != null){
 			int code = Integer.valueOf(String.valueOf(result.get("result")));
 			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.ARMY,code);
+				MsgUtil.getInstance().showMsg(Module.ARMY,code);
 				return ;
 			}
 			Object valueResult = result.get("content");
@@ -250,7 +250,7 @@ public class DialogArmyStage extends BaseStage {
 		if(result != null){
 			int code = Integer.valueOf(String.valueOf(result.get("result")));
 			if(code != Result.SUCCESS){
-				MsgUtil.showMsg(Module.ARMY,code);
+				MsgUtil.getInstance().showMsg(Module.ARMY,code);
 				return ;
 			}
 			Object valueResult = result.get("content");

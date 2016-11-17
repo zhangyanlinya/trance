@@ -52,7 +52,7 @@ public class RewardService {
 			sb.append(count + " ");
 		}
 		
-		MsgUtil.showMsg(sb.toString());
+		MsgUtil.getInstance().showMsg(sb.toString());
 		//TODO 
 	}
 }
