@@ -103,7 +103,7 @@ public class DialogArmyStage extends BaseStage {
 				public void clicked(InputEvent event, float x, float y) {
 					int max = armyTrain.getMax();
 					if(armyDto.getAmout() >= max){
-						MsgUtil.getInstance().showMsg("已达到最大训练数量");
+						MsgUtil.getInstance().showMsg("The maximum number of trains has been reached");
 						return;
 					}
 					

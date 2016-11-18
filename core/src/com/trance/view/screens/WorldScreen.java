@@ -42,12 +42,15 @@ import com.trance.view.utils.SocketUtil;
 import java.util.HashMap;
 import java.util.Map;
 
+import var3d.net.freefont.FreeBitmapFont;
+import var3d.net.freefont.FreeFont;
 
 
 public class WorldScreen extends BaseScreen implements InputProcessor {
 	
 	private final static int BASE = 10;
 	private Stage stage;
+	private FreeBitmapFont font;
 	private OrthographicCamera camera;
 	private SpriteBatch spriteBatch;
 	private boolean init;
@@ -115,7 +118,8 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 				sb.append(name);
 			}
 		}
-		
+
+		font = FreeFont.getBitmapFont("world");
 		font.appendText(sb.toString());
 
 		camera = new OrthographicCamera(width, height);
@@ -345,6 +349,8 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 			return;
 		}
 		init = false;
+		stage.dispose();
+		font.dispose();
 		if(spriteBatch != null)
 			spriteBatch.dispose();
 		playerDtos.clear();

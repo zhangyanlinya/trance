@@ -44,6 +44,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import var3d.net.freefont.FreeBitmapFont;
+import var3d.net.freefont.FreeFont;
+
 
 public class LoginScreen extends BaseScreen {
 	
@@ -53,6 +56,7 @@ public class LoginScreen extends BaseScreen {
 	private SpriteBatch spriteBatch;
 	private boolean init;
 	private ResUtil resUtil;
+	private FreeBitmapFont font;
 	//画笔
   	public ShapeRenderer renderer;
   	
@@ -67,8 +71,9 @@ public class LoginScreen extends BaseScreen {
 		resUtil = ResUtil.getInstance();
 		resUtil.init();
 		stage = new Stage(new FillViewport(width,height));
-		
+
 		spriteBatch = new SpriteBatch();
+		font = FreeFont.getBitmapFont("login");
 		font.appendText("[点击图片开始游戏]");
 		//GO
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
@@ -246,7 +251,7 @@ public class LoginScreen extends BaseScreen {
 		if(resUtil.update()){
 			spriteBatch.begin();
 			font.setColor(Color.GREEN);
-			font.draw(spriteBatch,"[点击图片开始游戏]",350,240);
+			font.draw(spriteBatch,"[点击图片开始游戏]",width/2  ,240);
 			spriteBatch.end();
 			finish = true;
 		}
@@ -278,6 +283,8 @@ public class LoginScreen extends BaseScreen {
 			return;
 		}
 		init = false;
+		stage.dispose();
+		font.dispose();
 		background.dispose();
 		spriteBatch.dispose();
 		resUtil.dispose();

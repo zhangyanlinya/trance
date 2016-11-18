@@ -2,7 +2,6 @@ package com.trance.view.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -11,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.TimeUtil;
+
+import var3d.net.freefont.FreeBitmapFont;
 
 public class ArmyImage extends Image {
 
@@ -21,7 +22,7 @@ public class ArmyImage extends Image {
 	
 	private ArmyDto armyDto;
 	
-	private BitmapFont font;
+	private FreeBitmapFont font;
 	
 	public ArmyImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, ArmyDto armyDto) {
 		super(region);

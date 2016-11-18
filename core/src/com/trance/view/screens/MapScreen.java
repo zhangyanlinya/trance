@@ -51,7 +51,6 @@ import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.textinput.RenameInputListener;
-import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.FormulaUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
@@ -62,13 +61,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import var3d.net.freefont.FreeBitmapFont;
+import var3d.net.freefont.FreeFont;
+
 
 public class MapScreen extends BaseScreen implements InputProcessor {
 
 	public static float menu_width = 0;
 	/** 控制区域高度 */	
-	public static int width;
-	public static int height;
+//	public static int width;
+//	public static int height;
 	/** 数组宽数量 */
 	public final static int ARR_WIDTH_SIZE = 16;
 	/** 数组高数量 */
@@ -100,6 +102,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private GestureController controller;
 
 	private Stage stage;
+	private FreeBitmapFont font;
 	
 	public ShapeRenderer shapeRenderer;
 	
@@ -113,13 +116,17 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 	
 	public void init(){
-		width = Gdx.graphics.getWidth(); // 720
-		height = Gdx.graphics.getHeight(); // 1200
+//		width = Gdx.graphics.getWidth(); // 720
+//		height = Gdx.graphics.getHeight(); // 1200
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
 		game_height  = length * ARR_HEIGHT_SIZE;
 		menu_width  = (width - game_width)/2;
 		control_height = height - game_height-length * 2;//再减2格
+
+		font = FreeFont.getBitmapFont("map");
+		font.appendText(playerDto.getPlayerName());
+		font.appendText(MsgUtil.getInstance().getLocalMsg("Drag building placement"));
 		
 		stage = new Stage(new FillViewport(width, height));
 		camera = new OrthographicCamera(width, height);
@@ -136,7 +143,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
-		int side = width/8;
+		float side = width/8;
 		
 		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(0, 0, side, side);
@@ -225,9 +232,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		MapData.gamerunning = false;
 		//文字 
-		font = FontUtil.getFont();
-		font.appendText("可拖动建筑放置等级金银币粮食");
-		
+
 		stage.clear();
 		float w = bg.getWidth();
 		float h = bg.getHeight();
@@ -513,7 +518,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private long levelExp;
 	
 	private void initPlayerInfo(){
-		int side = width / 5;
+		float side = width / 5;
 		ResImage level = new ResImage(ResUtil.getInstance().getUi(UiType.LEVEL),font, playerDto, 1);
 		level.setBounds(side, height - length , length, length);
 		stage.addActor(level);
@@ -823,6 +828,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return;
 		}
 		init = false;
+
+		stage.dispose();
+		font.dispose();
 
 		if(spriteBatch != null){
 			spriteBatch.dispose();

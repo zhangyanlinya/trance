@@ -27,22 +27,22 @@ public class RewardService {
 			case GOLD:
 				long gold = player.getGold();
 				player.setGold(gold + count);
-				sb.append("金币 : ");
+				sb.append(MsgUtil.getInstance().getLocalMsg("gold") + " : ");
 				break;
 			case SILVER:
 				long silver = player.getSilver();
 				player.setSilver(silver + count);
-				sb.append("银币 : ");
+				sb.append(MsgUtil.getInstance().getLocalMsg("silver") + ": ");
 				break;
 			case FOODS:
 				long foods = player.getFoods();
 				player.setFoods(foods + count);
-				sb.append("粮食 : ");
+				sb.append(MsgUtil.getInstance().getLocalMsg("foods") + " : ");
 				break;
 			case PLAYER_EXP:
-				long exp = player.getExperience();
-				player.setExperience(exp + count);
-				sb.append("经验 : ");
+				long experience = player.getExperience();
+				player.setExperience(experience + count);
+				sb.append(MsgUtil.getInstance().getLocalMsg("experience") + " : ");
 			default:
 				break;
 			}

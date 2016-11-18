@@ -56,14 +56,14 @@ public class SocketUtil {
 		Response response = clientService.send(request,showDialog);
 		if(response == null){
 			if(showDialog) {
-				MsgUtil.getInstance().showMsg("连接服务器失败！");
+				MsgUtil.getInstance().showMsg("Connection to server failed");
 			}
 			return null;
 		}
 		
 		if(response.getStatus() == ResponseStatus.NO_RIGHT){
 			if(!heartbeat){//心跳死了。
-				MsgUtil.getInstance().showMsg("请重新登录");
+				MsgUtil.getInstance().showMsg("please login again");
 				return null;
 			}
 		}
@@ -119,7 +119,7 @@ public class SocketUtil {
 			}
 		}
 		logger.error("断线重连成功");
-		MsgUtil.getInstance().showMsg("重新连接服务器成功");
+		MsgUtil.getInstance().showMsg("Reconnect the server successfully");
 		return true;
 	
 	}  

@@ -21,7 +21,7 @@ public class BaseScreen extends ScreenAdapter{
     protected float height;
     protected Batch batch;
     protected String msg;
-    protected FreeBitmapFont font;
+    private FreeBitmapFont font;
 
 
     public BaseScreen(TranceGame tranceGame){
@@ -30,6 +30,7 @@ public class BaseScreen extends ScreenAdapter{
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         font = FontUtil.getFont();
+        font.setColor(Color.RED);
     }
 
 
@@ -47,26 +48,23 @@ public class BaseScreen extends ScreenAdapter{
     }
 
     private long showTime;
-    private long delayShow = 10000;
+    private long delayShow = 50000;
 
     @Override
     public void render(float delta) {
         super.render(delta);
         if(msg != null && !msg.equals("")) {
             batch.begin();
-            font.setColor(Color.RED);
-            font.setSize(50);
-            font.draw(batch, msg, width / 2, height / 2);
+            font.draw(batch, msg, width / 2 , height / 2);
             batch.end();
         }
 
         long now = System.currentTimeMillis();
-        if((now - showTime) < delayShow){
+        if((now - showTime) > delayShow){
             msg = null;
+            showTime = now;
             return;
         }
-        showTime = now;
-
     }
 
     @Override

@@ -72,6 +72,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import var3d.net.freefont.FreeBitmapFont;
+import var3d.net.freefont.FreeFont;
+
 
 public class GameScreen extends BaseScreen implements ContactListener,InputProcessor{
 
@@ -80,6 +83,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	private SpriteBatch spriteBatch;
 	public static PlayerDto playerDto;
 	private Stage stage;
+	private FreeBitmapFont font;
 	
 	/** 数组宽数量 */
 	public final static int ARR_WIDTH_SIZE = 16;
@@ -168,6 +172,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 //		font = FontUtil.getFont();
 //		width = Gdx.graphics.getWidth(); // 720
 //		height = Gdx.graphics.getHeight(); // 1200
+		font = FreeFont.getBitmapFont("game");
 		stage = new Stage(new FillViewport(width * 2, height * 2));
 
 		CELL_LENGHT = width / 10;
@@ -702,6 +707,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			return;
 		}
 		init = false;
+		stage.dispose();
+		font.dispose();
 
 		if(spriteBatch != null){
 			spriteBatch.dispose();

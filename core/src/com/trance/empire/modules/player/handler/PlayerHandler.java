@@ -83,8 +83,7 @@ public class PlayerHandler extends HandlerSupport {
 					return;
 				}
 				int newLevel = (Integer) response.getValue();
-//				System.out.println("收到推送等级提升...新等级＝" +newLevel);
-				MsgUtil.getInstance().showMsg("恭喜升级到"+newLevel +"级~");
+				MsgUtil.getInstance().showMsg("Congratulations on the upgrade");
 				Player.player.setLevel(newLevel);
 			}
 		});
@@ -117,22 +116,22 @@ public class PlayerHandler extends HandlerSupport {
 				String msg ="";
 				switch(reason){
 				case 1:
-					msg ="账号在其他地方登陆";
+					msg ="Account in other places login";
 					break;
 				case 2:
-					msg ="账号被管理后台踢下线";
+					msg ="Account has kicked out by admin";
 					break;
 				case 3:
-					msg ="IP被封";
+					msg ="IP is blocked";
 					break;
 				case 4:
-					msg ="账号被封";
+					msg ="Account is blocked";
 					break;
 				case 5:
-					msg ="服务器关闭, 请稍等。";
+					msg ="server is colosed please wait";
 					break;
 				case 6:
-					msg ="正在遭受攻击中,等待4分钟 ...";
+					msg ="Being attacked, wait 4 minutes";
 					break;
 				}
 				MsgUtil.getInstance().showMsg(msg);
