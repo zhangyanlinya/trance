@@ -51,6 +51,7 @@ import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.textinput.RenameInputListener;
+import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.FormulaUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
@@ -62,7 +63,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import var3d.net.freefont.FreeBitmapFont;
-import var3d.net.freefont.FreeFont;
 
 
 public class MapScreen extends BaseScreen implements InputProcessor {
@@ -110,6 +110,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     public DialogArmyStage dialogArmyStage;
     public DialogBuildingStage dialogBuildingStage;
     public DialogRankUpStage dialogRankUpStage;
+
+	private String msg;
 	
 	public MapScreen(TranceGame tranceGame){
 		super(tranceGame);
@@ -124,9 +126,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		menu_width  = (width - game_width)/2;
 		control_height = height - game_height-length * 2;//再减2格
 
-		font = FreeFont.getBitmapFont("map");
+		font = FontUtil.getFont();
 		font.appendText(playerDto.getPlayerName());
-		font.appendText(MsgUtil.getInstance().getLocalMsg("Drag building placement"));
+		msg = MsgUtil.getInstance().getLocalMsg("Drag building placement");
+		font.appendText(msg);
+		final String newNameMsg = MsgUtil.getInstance().getLocalMsg("input new name");
+		font.appendText(newNameMsg);
 		
 		stage = new Stage(new FillViewport(width, height));
 		camera = new OrthographicCamera(width, height);
@@ -163,7 +168,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.input.getTextInput(listener, "请输入新名字", Player.player.getPlayerName(),"input new name");
+				Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
 			}
 		});
 		
@@ -396,7 +401,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		stage.draw();
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
-			font.draw(spriteBatch,"可拖动建筑放置",length,control_height -length * 2);
+			font.draw(spriteBatch,msg,length,control_height -length * 2);
 		}
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch, Player.player.getPlayerName(),0,height - length);

@@ -34,7 +34,6 @@ public class BaseScreen extends ScreenAdapter{
     }
 
 
-
     public void showWindow(String msg){
         if(msg == null || msg.trim().equals("")){
             return;

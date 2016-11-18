@@ -43,7 +43,7 @@ public class MsgUtil {
 	private final  Map<Integer,Msg> battle = new HashMap<Integer,Msg>();
 	private final  Map<Integer,Msg> army = new HashMap<Integer,Msg>();
 
-	private final Map<String,String> local = new HashMap<String,String>();
+	private final Map<String,String> zh_local = new HashMap<String,String>();
 
 
 	private MsgUtil(){}
@@ -92,25 +92,26 @@ public class MsgUtil {
 
 	private void initLocal(String lang){
 		if("zh".equals(lang)) {
-			local.put("Congratulations on the upgrade", "恭喜升级!");
-			local.put("Account in other places login", "账号在其他地方登录");
-			local.put("Account has kicked out by admin", "账号被管理后台踢下线");
-			local.put("IP is blocked", "IP被封");
-			local.put("Account is blocked", "账号被封");
-			local.put("server is colosed please wait", "服务器已关闭 请等待");
-			local.put("Being attacked, wait 4 minutes", "正在遭到攻击 等待4分钟");
-			local.put("The maximum number of trains has been reached", "已达到最大训练数量");
-			local.put("Reconnect the server successfully", "重新连接服务器成功");
-			local.put("Connection to server failed", "连接服务器失败！");
-			local.put("please login again", "请重新登录");
+			zh_local.put("Congratulations on the upgrade", "恭喜升级!");
+			zh_local.put("Account in other places login", "账号在其他地方登录");
+			zh_local.put("Account has kicked out by admin", "账号被管理后台踢下线");
+			zh_local.put("IP is blocked", "IP被封");
+			zh_local.put("Account is blocked", "账号被封");
+			zh_local.put("server is colosed please wait", "服务器已关闭 请等待");
+			zh_local.put("Being attacked, wait 4 minutes", "正在遭到攻击 等待4分钟");
+			zh_local.put("The maximum number of trains has been reached", "已达到最大训练数量");
+			zh_local.put("Reconnect the server successfully", "重新连接服务器成功");
+			zh_local.put("Connection to server failed", "连接服务器失败！");
+			zh_local.put("please login again", "请重新登录");
 
 			//
-			local.put("gold","金币");
-			local.put("silver","银币");
-			local.put("foods","粮食");
-			local.put("experience","经验");
-			local.put("input new name","请输入新名字");
-			local.put("Drag building placement","可拖动建筑放置");
+			zh_local.put("gold","金币");
+			zh_local.put("silver","银币");
+			zh_local.put("foods","粮食");
+			zh_local.put("experience","经验");
+			zh_local.put("input new name","请输入新名字");
+			zh_local.put("Drag building placement","可拖动建筑放置");
+			zh_local.put("Click the picture to start the game","点击图片开始游戏");
 		}
 	}
 
@@ -118,7 +119,10 @@ public class MsgUtil {
 		if(lang == null || lang.equals("") || "en".equals(lang)){
 			return key;
 		}
-		String msg =  local.get(key);
+		String msg = null;
+		if(lang.equals("zh")) {
+			 msg = zh_local.get(key);
+		}
 		if(msg == null){
 			return key;
 		}

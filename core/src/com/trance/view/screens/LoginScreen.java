@@ -62,6 +62,8 @@ public class LoginScreen extends BaseScreen {
   	
   	public static boolean loginSuccess;
 
+	private String msg;
+
 	public LoginScreen(TranceGame tranceGame) {
 		super(tranceGame);
 	}
@@ -74,7 +76,8 @@ public class LoginScreen extends BaseScreen {
 
 		spriteBatch = new SpriteBatch();
 		font = FreeFont.getBitmapFont("login");
-		font.appendText("[点击图片开始游戏]");
+		msg = MsgUtil.getInstance().getLocalMsg("Click the picture to start the game");
+		font.appendText("[" + msg + "]");
 		//GO
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
@@ -242,7 +245,6 @@ public class LoginScreen extends BaseScreen {
 
 	private boolean finish;
 
-
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -251,7 +253,7 @@ public class LoginScreen extends BaseScreen {
 		if(resUtil.update()){
 			spriteBatch.begin();
 			font.setColor(Color.GREEN);
-			font.draw(spriteBatch,"[点击图片开始游戏]",width/2  ,240);
+			font.draw(spriteBatch,"[" +msg+ "]",width/2  ,240);
 			spriteBatch.end();
 			finish = true;
 		}

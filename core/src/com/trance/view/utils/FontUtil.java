@@ -22,9 +22,4 @@ public class FontUtil {
 		return font;
 	}
 
-	public static void dispose(){
-		if(font != null){
-			font.dispose();
-		}
-	}
 }
