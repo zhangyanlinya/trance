@@ -216,19 +216,23 @@ public class MsgUtil {
 	}
 
 	public void showLoading(){
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run() {
-				tranceGame.showLoading();
-			}
-		});
+		tranceGame.showLoading();
+//		Gdx.app.postRunnable(new Runnable() {
+//			@Override
+//			public void run() {
+//				tranceGame.showLoading();
+//			}
+//		});
+
 	}
 	public void hideLoading(){
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run() {
-				tranceGame.hideLoading();
-			}
-		});
+		tranceGame.hideLoading();
+//		Gdx.app.postRunnable(new Runnable() {
+//			@Override
+//			public void run() {
+//				tranceGame.hideLoading();
+//			}
+//		});
+
 	}
 }

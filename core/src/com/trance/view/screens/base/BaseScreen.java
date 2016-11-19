@@ -61,17 +61,15 @@ public abstract class BaseScreen extends ScreenAdapter{
     }
 
     public void showLoading(){
-//        if(!isInit){
-//            initAnimation();
-//            isInit = true;
-//        }
+        if(!isInit){
+            initAnimation();
+            isInit = true;
+        }
         showloading = true;
-        this.msg = "get data from server ...";
     }
 
     public void hideLoading(){
-//        showloading = false;
-//        this.msg = null;
+        showloading = false;
     }
 
 
@@ -84,15 +82,11 @@ public abstract class BaseScreen extends ScreenAdapter{
         super.render(delta);
 
         if(showloading) {
-//            stateTime += delta;
-//            //下一帧
-//            currentFrame = animation.getKeyFrame(stateTime, true);
-//            batch.begin();
-//            batch.draw(currentFrame, width/2 -100, height/2 -100 , 200F, 200F);
-//            batch.end();
+            stateTime += delta;
+            //下一帧
+            currentFrame = animation.getKeyFrame(stateTime, true);
             batch.begin();
-            font.setColor(Color.WHITE);
-            font.draw(batch, msg, width / 2 - 120, fontHeight);
+            batch.draw(currentFrame, width/2 -100, height/2 -100 , 200F, 200F);
             batch.end();
         }
 
