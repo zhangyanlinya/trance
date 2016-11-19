@@ -69,8 +69,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	public static float menu_width = 0;
 	/** 控制区域高度 */	
-//	public static int width;
-//	public static int height;
+	public int width;
+	public int height;
 	/** 数组宽数量 */
 	public final static int ARR_WIDTH_SIZE = 16;
 	/** 数组高数量 */
@@ -100,6 +100,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private OrthographicCamera camera;
 	private Image bg;
 	private GestureController controller;
+	private GestureDetector gestureHandler;
 
 	private Stage stage;
 	private FreeBitmapFont font;
@@ -118,8 +119,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 	
 	public void init(){
-//		width = Gdx.graphics.getWidth(); // 720
-//		height = Gdx.graphics.getHeight(); // 1200
+		width = Gdx.graphics.getWidth(); // 720
+		height = Gdx.graphics.getHeight(); // 1200
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
 		game_height  = length * ARR_HEIGHT_SIZE;
@@ -132,13 +133,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		font.appendText(msg);
 		final String newNameMsg = MsgUtil.getInstance().getLocalMsg("input new name");
 		font.appendText(newNameMsg);
-		
-		stage = new Stage(new FillViewport(width, height));
+
 		camera = new OrthographicCamera(width, height);
-		stage.getViewport().setCamera(camera);
 		camera.setToOrtho(false, width, height);
-		
-		
+		stage = new Stage(new FillViewport(width, height, camera));
+
 		spriteBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		
@@ -273,18 +272,42 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 		initPlayerInfo();
 		stage.addActor(toWorld);
-		
-		inputMultiplexer = new InputMultiplexer();
+
 		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		camera.position.set(width/2, height/2, 0);
 		controller.setCanPan(false);
-		GestureDetector gestureHandler = new GestureDetector(controller);
+
+		inputMultiplexer = new InputMultiplexer();
+		gestureHandler = new GestureDetector(controller);
+		initInputProcessor();
+	}
+
+	private void initInputProcessor(){
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
-	
+
+	@Override
+	public void showLoading() {
+		super.showLoading();
+		inputMultiplexer.clear();
+	}
+
+	@Override
+	public void hideLoading() {
+		super.hideLoading();
+		initInputProcessor();
+		if(dialogArmyStage.isVisible()){
+			setArmyDailog(true);
+		}else if(dialogBuildingStage.isVisible()){
+			setBuildingDailog(true);
+		}else if(dialogRankUpStage.isVisible()){
+			setRankUpDailog(true);
+		}
+	}
+
 
 	/**
 	 *  地图是否可编辑
@@ -364,7 +387,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			newPlayerDto.setY(playerDto.getY());
 			WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
 			playerDto = newPlayerDto;
-			int[][] map = null;
+			int[][] map;
 			Object mobj = result.get("mapdata");
 			if (mobj == null) {
 				map = MapData.clonemap();
@@ -404,10 +427,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			font.draw(spriteBatch,msg,length,control_height -length * 2);
 		}
 		if(playerDto.isMyself()){
-			font.draw(spriteBatch, Player.player.getPlayerName(),0,height - length);
-			font.draw(spriteBatch, Player.player.getExperience()+"/"+levelExp ,0,height - length * 2);
+			font.draw(spriteBatch, Player.player.getPlayerName(),20,height - length);
+			font.draw(spriteBatch, Player.player.getExperience()+"/"+levelExp ,20,height - length * 2);
 		}else{
-			font.draw(spriteBatch, playerDto.getPlayerName(),0,height - length);
+			font.draw(spriteBatch, playerDto.getPlayerName(),20,height - length);
 		}
 		spriteBatch.end();
 		

@@ -51,6 +51,8 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 	private final static int BASE = 10;
 	private Stage stage;
 	private FreeBitmapFont font;
+	private float width;
+	private float height;
 	private OrthographicCamera camera;
 	private SpriteBatch spriteBatch;
 	private boolean init;
@@ -62,8 +64,10 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 	public final static Map<String,WorldImage> locations = new HashMap<String,WorldImage>();
 	public final static Map<String,PlayerDto> playerDtos = new HashMap<String,PlayerDto>();
 	private float side;
-	
-	
+	private InputMultiplexer inputMultiplexer;
+	private GestureDetector gestureHandler;
+
+
 	public WorldScreen(TranceGame tranceGame) {
 		super(tranceGame);
 	}
@@ -96,20 +100,37 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 			init = true;
 		}
 		
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer = new InputMultiplexer();
 		GestureController controller = new GestureController(camera, 0, sw, 0, sh);
-		GestureDetector gestureHandler = new GestureDetector(controller);
+		gestureHandler = new GestureDetector(controller);
+		initInputProcessor();
+	}
+
+	private void initInputProcessor(){
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(this);
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-		
+
+	}
+
+	@Override
+	public void showLoading() {
+		super.showLoading();
+		inputMultiplexer.clear();
+	}
+
+	@Override
+	public void hideLoading() {
+		super.hideLoading();
+		initInputProcessor();
 	}
 	
 	private void init(){
+		width = Gdx.graphics.getWidth();
+		height = Gdx.graphics.getHeight();
 		side = width / 8;
 		spriteBatch = new SpriteBatch();
-		
 		StringBuilder sb = new StringBuilder();
 		sb.append(Player.player.getPlayerName());
 		if(!playerDtos.isEmpty()){
@@ -246,6 +267,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 								dto.setX(ox);
 								dto.setY(oy);
 								location.setPlayerDto(dto);
+								font.appendText(dto.getPlayerName());
 								tranceGame.mapScreen.setPlayerDto(dto);
 								tranceGame.setScreen(tranceGame.mapScreen);
 							}

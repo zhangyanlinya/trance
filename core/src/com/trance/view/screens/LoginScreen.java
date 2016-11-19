@@ -52,6 +52,8 @@ public class LoginScreen extends BaseScreen {
 	
 	private Texture background;
 	private Stage stage;
+	private float width;
+	private float height;
 	private Image start;
 	private SpriteBatch spriteBatch;
 	private boolean init;
@@ -61,6 +63,8 @@ public class LoginScreen extends BaseScreen {
   	public ShapeRenderer renderer;
   	
   	public static boolean loginSuccess;
+
+	private InputMultiplexer inputMultiplexer;
 
 	private String msg;
 
@@ -72,8 +76,9 @@ public class LoginScreen extends BaseScreen {
 		renderer = new ShapeRenderer();
 		resUtil = ResUtil.getInstance();
 		resUtil.init();
+		width = Gdx.graphics.getWidth();
+		height = Gdx.graphics.getHeight();
 		stage = new Stage(new FillViewport(width,height));
-
 		spriteBatch = new SpriteBatch();
 		font = FreeFont.getBitmapFont("login");
 		msg = MsgUtil.getInstance().getLocalMsg("Click the picture to start the game");
@@ -102,11 +107,22 @@ public class LoginScreen extends BaseScreen {
 		start.setY(y);
 		stage.addActor(start);
 		
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
 
+	@Override
+	public void showLoading() {
+		super.showLoading();
+		inputMultiplexer.clear();
+	}
 
+	@Override
+	public void hideLoading() {
+		super.hideLoading();
+		inputMultiplexer.addProcessor(stage);
+		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
 	@Override
@@ -253,7 +269,7 @@ public class LoginScreen extends BaseScreen {
 		if(resUtil.update()){
 			spriteBatch.begin();
 			font.setColor(Color.GREEN);
-			font.draw(spriteBatch,"[" +msg+ "]",width/2  ,240);
+			font.draw(spriteBatch,"[" +msg+ "]",width/2 - 120  ,240);
 			spriteBatch.end();
 			finish = true;
 		}

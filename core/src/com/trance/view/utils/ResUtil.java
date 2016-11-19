@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2014. William Mora
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.trance.view.utils;
 
@@ -118,6 +103,11 @@ public class ResUtil extends AssetManager {
     		 load("army/"+type.id + "/zoulu/" + i + ".png", Texture.class);
          }
     	}
+
+		//loading
+		for (int i = 0; i < 4; i++) {
+			load("loading/" + i +".png", Texture.class);
+		}
 	}
 
 	/**
@@ -178,6 +168,23 @@ public class ResUtil extends AssetManager {
     	TextureRegion textureRegion = new TextureRegion(texture);
         return textureRegion;
     }
+
+	private TextureRegion[] loadingAnimation;
+
+	public TextureRegion[] getLoadingAnimation(){
+		if(loadingAnimation != null && loadingAnimation.length > 0){
+			return loadingAnimation;
+		}
+
+		loadingAnimation = new TextureRegion[4];
+		for(int i = 0; i < 4 ; i++){
+			Texture animation = this.get("loading/"+i+".png", Texture.class);
+			TextureRegion region = new TextureRegion(animation);
+			loadingAnimation[i] = region;
+		}
+		return loadingAnimation;
+	}
+
     
     public Texture getControlTextureRegion(ControlType value) {
     	Texture texture = null;
@@ -208,5 +215,6 @@ public class ResUtil extends AssetManager {
     public void dispose() {
     	super.dispose();
     	armyAnimations.clear();
+		loadingAnimation = null;
     }
 }

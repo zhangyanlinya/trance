@@ -55,7 +55,7 @@ public class SocketUtil {
 	public static Response send(Request request, boolean showDialog, boolean showMsg) {
 		Response response = clientService.send(request,showDialog);
 		if(response == null){
-			if(showDialog) {
+			if(showMsg) {
 				MsgUtil.getInstance().showMsg("Connection to server failed");
 			}
 			return null;

@@ -29,8 +29,8 @@ public class ClientServiceImpl implements ClientService{
 	/**
 	 * 远程主机ip
 	 */
-	private String ip = "47.88.26.24";
-//	private String ip = "192.168.0.4";
+//	private String ip = "47.88.26.24";
+	private String ip = "192.168.0.4";
 //	private String ip = "192.168.0.105";
 	
 	/**
@@ -66,9 +66,10 @@ public class ClientServiceImpl implements ClientService{
 	@Override
 	public Response send(Request request, boolean showDialog) {
 		if(showDialog){
-			MsgUtil.getInstance().showMsg("loading...");
+			MsgUtil.getInstance().showLoading();
+//			System.out.println("show");
 		}
-		
+
 		try {
 			Response response = this.socketClient.send(request);
 			return response;
@@ -76,7 +77,8 @@ public class ClientServiceImpl implements ClientService{
 			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}finally{
 			if(showDialog){
-				MsgUtil.getInstance().hideMsg();
+				MsgUtil.getInstance().hideLoading();
+//				System.out.println("hide");
 			}
 		}
 		return null;

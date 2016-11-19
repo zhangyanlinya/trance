@@ -84,6 +84,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	public static PlayerDto playerDto;
 	private Stage stage;
 	private FreeBitmapFont font;
+	private float width;
+	private float height;
 	
 	/** 数组宽数量 */
 	public final static int ARR_WIDTH_SIZE = 16;
@@ -137,6 +139,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	private boolean init;
 	
 	private static boolean finishBattle;
+
+	private InputMultiplexer inputMultiplexer;
+	private GestureDetector gestureHandler;
 	
 	public GameScreen(TranceGame tranceGame) {
 		super(tranceGame);
@@ -158,20 +163,36 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		initWorld();
 		initMap();
 		initArmy();
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer = new InputMultiplexer();
 		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
-		GestureDetector gestureHandler = new GestureDetector(controller);
+		gestureHandler = new GestureDetector(controller);
+		initInputProcessor();
+	}
+
+	private void initInputProcessor(){
 		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
+
+	@Override
+	public void showLoading() {
+		super.showLoading();
+		inputMultiplexer.clear();
+	}
+
+	@Override
+	public void hideLoading() {
+		super.hideLoading();
+		initInputProcessor();
+	}
 	
 	private void init(){
 		spriteBatch = new SpriteBatch();
 //		font = FontUtil.getFont();
-//		width = Gdx.graphics.getWidth(); // 720
-//		height = Gdx.graphics.getHeight(); // 1200
+		width = Gdx.graphics.getWidth(); // 720
+		height = Gdx.graphics.getHeight(); // 1200
 		font = FreeFont.getBitmapFont("game");
 		stage = new Stage(new FillViewport(width * 2, height * 2));
 

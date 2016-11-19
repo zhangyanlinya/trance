@@ -215,11 +215,19 @@ public class MsgUtil {
 		});
 	}
 
-	public void hideMsg(){
+	public void showLoading(){
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run() {
-				tranceGame.hideMsg();
+				tranceGame.showLoading();
+			}
+		});
+	}
+	public void hideLoading(){
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				tranceGame.hideLoading();
 			}
 		});
 	}

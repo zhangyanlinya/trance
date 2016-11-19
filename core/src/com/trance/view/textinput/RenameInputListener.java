@@ -8,6 +8,7 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.empire.config.Module;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
+import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.SocketUtil;
 
@@ -41,6 +42,7 @@ public class RenameInputListener implements TextInputListener {
 		Integer code = JSON.parseObject(str, Integer.class);
 		if(code == 0){
 			Player.player.setPlayerName(text);
+			FontUtil.getFont().appendText(text);
 		}else{
 			MsgUtil.getInstance().showMsg(Module.PLAYER, code);
 		}

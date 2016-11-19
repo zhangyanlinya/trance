@@ -153,7 +153,6 @@ public class SimpleSocketClient {
 		ClientContext ctx = ClientContext.valueOf(sn, request.getSn(), true);
 		request.setSn(sn);	
 		this.requestContext.put(sn, ctx);
-		
 		try {
 			IoSession session = this.getSession();
 			if(session == null){

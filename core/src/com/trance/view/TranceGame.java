@@ -46,12 +46,18 @@ public class TranceGame extends Game {
 	}
 
 	public void showMsg(String msg){
-		((BaseScreen)this.getScreen()).showWindow(msg);
+		((BaseScreen)this.getScreen()).showMsg(msg);
 	}
 
-	public void hideMsg(){
-		((BaseScreen)this.getScreen()).hideWindow();
+
+	public void showLoading(){
+		((BaseScreen)this.getScreen()).showLoading();
 	}
+
+	public void hideLoading(){
+		((BaseScreen)this.getScreen()).hideLoading();
+	}
+
 
 	@Override
 	public void dispose() {

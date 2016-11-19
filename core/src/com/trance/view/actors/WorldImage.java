@@ -26,7 +26,7 @@ public class WorldImage extends Image {
 			String name = playerDto.getPlayerName() + "  ";
 			font.setColor(Color.WHITE);
 			font.draw(batch, name ,this.getX(),this.getY());
-			font.setColor(Color.RED);
+//			font.setColor(Color.RED);
 			font.draw(batch, playerDto.getUp()+"" ,this.getX() + getWidth() + getWidth()/2, this.getY());
 		}
 	}
