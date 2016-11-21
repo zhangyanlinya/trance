@@ -856,7 +856,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		init = false;
 
 		stage.dispose();
-		font.dispose();
 
 		if(spriteBatch != null){
 			spriteBatch.dispose();

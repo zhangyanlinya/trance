@@ -60,9 +60,9 @@ import com.trance.view.actors.MapImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.controller.GestureController;
 import com.trance.view.freefont.FreeBitmapFont;
-import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
+import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
@@ -193,7 +193,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 //		font = FontUtil.getFont();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
-		font = FreeFont.getBitmapFont("game");
+		font = FontUtil.getFont();
 		font.appendText(MsgUtil.getInstance().getLocalMsg("laud"));
 		stage = new Stage(new FillViewport(width * 2, height * 2));
 
@@ -730,7 +730,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 		init = false;
 		stage.dispose();
-		font.dispose();
 
 		if(spriteBatch != null){
 			spriteBatch.dispose();

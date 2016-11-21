@@ -23,4 +23,7 @@ public class FontUtil {
 		return font;
 	}
 
+	public static void dispose(){
+		font.dispose();
+	}
 }

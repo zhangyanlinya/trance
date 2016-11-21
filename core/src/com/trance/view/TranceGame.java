@@ -9,6 +9,7 @@ import com.trance.view.screens.LoginScreen;
 import com.trance.view.screens.MapScreen;
 import com.trance.view.screens.WorldScreen;
 import com.trance.view.screens.base.BaseScreen;
+import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
@@ -71,6 +72,7 @@ public class TranceGame extends Game {
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
+		FontUtil.dispose();
 		ResUtil.getInstance().dispose();
 		super.dispose();
 	}

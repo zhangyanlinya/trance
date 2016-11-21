@@ -126,7 +126,6 @@ public class DialogRankUpStage extends BaseStage {
 	public void dispose(){
 		super.dispose();
 		if(init){
-			font.dispose();
 			init = false;
 		}
 	}
