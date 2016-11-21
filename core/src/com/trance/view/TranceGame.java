@@ -72,9 +72,9 @@ public class TranceGame extends Game {
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
-		FontUtil.dispose();
 		ResUtil.getInstance().dispose();
 		super.dispose();
+		FontUtil.dispose();
 	}
 
 	public BsuEvent getEvent() {

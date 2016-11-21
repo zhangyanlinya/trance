@@ -24,6 +24,9 @@ public class FontUtil {
 	}
 
 	public static void dispose(){
-		font.dispose();
+		try {
+			font.dispose(); //TODO Pixmap already disposed!
+		}catch (Exception e){
+		}
 	}
 }
