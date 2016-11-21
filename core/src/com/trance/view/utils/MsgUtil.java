@@ -112,6 +112,7 @@ public class MsgUtil {
 			zh_local.put("input new name","请输入新名字");
 			zh_local.put("Drag building placement","可拖动建筑放置");
 			zh_local.put("Click the picture to start the game","点击图片开始游戏");
+			zh_local.put("laud","点赞");
 		}
 	}
 

@@ -194,6 +194,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		font = FreeFont.getBitmapFont("game");
+		font.appendText(MsgUtil.getInstance().getLocalMsg("laud"));
 		stage = new Stage(new FillViewport(width * 2, height * 2));
 
 		CELL_LENGHT = width / 10;
@@ -226,7 +227,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				ResUtil.getInstance().get("world/tips.png",Texture.class)));
 		Drawable background = new TextureRegionDrawable(tips);
 		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
-		window = new Window("点赞",style);
+		window = new Window(MsgUtil.getInstance().getLocalMsg("laud"),style);
 		window.setPosition(width/2 - window.getWidth()/2, height/2 - window.getHeight()/2);
 		window.addListener(new ClickListener(){
 

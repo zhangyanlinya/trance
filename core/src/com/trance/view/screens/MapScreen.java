@@ -427,10 +427,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			font.draw(spriteBatch,msg,length,control_height -length * 2);
 		}
 		if(playerDto.isMyself()){
-			font.draw(spriteBatch, Player.player.getPlayerName(),20,height - length);
-			font.draw(spriteBatch, Player.player.getExperience()+"/"+levelExp ,20,height - length * 2);
+			font.draw(spriteBatch, Player.player.getPlayerName(),length,height - length);
+			font.draw(spriteBatch, Player.player.getExperience()+"/"+levelExp ,length,height - length * 2);
 		}else{
-			font.draw(spriteBatch, playerDto.getPlayerName(),20,height - length);
+			font.draw(spriteBatch, playerDto.getPlayerName(),length,height - length);
 		}
 		spriteBatch.end();
 		
@@ -802,12 +802,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return null;
 		}
 		if(!(at instanceof Building)){
-			System.out.println("at not instanceof Building!");
 			return null;
 		}
 		Building b = (Building)at;
 		if(b.getY() <= control_height - length){//与原始的不比较
-			System.out.println("b.getY() <= control_height - length");
 			return null;
 		}
 		return b;
