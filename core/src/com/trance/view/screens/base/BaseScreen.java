@@ -111,15 +111,19 @@ public abstract class BaseScreen extends ScreenAdapter{
         }
 
     }
-
+    private  boolean destory;
     @Override
     public void dispose() {
+        if(destory){
+            return;
+        }
         super.dispose();
 //        try {
             basefont.dispose();  //TODO 还是要解决掉。
 //        }catch (Exception e){}
         batch.dispose();
         isInit = false;
+        destory = true;
     }
 
 }
