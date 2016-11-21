@@ -262,8 +262,10 @@ public class FreeBitmapFont extends BitmapFont {
         this.paint = null;
         this.charSet.clear();
         this.charSet = null;
-        this.packer.dispose();
-        this.packer = null;
+        if(packer != null) {//修复这个BUG
+            this.packer.dispose();
+            this.packer = null;
+        }
         return this;
     }
 
