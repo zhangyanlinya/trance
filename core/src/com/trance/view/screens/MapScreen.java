@@ -48,6 +48,7 @@ import com.trance.view.controller.GestureController;
 import com.trance.view.dialog.DialogArmyStage;
 import com.trance.view.dialog.DialogBuildingStage;
 import com.trance.view.dialog.DialogRankUpStage;
+import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.textinput.RenameInputListener;
@@ -62,7 +63,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import var3d.net.freefont.FreeBitmapFont;
 
 
 public class MapScreen extends BaseScreen implements InputProcessor {

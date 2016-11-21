@@ -32,6 +32,8 @@ import com.trance.view.actors.WorldImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
 import com.trance.view.controller.GestureController;
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.MsgUtil;
@@ -42,8 +44,6 @@ import com.trance.view.utils.SocketUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-import var3d.net.freefont.FreeBitmapFont;
-import var3d.net.freefont.FreeFont;
 
 
 public class WorldScreen extends BaseScreen implements InputProcessor {

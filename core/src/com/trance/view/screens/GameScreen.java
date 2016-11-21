@@ -59,6 +59,8 @@ import com.trance.view.actors.GameActor;
 import com.trance.view.actors.MapImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.controller.GestureController;
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.MsgUtil;
@@ -72,8 +74,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import var3d.net.freefont.FreeBitmapFont;
-import var3d.net.freefont.FreeFont;
 
 
 public class GameScreen extends BaseScreen implements ContactListener,InputProcessor{

@@ -2,11 +2,11 @@ package com.trance.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.trance.desktop.font.DesktopFreeFont;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.event.BsuEvent;
 import com.trance.view.TranceGame;
 
-import var3d.net.freefont.desktop.DesktopFreeFont;
 
 public class DesktopLauncher {
 	/**

@@ -1,7 +1,8 @@
 package com.trance.view.utils;
 
-import var3d.net.freefont.FreeBitmapFont;
-import var3d.net.freefont.FreeFont;
+
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.freefont.FreeFont;
 
 public class FontUtil {
 

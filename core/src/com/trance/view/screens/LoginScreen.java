@@ -31,6 +31,8 @@ import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.view.TranceGame;
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.MsgUtil;
@@ -44,8 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import var3d.net.freefont.FreeBitmapFont;
-import var3d.net.freefont.FreeFont;
 
 
 public class LoginScreen extends BaseScreen {

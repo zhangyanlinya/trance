@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.view.TranceGame;
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.freefont.FreeFont;
 import com.trance.view.utils.ResUtil;
 
-import var3d.net.freefont.FreeBitmapFont;
-import var3d.net.freefont.FreeFont;
 
 /**
  * Created by Administrator on 2016/11/16 0016.
@@ -45,7 +45,6 @@ public abstract class BaseScreen extends ScreenAdapter{
         height = Gdx.graphics.getHeight();
         basefont = FreeFont.getBitmapFont("base");
         basefont.setColor(Color.RED);
-//        basefont.createText("A");
         basefont.setSize(46);
         fontHeight = height / 2;
     }

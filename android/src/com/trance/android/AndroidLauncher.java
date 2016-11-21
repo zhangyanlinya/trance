@@ -13,6 +13,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.trance.android.font.AndroidFreeFont;
 import com.trance.android.util.GetDeviceId;
 import com.trance.android.util.UpdateManager;
 import com.trance.empire.modules.player.model.Player;
@@ -26,7 +27,6 @@ import com.trance.view.utils.SocketUtil;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
-import var3d.net.freefont.android.AndroidFreeFont;
 
 
 public class AndroidLauncher extends AndroidApplication {

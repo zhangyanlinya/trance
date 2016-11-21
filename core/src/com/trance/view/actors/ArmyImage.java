@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.trance.empire.modules.army.model.ArmyDto;
+import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.TimeUtil;
 
-import var3d.net.freefont.FreeBitmapFont;
 
 public class ArmyImage extends Image {
 

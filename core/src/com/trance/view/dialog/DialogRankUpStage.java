@@ -17,6 +17,7 @@ import com.trance.view.TranceGame;
 import com.trance.view.actors.WorldImage;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
+import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
@@ -25,7 +26,6 @@ import com.trance.view.utils.SocketUtil;
 import java.util.HashMap;
 import java.util.List;
 
-import var3d.net.freefont.FreeBitmapFont;
 
 /**
  *
