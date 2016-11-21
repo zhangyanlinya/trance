@@ -60,7 +60,7 @@ public class SocketUtil {
 			}
 			return null;
 		}
-		
+
 		if(response.getStatus() == ResponseStatus.NO_RIGHT){
 			if(!heartbeat){//心跳死了。
 				MsgUtil.getInstance().showMsg("please login again");

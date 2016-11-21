@@ -29,8 +29,8 @@ public class ClientServiceImpl implements ClientService{
 	/**
 	 * 远程主机ip
 	 */
-	private String ip = "47.88.26.24";
-//	private String ip = "192.168.0.4";
+//	private String ip = "47.88.26.24";
+	private String ip = "192.168.0.4";
 //	private String ip = "192.168.0.105";
 	
 	/**
@@ -62,14 +62,18 @@ public class ClientServiceImpl implements ClientService{
 		this.responseProcessors.registerProcessor(processor);
 		
 	}
-	
+
+
+	/**
+	 * @param request    Request
+	 * @param showDialog
+	 * @return
+	 */
 	@Override
 	public Response send(Request request, boolean showDialog) {
 		if(showDialog){
 			MsgUtil.getInstance().showLoading();
-//			System.out.println("show");
 		}
-
 		try {
 			Response response = this.socketClient.send(request);
 			return response;
@@ -78,13 +82,15 @@ public class ClientServiceImpl implements ClientService{
 		}finally{
 			if(showDialog){
 				MsgUtil.getInstance().hideLoading();
-//				System.out.println("hide");
 			}
 		}
 		return null;
 	
 	}
 
+	/**
+	 * @param request Request
+	 */
 	@Override
 	public void sendAsync(Request request) {
 		try {

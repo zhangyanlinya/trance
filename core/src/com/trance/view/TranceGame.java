@@ -3,6 +3,7 @@ package com.trance.view;
 import com.badlogic.gdx.Game;
 import com.trance.common.basedb.BasedbService;
 import com.trance.empire.modules.player.model.Player;
+import com.trance.event.BsuEvent;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.screens.LoginScreen;
 import com.trance.view.screens.MapScreen;
@@ -19,6 +20,11 @@ public class TranceGame extends Game {
 	public GameScreen gameScreen;  //
 	private String lang;
 
+	private BsuEvent event;
+	public TranceGame(BsuEvent event, String lang){
+		this.event = event;
+		this.lang = lang;
+	}
 
 	@Override
 	public void create() {
@@ -69,11 +75,11 @@ public class TranceGame extends Game {
 		super.dispose();
 	}
 
-	public String getLang() {
-		return lang;
+	public BsuEvent getEvent() {
+		return event;
 	}
 
-	public void setLang(String lang) {
-		this.lang = lang;
+	public void setEvent(BsuEvent event) {
+		this.event = event;
 	}
 }

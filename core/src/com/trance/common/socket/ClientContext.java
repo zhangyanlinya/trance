@@ -62,9 +62,13 @@ public class ClientContext {
 	public void await(long timeout, TimeUnit unit) throws InterruptedException {
 		this.latch.await(timeout, unit);
 	}
-	
+
 	public void release(){
 		this.latch.countDown();
+	}
+
+	public long getCount(){
+		return this.latch.getCount();
 	}
 
 	public Response getResponse() {

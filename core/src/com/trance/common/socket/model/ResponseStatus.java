@@ -37,7 +37,7 @@ public enum ResponseStatus {
 	 */
 	final int value;
 	
-	private ResponseStatus(int value) {
+	ResponseStatus(int value) {
 		this.value = value;
 	}
 

@@ -159,7 +159,7 @@ public class SimpleSocketClient {
 				return null;
 			}
 			WriteFuture writeFuture = session.write(request);
-			writeFuture.awaitUninterruptibly(15 * 1000L);
+			writeFuture.awaitUninterruptibly(15000L);
 			ctx.await(15, TimeUnit.SECONDS);
 			return ctx.getResponse();
 		} catch (Exception ex) {

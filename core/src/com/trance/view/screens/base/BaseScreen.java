@@ -24,7 +24,7 @@ public abstract class BaseScreen extends ScreenAdapter{
     private float height;
     private Batch batch;
     private String msg;
-    private FreeBitmapFont font;
+    private FreeBitmapFont basefont;
     public volatile boolean showloading;
 
     private TextureRegion[] loadingRegion;
@@ -35,14 +35,18 @@ public abstract class BaseScreen extends ScreenAdapter{
 
     private boolean isInit;
 
+    /**
+     * @param tranceGame
+     */
     public BaseScreen(TranceGame tranceGame){
         this.tranceGame = tranceGame;
         batch = new SpriteBatch();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        font = FreeFont.getBitmapFont("base");
-        font.setColor(Color.RED);
-        font.setSize(46);
+        basefont = FreeFont.getBitmapFont("base");
+        basefont.setColor(Color.RED);
+//        basefont.createText("A");
+        basefont.setSize(46);
         fontHeight = height / 2;
     }
 
@@ -57,7 +61,7 @@ public abstract class BaseScreen extends ScreenAdapter{
             return;
         }
         this.msg = msg;
-        font.appendText(msg);
+        basefont.appendText(msg);
     }
 
     public void showLoading(){
@@ -81,18 +85,18 @@ public abstract class BaseScreen extends ScreenAdapter{
     public void render(float delta) {
         super.render(delta);
 
-        if(showloading) {
-            stateTime += delta;
-            //下一帧
-            currentFrame = animation.getKeyFrame(stateTime, true);
-            batch.begin();
-            batch.draw(currentFrame, width/2 -100, height/2 -100 , 200F, 200F);
-            batch.end();
-        }
+//        if(showloading) {
+//            stateTime += delta;
+//            //下一帧
+//            currentFrame = animation.getKeyFrame(stateTime, true);
+//            batch.begin();
+//            batch.draw(currentFrame, width/2 -100, height/2 -100 , 200F, 200F);
+//            batch.end();
+//        }
 
         if (msg != null && !msg.equals("")) {
             batch.begin();
-            font.draw(batch, msg, width / 2 - 120, fontHeight);
+            basefont.draw(batch, msg, width / 2 - 200, fontHeight);
             batch.end();
 
             long now = System.currentTimeMillis();
@@ -112,7 +116,9 @@ public abstract class BaseScreen extends ScreenAdapter{
     @Override
     public void dispose() {
         super.dispose();
-        font.dispose();
+//        try {
+            basefont.dispose();  //TODO 还是要解决掉。
+//        }catch (Exception e){}
         batch.dispose();
         isInit = false;
     }

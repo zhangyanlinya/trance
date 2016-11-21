@@ -216,7 +216,7 @@ public class MsgUtil {
 	}
 
 	public void showLoading(){
-		tranceGame.showLoading();
+		tranceGame.getEvent().notify(1,null);
 //		Gdx.app.postRunnable(new Runnable() {
 //			@Override
 //			public void run() {
@@ -226,7 +226,7 @@ public class MsgUtil {
 
 	}
 	public void hideLoading(){
-		tranceGame.hideLoading();
+		tranceGame.getEvent().notify(2,null);
 //		Gdx.app.postRunnable(new Runnable() {
 //			@Override
 //			public void run() {

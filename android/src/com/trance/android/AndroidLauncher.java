@@ -1,6 +1,10 @@
 package com.trance.android;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -12,15 +16,18 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.trance.android.util.GetDeviceId;
 import com.trance.android.util.UpdateManager;
 import com.trance.empire.modules.player.model.Player;
+import com.trance.event.BsuEvent;
 import com.trance.view.TranceGame;
 import com.trance.view.screens.LoginScreen;
 import com.trance.view.screens.WorldScreen;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.SocketUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import var3d.net.freefont.android.AndroidFreeFont;
+
 
 public class AndroidLauncher extends AndroidApplication {
 	public TranceGame tranceGame;
@@ -35,8 +42,25 @@ public class AndroidLauncher extends AndroidApplication {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		String lang = Locale.getDefault().getLanguage();
-		tranceGame = new TranceGame();
-		tranceGame.setLang(lang);
+		ProgressDialog dialog = new ProgressDialog(this);
+		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置水平进度条
+		dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+		dialog.setCancelable(false);
+		dialog.setIndeterminate(true);
+		dialog.setMessage("Loading...");
+		WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+		lp.alpha = 0.8f;
+
+		handler = new MyHandler(this,dialog);
+
+		tranceGame = new TranceGame( new BsuEvent(){
+			@Override
+			public void notify(int what, Object obj) {
+				Message msg = Message.obtain();
+				msg.what = what;
+				handler.sendMessage(msg);
+			}
+		}, lang);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;  //禁用加速计
 		config.useCompass = false;		  //禁用罗盘
@@ -46,6 +70,7 @@ public class AndroidLauncher extends AndroidApplication {
 		init();
 	}
 
+		public static Handler handler;
 
 	/**
 	 * 初始化
@@ -64,6 +89,33 @@ public class AndroidLauncher extends AndroidApplication {
 		//
 
 		isInit = true;
+	}
+
+	static class MyHandler extends Handler{
+
+		private WeakReference<Context> reference;
+		private ProgressDialog dialog;
+
+		public MyHandler(Context context, ProgressDialog dialog){
+			this.reference = new WeakReference<Context>(context);
+			this.dialog = dialog;
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case 1:
+					dialog.show();
+					break;
+				case 2:
+					dialog.dismiss();
+					break;
+				default:
+					Toast.makeText(reference.get(), msg.obj+"",
+							Toast.LENGTH_SHORT).show();
+					break;
+			}
+		}
 	}
 
 
