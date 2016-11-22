@@ -108,7 +108,7 @@ public class UpdateManager {
     		 showNoticeDialog();
     	}
 		Message m = Message.obtain();
-		m.what =ServerInfoUtil.addelay;
+		m.what = ServerInfoUtil.addelay;
 		callback.handleMessage(m);
 	}
 

@@ -116,7 +116,7 @@ public class AdmobActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 delay--;
-                if(delay <= 1){
+                if(delay < 0){
                     break;
                 }
             }
