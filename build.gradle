@@ -61,7 +61,6 @@ project(":android") {
 
         compile 'com.android.support:appcompat-v7:25.0.0'
         compile 'com.google.android.gms:play-services-ads:9.8.0'
-
     }
 }
 

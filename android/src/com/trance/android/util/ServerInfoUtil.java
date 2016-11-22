@@ -14,6 +14,7 @@ public class ServerInfoUtil {
     public final static  List<Server> serverList = new ArrayList<>();
     public static int versionCode;
     public static String versionMsg;
+    public static int addelay;
 
     public static  void init(String serverJson){
         serverList.clear();
@@ -27,6 +28,7 @@ public class ServerInfoUtil {
 
         versionCode = jsonObject.getInteger("versionCode");
         versionMsg = jsonObject.getString("versionMsg");
+        addelay = jsonObject.getIntValue("addelay");
     }
 
 }

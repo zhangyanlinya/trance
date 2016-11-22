@@ -61,6 +61,7 @@ public abstract class BaseScreen extends ScreenAdapter{
         }
         this.msg = msg;
         basefont.appendText(msg);
+        showTime = System.currentTimeMillis();
     }
 
     public void showLoading(){
@@ -76,7 +77,7 @@ public abstract class BaseScreen extends ScreenAdapter{
     }
 
 
-    private long showTime = System.currentTimeMillis();
+    private long showTime;
     private long delayShow = 3000;
     private float fontHeight;
 

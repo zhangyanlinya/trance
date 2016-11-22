@@ -21,7 +21,7 @@
         android:label="@string/app_name"
         android:theme="@style/GdxTheme" >
         <activity
-            android:name="com.trance.android.AndroidLauncher"
+            android:name="com.trance.android.AdmobActivity"
             android:label="@string/app_name" 
             android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
@@ -30,6 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".AndroidLauncher" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

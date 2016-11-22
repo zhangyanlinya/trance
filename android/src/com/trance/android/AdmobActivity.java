@@ -1,130 +1,119 @@
-/*
+
 
 package com.trance.android;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-
-import static com.badlogic.gdx.Input.Keys.R;
+import com.trance.android.util.ServerInfoUtil;
+import com.trance.android.util.UpdateManager;
 
 
 public class AdmobActivity extends AppCompatActivity {
-    // Remove the below line after defining your own ad unit ID.
-    private static final String TOAST_TEXT = "Test ads are being shown. "
-            + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
 
-    private static final int START_LEVEL = 1;
-    private int mLevel;
-    private Button mNextLevelButton;
     private InterstitialAd mInterstitialAd;
-    private TextView mLevelTextView;
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admob);
 
-        // Create the next level button, which tries to show an interstitial when clicked.
-        mNextLevelButton = ((Button) findViewById(R.id.next_level_button));
-        mNextLevelButton.setEnabled(false);
-        mNextLevelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showInterstitial();
-            }
-        });
+        UpdateManager update = new UpdateManager(this);
+        update.checkUpdate();
 
-        // Create the text view to show the level number.
-        mLevelTextView = (TextView) findViewById(R.id.level);
-        mLevel = START_LEVEL;
-
-        // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
-
-        // Toasts the test ad message on the screen. Remove this after defining your own ad unit ID.
-        Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
+        new TimeThread().start();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_admob, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private InterstitialAd newInterstitialAd() {
         InterstitialAd interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                mNextLevelButton.setEnabled(true);
+                if(start){
+                    return;
+                }
+                showInterstitial();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                mNextLevelButton.setEnabled(true);
+                startGame();
             }
 
             @Override
             public void onAdClosed() {
-                // Proceed to the next level.
-                goToNextLevel();
+                startGame();
             }
         });
         return interstitialAd;
     }
 
     private void showInterstitial() {
-        // Show the ad if it's ready. Otherwise toast and reload the ad.
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         } else {
-            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
-            goToNextLevel();
+     //       Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void loadInterstitial() {
-        // Disable the next level button and load the ad.
-        mNextLevelButton.setEnabled(false);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         mInterstitialAd.loadAd(adRequest);
     }
 
-    private void goToNextLevel() {
-        // Show the next level and reload the ad to prepare for the level after.
-        mLevelTextView.setText("Level " + (++mLevel));
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
+    private boolean start;
+
+    private synchronized void startGame(){
+        if(start){
+            return;
+        }
+        start = true;
+        Intent intent = new Intent(AdmobActivity.this, AndroidLauncher.class);
+        startActivity(intent);
+        AdmobActivity.this.finish();
+    }
+
+    public Handler handler = new Handler(){
+
+        public void handleMessage(android.os.Message msg) {
+            int count = msg.what;
+            if(count <= 1){
+                startGame();
+            }
+        }
+    };
+
+    class TimeThread extends Thread{
+        private int i;
+        public void run(){
+            int i = ServerInfoUtil.addelay;
+            System.out.println("addelay====================> " + i);
+            while(true){
+                try {
+                    handler.sendEmptyMessage(i);
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                i--;
+                if(i <= 0){
+                    break;
+                }
+            }
+        }
     }
 }
 
-*/
+

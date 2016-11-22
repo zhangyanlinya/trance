@@ -15,7 +15,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.trance.android.font.AndroidFreeFont;
 import com.trance.android.util.GetDeviceId;
-import com.trance.android.util.UpdateManager;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.event.BsuEvent;
 import com.trance.view.TranceGame;
@@ -33,13 +32,13 @@ public class AndroidLauncher extends AndroidApplication {
 	public TranceGame tranceGame;
 	private boolean isInit;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
 		String lang = Locale.getDefault().getLanguage();
 		ProgressDialog dialog = new ProgressDialog(this);
@@ -61,6 +60,7 @@ public class AndroidLauncher extends AndroidApplication {
 				handler.sendMessage(msg);
 			}
 		}, lang);
+
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;  //禁用加速计
 		config.useCompass = false;		  //禁用罗盘
@@ -80,8 +80,8 @@ public class AndroidLauncher extends AndroidApplication {
 			return;
 		}
 
-		UpdateManager update = new UpdateManager(this);
-		update.checkUpdate();
+//		UpdateManager update = new UpdateManager(this);
+//		update.checkUpdate();
 
 		GetDeviceId getDeviceId  = new GetDeviceId(this);
 		Player.userName = getDeviceId.getCombinedId();
