@@ -43,7 +43,8 @@ public class AdmobActivity extends AppCompatActivity {
 
     private InterstitialAd newInterstitialAd() {
         InterstitialAd interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+//        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");//TEST ID
+        interstitialAd.setAdUnitId("ca-app-pub-5713066340300541/3148879311");//
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
