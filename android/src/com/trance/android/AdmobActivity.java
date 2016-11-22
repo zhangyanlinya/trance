@@ -5,12 +5,12 @@ package com.trance.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.trance.android.util.ServerInfoUtil;
 import com.trance.android.util.UpdateManager;
 
 
@@ -25,12 +25,19 @@ public class AdmobActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UpdateManager update = new UpdateManager(this);
+        UpdateManager update = new UpdateManager(this , new Handler.Callback(){
+            @Override
+            public boolean handleMessage(Message message) {
+                int delay = message.what;
+                new TimeThread(delay).start();
+                return false;
+            }
+        });
         update.checkUpdate();
 
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
-        new TimeThread().start();
+
     }
 
 
@@ -89,26 +96,27 @@ public class AdmobActivity extends AppCompatActivity {
 
         public void handleMessage(android.os.Message msg) {
             int count = msg.what;
-            if(count <= 1){
+            if(count < 1){
                 startGame();
             }
         }
     };
 
     class TimeThread extends Thread{
-        private int i;
+        private int delay;
+        public TimeThread(int delay){
+            this.delay = delay;
+        }
         public void run(){
-            int i = ServerInfoUtil.addelay;
-            System.out.println("addelay====================> " + i);
             while(true){
                 try {
-                    handler.sendEmptyMessage(i);
+                    handler.sendEmptyMessage(delay);
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                i--;
-                if(i <= 0){
+                delay--;
+                if(delay <= 1){
                     break;
                 }
             }

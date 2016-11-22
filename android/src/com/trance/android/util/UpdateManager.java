@@ -80,12 +80,15 @@ public class UpdateManager {
         }
  
     };
-	     
+
+	private  Handler.Callback callback;
+
     /*
      * 构造方法
      */
-    public UpdateManager(Context context) {
+    public UpdateManager(Context context, Handler.Callback callback) {
         this.mContext = context;
+		this.callback = callback;
     }
  
     //是否决定要更新
@@ -104,7 +107,9 @@ public class UpdateManager {
         if(ServerInfoUtil.versionCode > currentCode){
     		 showNoticeDialog();
     	}
-		
+		Message m = Message.obtain();
+		m.what =ServerInfoUtil.addelay;
+		callback.handleMessage(m);
 	}
 
 	/*
