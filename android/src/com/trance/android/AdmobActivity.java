@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -24,6 +26,9 @@ public class AdmobActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         UpdateManager update = new UpdateManager(this , new Handler.Callback(){
             @Override
@@ -43,8 +48,8 @@ public class AdmobActivity extends AppCompatActivity {
 
     private InterstitialAd newInterstitialAd() {
         InterstitialAd interstitialAd = new InterstitialAd(this);
-//        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");//TEST ID
-        interstitialAd.setAdUnitId("ca-app-pub-5713066340300541/3148879311");//
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");//TEST ID
+//        interstitialAd.setAdUnitId("ca-app-pub-5713066340300541/3148879311");//
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {

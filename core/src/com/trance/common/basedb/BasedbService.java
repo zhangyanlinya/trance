@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.trance.empire.modules.army.model.basedb.ArmyTrain;
 import com.trance.empire.modules.building.model.basedb.CityElement;
-import com.trance.empire.modules.building.model.basedb.ElementUpgrade;
 import com.trance.empire.modules.coolqueue.model.basedb.CoolQueue;
 
 import java.util.Collection;
@@ -29,7 +28,7 @@ public class BasedbService {
 		clazzes.put(ArmyTrain.class.getSimpleName(), ArmyTrain.class);
 		clazzes.put(CityElement.class.getSimpleName(), CityElement.class);
 		clazzes.put(CoolQueue.class.getSimpleName(), CoolQueue.class);
-		clazzes.put(ElementUpgrade.class.getSimpleName(), ElementUpgrade.class);
+//		clazzes.put(ElementUpgrade.class.getSimpleName(), ElementUpgrade.class);
 		
 		storage.clear();
 		FileHandle fileHandle = Gdx.files.internal("xml_db");

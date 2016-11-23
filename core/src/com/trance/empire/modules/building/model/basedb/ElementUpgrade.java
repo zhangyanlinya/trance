@@ -1,39 +1,52 @@
+/*
 package com.trance.empire.modules.building.model.basedb;
 
 import com.trance.common.basedb.Basedb;
 
 
+*/
 /**
  * 主城建筑升级表
  * 
  * @author Along
  *
- */
+ *//*
+
 public class ElementUpgrade implements Basedb {
 
-	/**
+	*/
+/**
 	 * id
-	 */
+	 *//*
+
 	private Integer id;
 	
-	/**
+	*/
+/**
 	 * 建筑等级
-	 */
+	 *//*
+
 	private Integer level;
 	
-	/**
+	*/
+/**
 	 * 建筑类型
-	 */
+	 *//*
+
 	private Integer type;
 	
-	/**
+	*/
+/**
 	 * 需要的银元
-	 */
+	 *//*
+
 	private String cost;
 	
-	/**
+	*/
+/**
 	 * 冷却时间
-	 */
+	 *//*
+
 	private Integer time;
 	
 
@@ -79,3 +92,4 @@ public class ElementUpgrade implements Basedb {
 	}
 
 }
+*/
