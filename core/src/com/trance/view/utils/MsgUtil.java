@@ -113,6 +113,7 @@ public class MsgUtil {
 			zh_local.put("Drag building placement","可拖动建筑放置");
 			zh_local.put("Click the picture to start the game","点击图片开始游戏");
 			zh_local.put("laud","点赞");
+			zh_local.put("Click Build Image to upgrade","点击建筑图片升级");
 		}
 	}
 

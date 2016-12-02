@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -26,12 +28,13 @@ import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.BuildingImage;
+import com.trance.view.actors.Timer;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
+import com.trance.view.freefont.FreeFont;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
-import com.trance.view.actors.Timer;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -115,6 +118,10 @@ public class DialogBuildingStage extends BaseStage {
 				}
 			});
     	}
+
+		Label label = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("Click Build Image to upgrade"));
+		label.setPosition(getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2 + 100, Align.center);
+		addActor(label);
     	
     	if(timer != null && !timer.isFinish()){
     		addActor(timer);
