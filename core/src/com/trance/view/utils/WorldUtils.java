@@ -95,7 +95,7 @@ public class WorldUtils {
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
-    	f.density = 1f;//夹具的密度
+    	f.density = 0.1f;//夹具的密度
     	f.friction = 0f;//夹具的摩擦力
     	f.restitution = 0.1f;//反弹
 		f.filter.categoryBits = 4;

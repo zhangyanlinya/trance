@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
+import com.trance.view.constant.BulletType;
 import com.trance.view.pools.BulletPool;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.utils.ResUtil;
@@ -19,7 +20,7 @@ import com.trance.view.utils.WorldUtils;
 public class Bullet extends GameActor {
 	
 	public Body body;
-	public int type;
+	public BulletType type;
 	public GameActor gameActor;
 	public float speed = 2;//
 	
@@ -34,7 +35,7 @@ public class Bullet extends GameActor {
 	public Bullet() {}
 	
 	//初始化
-	public void init(World world, int type, GameActor gameActor, float x, float y, float width, float height){
+	public void init(World world, BulletType type, GameActor gameActor, float x, float y, float width, float height){
 		this.alive = true;
 		this.type  = type;
 		this.gameActor = gameActor;

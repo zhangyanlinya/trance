@@ -173,7 +173,7 @@ public class Army extends GameActor {
 		}
 		
 		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(body.getWorld(), BulletType.COMMON.getValue(), this, getX(), getY(), 0,
+		bullet.init(body.getWorld(), BulletType.COMMON, this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 		

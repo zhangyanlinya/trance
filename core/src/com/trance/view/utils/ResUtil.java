@@ -37,7 +37,6 @@ public class ResUtil extends AssetManager {
     	load("building/7.png", Texture.class);
     	load("building/8.png", Texture.class);
     	load("building/9.png", Texture.class);
-    	load("ui/bullet.png", Texture.class);
     	load("ui/attack.png", Texture.class);
     	load("ui/to_world.png", Texture.class);
     	load("ui/to_home.png", Texture.class);
@@ -56,7 +55,15 @@ public class ResUtil extends AssetManager {
        	load("ui/levelup.png", Texture.class);
        	load("ui/upbuilding.png", Texture.class);
        	load("ui/fixed.png", Texture.class);
-    	
+
+		//Bullet
+		load("bullet/0.png", Texture.class);
+		load("bullet/1.png", Texture.class);
+		load("bullet/2.png", Texture.class);
+		load("bullet/3.png", Texture.class);
+		load("bullet/4.png", Texture.class);
+		load("bullet/5.png", Texture.class);
+
     	load("world/me1.png", Texture.class);
     	load("world/me2.png", Texture.class);
     	load("world/me3.png", Texture.class);
@@ -158,13 +165,8 @@ public class ResUtil extends AssetManager {
 		return regions;
 	}
     
-    public TextureRegion getBulletTextureRegion(int value) {
-    	String fileName ="ui/bullet.png";
-    	if(value == BulletType.COMMON.getValue()){
-    		fileName = "ui/bullet.png";
-    	}
-    	
-    	Texture texture = get(fileName, Texture.class);
+    public TextureRegion getBulletTextureRegion(BulletType type) {
+    	Texture texture = get(type.getValue(), Texture.class);
     	TextureRegion textureRegion = new TextureRegion(texture);
         return textureRegion;
     }

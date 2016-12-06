@@ -2,24 +2,27 @@ package com.trance.view.constant;
 
 public enum BulletType {
 
-	COMMON(1);
+	COMMON("bullet/0.png"),
 
-	private final int value;
+	ONE("bullet/1.png"),
 
-	private BulletType(int value) {
+	TWO("bullet/2.png"),
+
+	THREE("bullet/3.png"),
+
+	FOUR("bullet/4.png"),
+
+	FIVE("bullet/5.png")
+	;
+
+	private  String value;
+
+	BulletType(String value) {
 		this.value = value;
 	}
 
-	public int getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public static BulletType valueOf(int value) {
-		for (BulletType type : BulletType.values()) {
-			if (type.value == value) {
-				return type;
-			}
-		}
-		return null;
-	}
 }
