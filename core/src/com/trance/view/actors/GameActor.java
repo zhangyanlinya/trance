@@ -18,8 +18,8 @@ public abstract class GameActor extends Actor {
 	
 	public float degrees;
 
-	public float hp = 20;
-	public float maxhp = 20;
+	public float hp = 10;
+	public float maxhp = 10;
 	public int atk = 10 ;
 	
 	public boolean alive = true;
