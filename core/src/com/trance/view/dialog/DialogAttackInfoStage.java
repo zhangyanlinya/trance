@@ -43,15 +43,6 @@ public class DialogAttackInfoStage extends BaseStage {
     }
 
     private void init() {
-
-        init = true;
-    }
-    
-    public void show(){
-    	if(!init){
-    		init();
-    	}
-
 		attackInfos = getAttackInfo();
 		StringBuilder sb = new StringBuilder();
 		if(attackInfos != null){
@@ -62,6 +53,13 @@ public class DialogAttackInfoStage extends BaseStage {
 
 		font = FontUtil.getFont();
 		font.appendText(sb.toString());
+        init = true;
+    }
+    
+    public void show(){
+    	if(!init){
+    		init();
+    	}
 
     	this.clear();
     	this.setVisible(true);
