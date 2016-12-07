@@ -46,6 +46,7 @@ import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
 import com.trance.view.controller.GestureController;
 import com.trance.view.dialog.DialogArmyStage;
+import com.trance.view.dialog.DialogAttackInfoStage;
 import com.trance.view.dialog.DialogBuildingStage;
 import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.freefont.FreeBitmapFont;
@@ -93,6 +94,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private Image toTrain;
 	private Image toUpBuilding;
 	private Image toRankUp;
+	private Image toAttackInfo;
 	private Image rename;
 	private boolean init;
 	private TextInputListener listener;
@@ -111,6 +113,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     public DialogArmyStage dialogArmyStage;
     public DialogBuildingStage dialogBuildingStage;
     public DialogRankUpStage dialogRankUpStage;
+    public DialogAttackInfoStage dialogAttackInfoStage;
 
 	private String msg;
 	
@@ -144,7 +147,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		dialogArmyStage = new DialogArmyStage(tranceGame);
 		dialogBuildingStage = new DialogBuildingStage(tranceGame);
 		dialogRankUpStage = new DialogRankUpStage(tranceGame);
-		
+		dialogAttackInfoStage = new DialogAttackInfoStage(tranceGame);
+
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
 		float side = width/8;
@@ -190,7 +194,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				upBuilding();
 			}
 		});
-		
+
 		toRankUp = new Image(ResUtil.getInstance().getUi(UiType.LEVEL));
 		toRankUp.setBounds(side * 4, 0, side, side);
 		toRankUp.addListener(new ClickListener(){
@@ -219,6 +223,16 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				attack();
+			}
+		});
+
+		toAttackInfo = new Image(ResUtil.getInstance().getUi(UiType.LEVEL));
+		toAttackInfo.setBounds(side * 7, 0, side, side);
+		toAttackInfo.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				attackInfo();
 			}
 		});
 	}
@@ -265,6 +279,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			stage.addActor(toTrain);
 			stage.addActor(toUpBuilding);
 			stage.addActor(toRankUp);
+			stage.addActor(toAttackInfo);
 			initHarvist();
 		}else{
 			stage.addActor(toChange);
@@ -408,7 +423,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private void upBuilding(){
 		setBuildingDailog(true);
 	}
-	
+	private void attackInfo(){
+		setAttackInfoDailog(true);
+	}
+
 	private void rankUp(){
 		setRankUpDailog(true);
 	}
@@ -445,6 +463,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(dialogRankUpStage.isVisible()){
 			dialogRankUpStage.act();
 			dialogRankUpStage.draw();
+		}
+		if(dialogAttackInfoStage.isVisible()){
+			dialogAttackInfoStage.act();
+			dialogAttackInfoStage.draw();
 		}
 		super.render(delta);
 	}
@@ -490,7 +512,21 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			inputMultiplexer.removeProcessor(dialogBuildingStage);
 		}
 	}
-	
+
+	public void setAttackInfoDailog(boolean visible) {
+		if(visible){
+			dialogAttackInfoStage.show();
+			inputMultiplexer.addProcessor(dialogAttackInfoStage);
+			inputMultiplexer.removeProcessor(stage);
+			inputMultiplexer.removeProcessor(this);
+		}else{
+			dialogAttackInfoStage.hide();
+			inputMultiplexer.addProcessor(stage);
+			inputMultiplexer.addProcessor(this);
+			inputMultiplexer.removeProcessor(dialogAttackInfoStage);
+		}
+	}
+
 	private void initHarvist(){
 		addHarvist(BuildingType.HOUSE, 0);
 		addHarvist(BuildingType.BARRACKS, 1);

@@ -85,6 +85,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId(this);
 		Player.userName = getDeviceId.getCombinedId();
+		Player.userName ="ddd";
 
 		//
 
@@ -138,6 +139,8 @@ public class AndroidLauncher extends AndroidApplication {
 							tranceGame.mapScreen.setArmyDailog(false);
 						}else if(tranceGame.mapScreen.dialogBuildingStage.isVisible()){
 							tranceGame.mapScreen.setBuildingDailog(false);
+						}else if(tranceGame.mapScreen.dialogAttackInfoStage.isVisible()){
+							tranceGame.mapScreen.setAttackInfoDailog(false);
 						}else if(tranceGame.mapScreen.dialogRankUpStage.isVisible()){
 							tranceGame.mapScreen.setRankUpDailog(false);
 						}else{

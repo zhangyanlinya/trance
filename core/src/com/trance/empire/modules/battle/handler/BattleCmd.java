@@ -17,4 +17,6 @@ public interface BattleCmd {
 	 * @return Map {content: ValueResultSet}	
 	 */
 	int FINISH_BATTLE = 2;
+
+	int GET_ATTACK_INFO =3;
 }

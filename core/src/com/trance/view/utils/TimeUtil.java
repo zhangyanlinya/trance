@@ -19,4 +19,19 @@ public class TimeUtil {
 	public static long getServerTime(){
 		return System.currentTimeMillis() - deltaTime;
 	}
+
+
+	public static String betweenTime(long oldTime){
+		long date = getServerTime() - oldTime;
+		StringBuilder sb = new StringBuilder();
+		long day = date / 86400000;
+		long hour = (date / 3600000 - day * 24);
+		long min = ((date / 60000) - day * 1440 - hour * 60);
+		long s = (date / 1000 - day * 86400 - hour * 3600 - min * 60);
+		sb.append(day).append(":");
+		sb.append(hour).append(":");
+		sb.append(min).append(":");
+		sb.append(s);
+		return sb.toString();
+	}
 }
