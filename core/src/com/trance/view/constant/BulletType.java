@@ -25,4 +25,7 @@ public enum BulletType {
 		return value;
 	}
 
+	public static BulletType valueOf(int index){
+		return BulletType.values()[index];
+	}
 }

@@ -69,7 +69,7 @@ public class Bullet extends GameActor {
 		this.hw = width/2;
 		this.hh = height/2;
 				
-		body = WorldUtils.createBullet(world, x, y,width,height,degrees);
+		body = WorldUtils.createBullet(world, type,  x, y,width,height,degrees);
 		body.setTransform(body.getPosition(), degrees);
 		
 		body.applyLinearImpulse(sin * speed,  cos * speed,

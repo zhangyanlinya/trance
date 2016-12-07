@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.trance.view.constant.BulletType;
 import com.trance.view.screens.GameScreen;
 
 public class WorldUtils {
@@ -78,7 +79,7 @@ public class WorldUtils {
     	return body;
     }
     
-    public static Body createBullet(World world, float x, float y, float width, float height, float rotation) {
+    public static Body createBullet(World world, BulletType type, float x, float y, float width, float height, float rotation) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation  = true;
@@ -95,9 +96,32 @@ public class WorldUtils {
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
-    	f.density = 0.1f;//夹具的密度
+		float density = 0.2f;
+		switch (type){
+			case COMMON:
+				density = 1.0f;
+				break;
+			case ONE:
+				density = 0.3f;
+				break;
+			case TWO:
+				density = 0.4f;
+				break;
+			case THREE:
+				density = 0.5f;
+				break;
+			case FOUR:
+				density = 0.6f;
+				break;
+			case FIVE:
+				density = 0.7f;
+				break;
+			default:
+				break;
+		}
+    	f.density = density;//夹具的密度
     	f.friction = 0f;//夹具的摩擦力
-    	f.restitution = 0.1f;//反弹
+    	f.restitution = 0.8f;//反弹
 		f.filter.categoryBits = 4;
 		f.filter.maskBits = 4;
     	body.createFixture(f);//刚体创建夹具.

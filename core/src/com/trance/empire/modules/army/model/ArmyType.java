@@ -23,7 +23,7 @@ public enum ArmyType {
 	
 	public final int id;
 	
-	private ArmyType(int id) {
+	ArmyType(int id) {
 		this.id = id;
 	}
 	

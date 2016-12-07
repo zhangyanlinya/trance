@@ -32,7 +32,7 @@ public class Army extends GameActor {
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
 	public float speed = 2;
-	public long fireDelay = 1000;
+	public long fireDelay = 2000;
 	
 	private ArmyDto dto;
 	private BitmapFont font;
@@ -62,7 +62,7 @@ public class Army extends GameActor {
 		case TANK:
 			range = 300;
 			atk = 20;
-			fireDelay = 300;
+			fireDelay = 1000;
 			speed = 2;
 			break;
 		case FAT:
@@ -128,7 +128,7 @@ public class Army extends GameActor {
 	private void initAnimation(int armyId){
 		girlRegion = ResUtil.getInstance().getArmyAnimation(armyId);
         //0.06*11=0.66 大概就是1秒钟播放完这个动画。
-        animation = new Animation(0.1f, girlRegion);
+        animation = new Animation(0.5f, girlRegion);
 	}
 	
 	
@@ -171,16 +171,18 @@ public class Army extends GameActor {
 		if( body == null){
 			return;
 		}
-		
-		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(body.getWorld(), BulletType.COMMON, this, getX(), getY(), 0,
-				0);
-		this.getStage().addActor(bullet);
-		
+
 		int id = armyType.id;
 		if(id > 6){
 			id = 6;
 		}
+
+		Bullet bullet = Bullet.bulletPool.obtain();
+		bullet.init(body.getWorld(), BulletType.valueOf(id), this, getX(), getY(), 0,
+				0);
+		this.getStage().addActor(bullet);
+
+
 		Sound sound = ResUtil.getInstance().getSoundFire(id);
 		sound.play();
 	}

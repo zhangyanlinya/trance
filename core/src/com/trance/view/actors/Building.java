@@ -35,7 +35,7 @@ public class Building extends GameActor {
 	private TextureRegion textureRegion;
   	public ShapeRenderer renderer;
 	public float speed = 3;
-	public long fireDelay = 1000;
+	public long fireDelay = 2000;
 	private BitmapFont font;
 	private BuildingDto dto;
 	
@@ -80,12 +80,11 @@ public class Building extends GameActor {
 			break;
 		case BuildingType.ROCKET:
 			range = 700;
-			fireDelay = 2500;
+			fireDelay = 3500;
 			atk = 2;
 			break;
 		case BuildingType.FLAME:
-			range = 100;
-			fireDelay = 200;
+			fireDelay = 1000;
 			atk = 30;
 			break;
 		case BuildingType.GUN:
@@ -184,7 +183,7 @@ public class Building extends GameActor {
 		}
 		
 		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(body.getWorld(), BulletType.ONE, this, getX(), getY(), 0,
+		bullet.init(body.getWorld(), BulletType.valueOf(type - 4), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 		
