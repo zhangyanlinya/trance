@@ -102,19 +102,19 @@ public class WorldUtils {
 				density = 1.0f;
 				break;
 			case ONE:
-				density = 0.3f;
-				break;
-			case TWO:
 				density = 0.4f;
 				break;
-			case THREE:
+			case TWO:
 				density = 0.5f;
 				break;
-			case FOUR:
+			case THREE:
 				density = 0.6f;
 				break;
-			case FIVE:
+			case FOUR:
 				density = 0.7f;
+				break;
+			case FIVE:
+				density = 0.8f;
 				break;
 			default:
 				break;

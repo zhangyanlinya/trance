@@ -3,14 +3,11 @@ package com.trance.view.screens.base;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.view.TranceGame;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
-import com.trance.view.utils.ResUtil;
 
 
 /**
@@ -27,13 +24,7 @@ public abstract class BaseScreen extends ScreenAdapter{
     private FreeBitmapFont basefont;
     public volatile boolean showloading;
 
-    private TextureRegion[] loadingRegion;
-    private float stateTime;
-    //当前帧
-    private TextureRegion currentFrame;
-    private Animation animation;
 
-    private boolean isInit;
 
     /**
      * @param tranceGame
@@ -49,11 +40,6 @@ public abstract class BaseScreen extends ScreenAdapter{
         fontHeight = height / 2;
     }
 
-    private void initAnimation(){
-        loadingRegion = ResUtil.getInstance().getLoadingAnimation();
-        //0.06*11=0.66 大概就是1秒钟播放完这个动画。
-        animation = new Animation(0.5f, loadingRegion);
-    }
 
     public void showMsg(String msg){
         if(msg == null || msg.trim().equals("")){
@@ -65,10 +51,6 @@ public abstract class BaseScreen extends ScreenAdapter{
     }
 
     public void showLoading(){
-        if(!isInit){
-            initAnimation();
-            isInit = true;
-        }
         showloading = true;
     }
 
@@ -84,16 +66,6 @@ public abstract class BaseScreen extends ScreenAdapter{
     @Override
     public void render(float delta) {
         super.render(delta);
-
-//        if(showloading) {
-//            stateTime += delta;
-//            //下一帧
-//            currentFrame = animation.getKeyFrame(stateTime, true);
-//            batch.begin();
-//            batch.draw(currentFrame, width/2 -100, height/2 -100 , 200F, 200F);
-//            batch.end();
-//        }
-
         if (msg != null && !msg.equals("")) {
             batch.begin();
             basefont.draw(batch, msg, width / 2 - 200, fontHeight);
@@ -123,7 +95,6 @@ public abstract class BaseScreen extends ScreenAdapter{
             basefont.dispose();  //TODO 还是要解决掉。
 //        }catch (Exception e){}
         batch.dispose();
-        isInit = false;
         destory = true;
     }
 

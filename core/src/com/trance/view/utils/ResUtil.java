@@ -110,11 +110,6 @@ public class ResUtil extends AssetManager {
     		 load("army/"+type.id + "/zoulu/" + i + ".png", Texture.class);
          }
     	}
-
-		//loading
-		for (int i = 0; i < 4; i++) {
-			load("loading/" + i +".png", Texture.class);
-		}
 	}
 
 	/**
