@@ -85,12 +85,25 @@ public class DialogArmyStage extends BaseStage {
     	ConcurrentMap<Integer, ArmyDto> army_map = Player.player.getArmys();
     	int i = 1;
     	float side = bgImage.getHeight() / armyTrains.size();
+		float wd = bgImage.getWidth()/12;
     	for(final ArmyTrain armyTrain : armyTrains){
 	    	TextureRegion region = ResUtil.getInstance().getArmyTextureRegion(armyTrain.getId());
 	    	final ArmyDto armyDto = army_map.get(armyTrain.getId());
 	    	if(armyDto == null){
 	    		continue;
 	    	}
+
+			int amount = armyDto.getAmout();
+//			if(amount == 0){
+//				amount = 1; //等于0 就附值为1
+//			}
+
+			for(int k = 0; k < amount; k++){
+				Image item = new Image(region);
+				item.setBounds(getWidth()/2 - bgImage.getWidth()/2 + wd * k,  getHeight()/2 + bgImage.getHeight()/2 - side * i , side, side);
+				addActor(item);
+			}
+
 	    	ArmyImage image = new ArmyImage(region,renderer,armyTrain.getPerTime() * 1000 ,armyDto); //按毫秒算
 	    	image.setBounds(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
 	    	addActor(image);
