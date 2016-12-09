@@ -103,7 +103,6 @@ public class Army extends GameActor {
 		
 		ArmyDto dto = Player.player.getArmys().get(armyType.id);
 		if(dto != null && dto.getLevel() > 0){
-//			atk *= dto.getLevel();//等级加成
 			atk *= dto.getLevel();
 		    hp *= dto.getLevel();
 		    maxhp = hp;

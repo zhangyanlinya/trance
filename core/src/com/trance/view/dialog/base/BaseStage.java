@@ -29,8 +29,10 @@ public abstract class BaseStage extends Stage {
 		this.visible = visible;
 	}
 
+	public abstract void show();
+
 	public void hide(){
 		this.visible = false;
 	}
-	
+
 }

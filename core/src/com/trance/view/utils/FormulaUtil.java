@@ -85,7 +85,7 @@ public class FormulaUtil {
 	 * 根据等级获得经验值
 	 */
 	public static int getExpByLevel(int level){
-		String expression = "2*(" + level + "*" + level + " + " + level+ "*2)-6";
+		String expression = "3*(" + level + "*" + level + " + " + level+ "*2)-6";
 		double n = eval(expression);
 		return (int)n;
 	}

@@ -115,6 +115,7 @@ public class MsgUtil {
 			zh_local.put("laud","点赞");
 			zh_local.put("Click Build Image to upgrade","点击建筑图片升级");
 			zh_local.put("looted","掠夺了");
+			zh_local.put("Click on the building to search for enemies","点击建筑搜索敌人");
 		}
 	}
 

@@ -66,6 +66,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 	private float side;
 	private InputMultiplexer inputMultiplexer;
 	private GestureDetector gestureHandler;
+	private String tips = "";
 
 
 	public WorldScreen(TranceGame tranceGame) {
@@ -99,7 +100,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 			init();
 			init = true;
 		}
-		
+
 		inputMultiplexer = new InputMultiplexer();
 		GestureController controller = new GestureController(camera, 0, sw, 0, sh);
 		gestureHandler = new GestureDetector(controller);
@@ -142,6 +143,9 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 
 		font = FreeFont.getBitmapFont("world");
 		font.appendText(sb.toString());
+
+		tips = MsgUtil.getInstance().getLocalMsg("Click on the building to search for enemies");
+		font.appendText(tips);
 
 		camera = new OrthographicCamera(width, height);
 		stage = new Stage(new FillViewport(sw, sh));
@@ -291,7 +295,21 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 							
 							Object pobj = result.get("content");
 							dto = JSON.parseObject(pobj.toString(), PlayerDto.class);
+							dto.setX(ox);
+							dto.setY(oy);
+
+							Object mobj = result.get("map");
+							if (mobj != null) {
+								int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
+								dto.setMap(map);
+							}else{
+								dto.setMap(MapData.clonemap());
+							}
+
 							location.setPlayerDto(dto);
+							font.appendText(dto.getPlayerName());
+							tranceGame.mapScreen.setPlayerDto(dto);
+							tranceGame.setScreen(tranceGame.mapScreen);
 					   }
 					}
 				});
@@ -300,10 +318,10 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 	
 		//Home
 		home = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.HOME));
-		home.setBounds(10, 10, side, side);
+		home.setBounds(20, 10, side, side);
 		
 		fixed = new Image(ResUtil.getInstance().getUi(UiType.FIXED));
-		fixed.setBounds(width - side , 10, side, side);
+		fixed.setBounds(width - side - 20 , 10, side, side);
 		
 		//itembox
 		dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
@@ -350,7 +368,6 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 	private void fixedToLacation() {
 		camera.position.set(sw / 2, sh / 2, 0);
 	}
-	
 
 	@Override
 	public void render(float delatime) {
@@ -360,6 +377,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		spriteBatch.begin();
 		home.draw(spriteBatch, 1);
 		fixed.draw(spriteBatch, 1);
+		font.draw(spriteBatch, tips, side, height - 20f);
 		spriteBatch.end();
 		super.render(delatime);
 	}
@@ -398,9 +416,9 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(screenX < side + 10  && screenY > height - side ){
+		if(screenX < side + 20  && screenY > height - side ){
 			gotoHome();
-		}else if(screenX > width - side  && screenY > height - side ){
+		}else if(screenX > width - side -20  && screenY > height - side ){
 			fixedToLacation();
 		}
 		return false;

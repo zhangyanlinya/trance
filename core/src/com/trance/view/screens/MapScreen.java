@@ -154,7 +154,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		float side = width/8;
 		
 		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
-		toWorld.setBounds(0, 0, side, side);
+		toWorld.setBounds(10, 0, side, side);
 		toWorld.addListener(new ClickListener(){
 			
 			@Override
