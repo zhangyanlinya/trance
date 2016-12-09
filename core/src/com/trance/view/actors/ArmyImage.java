@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.trance.empire.modules.army.model.ArmyDto;
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.TimeUtil;
 
 
@@ -20,14 +22,14 @@ public class ArmyImage extends Image {
 	
 	private ArmyDto armyDto;
 	
-//	private FreeBitmapFont font;
+	private FreeBitmapFont font;
 	
 	public ArmyImage(TextureRegion region, ShapeRenderer shapeRenderer, long needTime, ArmyDto armyDto) {
 		super(region);
 		this.renderer = shapeRenderer;
 		this.needTime = needTime;
 		this.armyDto = armyDto;
-//		this.font = FontUtil.getFont();
+		this.font = FontUtil.getFont();
 	}
 	
 		
@@ -37,10 +39,10 @@ public class ArmyImage extends Image {
 		long expireTime = 0;
 		if(armyDto != null ){
 			expireTime = armyDto.getExpireTime();
-//			batch.begin();
-//			font.draw(batch, "level: " + armyDto.getLevel() +" amount:" + armyDto.getAmout() + " add: " + armyDto.getAddAmount(),
-//					this.getX() + this.getWidth() ,this.getY() +  this.getHeight()/2 + 12 );
-//			batch.end();
+			batch.begin();
+			font.draw(batch, "level: " + armyDto.getLevel(),
+					this.getX() + this.getWidth() ,this.getY() +  this.getHeight()/2 + 12 );
+			batch.end();
 		}
 		
 		long leftTime = expireTime - TimeUtil.getServerTime();

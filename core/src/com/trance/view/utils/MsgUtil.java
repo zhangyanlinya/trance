@@ -116,6 +116,15 @@ public class MsgUtil {
 			zh_local.put("Click Build Image to upgrade","点击建筑图片升级");
 			zh_local.put("looted","掠夺了");
 			zh_local.put("Click on the building to search for enemies","点击建筑搜索敌人");
+
+			zh_local.put("world","世界");
+			zh_local.put("rename","改名");
+			zh_local.put("train","训练");
+			zh_local.put("upgrade","升级");
+			zh_local.put("ranking","排行榜");
+			zh_local.put("attack","攻击");
+			zh_local.put("change","更换");
+			zh_local.put("info","情报");
 		}
 	}
 

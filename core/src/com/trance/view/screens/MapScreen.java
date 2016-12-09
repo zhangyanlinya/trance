@@ -18,7 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -50,6 +52,7 @@ import com.trance.view.dialog.DialogAttackInfoStage;
 import com.trance.view.dialog.DialogBuildingStage;
 import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.textinput.RenameInputListener;
@@ -96,6 +99,16 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private Image toRankUp;
 	private Image toAttackInfo;
 	private Image rename;
+
+	private Label label_world;
+	private Label label_rename;
+	private Label label_train;
+	private Label label_upgrade;
+	private Label label_ranking;
+	private Label label_attack;
+	private Label label_change;
+	private Label label_info;
+
 	private boolean init;
 	private TextInputListener listener;
 	private PlayerDto playerDto;
@@ -152,7 +165,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
 		float side = width/8;
-		
+
+		label_world = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("world"));
+		label_world.setPosition(10 + side/2, side, Align.center);
+
 		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 0, side, side);
 		toWorld.addListener(new ClickListener(){
@@ -162,7 +178,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				toWorld();
 			}
 		});
-		
+
+
+		label_rename = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("rename"));
+		label_rename.setPosition(side * 1 + side/2, side, Align.center);
 		//Rename
 		listener = new RenameInputListener();
 		rename = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.RENAME));
@@ -174,7 +193,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
 			}
 		});
-		
+
+
+		label_train = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("train"));
+		label_train.setPosition(side * 2 + side/2, side, Align.center);
+
 		toTrain = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
 		toTrain.setBounds(side * 2, 0, side, side);
 		toTrain.addListener(new ClickListener(){
@@ -184,7 +207,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				train();
 			}
 		});
-		
+
+
+		label_upgrade = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("upgrade"));
+		label_upgrade.setPosition(side * 3 + side/2, side, Align.center);
+
 		toUpBuilding = new Image(ResUtil.getInstance().getUi(UiType.UPBUILDING));
 		toUpBuilding.setBounds(side * 3, 0, side, side);
 		toUpBuilding.addListener(new ClickListener(){
@@ -195,6 +222,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 		});
 
+
+
+		label_ranking= FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("ranking"));
+		label_ranking.setPosition(side * 4 + side/2, side, Align.center);
+
 		toRankUp = new Image(ResUtil.getInstance().getUi(UiType.LEVEL));
 		toRankUp.setBounds(side * 4, 0, side, side);
 		toRankUp.addListener(new ClickListener(){
@@ -204,7 +236,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				rankUp();
 			}
 		});
-		
+
+		label_change = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("change"));
+		label_change.setPosition(side * 5 + side/2, side, Align.center);
 
 		toChange = new Image(ResUtil.getInstance().getUi(UiType.CHANGE));
 		toChange.setBounds(side * 5, 0, side, side);
@@ -215,7 +249,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				change();
 			}
 		});
-		
+
+		label_attack = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("attack"));
+		label_attack.setPosition(side * 6 + side/2, side, Align.center);
+
 		attack = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.ATTACK));
 		attack.setBounds(side * 6, 0, side, side);
 		attack.addListener(new ClickListener(){
@@ -225,6 +262,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				attack();
 			}
 		});
+
+
+		label_info= FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("info"));
+		label_info.setPosition(side * 7 + side/2, side, Align.center);
 
 		toAttackInfo = new Image(ResUtil.getInstance().getUi(UiType.LEVEL));
 		toAttackInfo.setBounds(side * 7, 0, side, side);
@@ -280,13 +321,24 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			stage.addActor(toUpBuilding);
 			stage.addActor(toRankUp);
 			stage.addActor(toAttackInfo);
+
+
+			stage.addActor(label_rename);
+			stage.addActor(label_train);
+			stage.addActor(label_upgrade);
+			stage.addActor(label_ranking);
+			stage.addActor(label_info);
 			initHarvist();
 		}else{
 			stage.addActor(toChange);
 			stage.addActor(attack);
+
+			stage.addActor(label_change);
+			stage.addActor(label_attack);
 		}
 		initPlayerInfo();
 		stage.addActor(toWorld);
+		stage.addActor(label_world);
 
 		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		camera.position.set(width/2, height/2, 0);
