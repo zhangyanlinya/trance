@@ -5,14 +5,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.trance.android.font.AndroidFreeFont;
 import com.trance.android.util.GetDeviceId;
 import com.trance.empire.modules.player.model.Player;
@@ -32,13 +38,21 @@ public class AndroidLauncher extends AndroidApplication {
 	public TranceGame tranceGame;
 	private boolean isInit;
 
+	// Admob Google test banner
+//	private static final String AD_UNITID ="ca-app-pub-3940256099942544/6300978111";
+
+	//Admob 横屏广告ID(自己的)
+	private static final String AD_UNITID ="ca-app-pub-5713066340300541/1056902518";
+
+	private static AdView adView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
 		String lang = Locale.getDefault().getLanguage();
 		ProgressDialog dialog = new ProgressDialog(this);
@@ -66,11 +80,62 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useCompass = false;		  //禁用罗盘
 //        config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
 		AndroidFreeFont.Strat();//初始化文本
-		initialize(tranceGame, config);
+		View gameView = initializeForView(tranceGame,config);
+		showAD(gameView);
+
 		init();
 	}
 
-		public static Handler handler;
+	/**
+	 * 显示Admob banner
+	 */
+	private void showAD(final View gameView){
+		// Create the layout
+		RelativeLayout layout = new RelativeLayout(this);
+
+        // Create a banner ad
+		adView = new AdView(this);
+		adView.setAdSize(AdSize.BANNER);
+		adView.setAdUnitId(AD_UNITID);
+
+		AdRequest adRequest = new AdRequest.Builder().build();
+
+		// Add the libgdx view
+		layout.addView(gameView);
+
+		// Add the AdMob view
+		RelativeLayout.LayoutParams adParams =
+				new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+						RelativeLayout.LayoutParams.WRAP_CONTENT);
+		adParams.addRule(RelativeLayout.CENTER_HORIZONTAL | RelativeLayout.ALIGN_PARENT_TOP);
+		layout.addView(adView, adParams);
+
+		adView.loadAd(adRequest);
+		setContentView(layout);
+
+		adView.setAdListener(new AdListener() {
+			@Override
+			public void onAdLoaded() {
+				adView.setVisibility(View.GONE);
+				adView.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+
+	@Override
+	protected void onPause() {
+		adView.pause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		adView.resume();
+	}
+
+
+	public static Handler handler;
 
 	/**
 	 * 初始化
@@ -110,6 +175,7 @@ public class AndroidLauncher extends AndroidApplication {
 					break;
 				case 2:
 					dialog.dismiss();
+					adView.setVisibility(View.GONE);
 					break;
 				default:
 					Toast.makeText(reference.get(), msg.obj+"",
@@ -164,6 +230,7 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		adView.destroy();
 		tranceGame.dispose();
 		SocketUtil.destroy();
 		Gdx.app.exit();
