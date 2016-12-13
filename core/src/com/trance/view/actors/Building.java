@@ -110,7 +110,7 @@ public class Building extends GameActor {
 		}
 		body = WorldUtils.createBlock(world, x, y, width, height);
 		body.setUserData(this);
-		
+
 	}
 	
 	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, BitmapFont font, BuildingDto dto){

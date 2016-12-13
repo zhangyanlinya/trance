@@ -61,7 +61,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 	private Image dailyReward;
 	private float sw = 480 * BASE;
 	private float sh = 800 * BASE;
-	public final static Map<String,WorldImage> locations = new HashMap<String,WorldImage>();
+	private final static Map<String,WorldImage> locations = new HashMap<String,WorldImage>();
 	public final static Map<String,PlayerDto> playerDtos = new HashMap<String,PlayerDto>();
 	private float side;
 	private InputMultiplexer inputMultiplexer;

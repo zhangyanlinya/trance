@@ -88,22 +88,22 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	private float height;
 	
 	/** 数组宽数量 */
-	public final static int ARR_WIDTH_SIZE = 16;
+	private final static int ARR_WIDTH_SIZE = 16;
 	/** 数组高数量 */
-	public final static int ARR_HEIGHT_SIZE = 20;
+	private final static int ARR_HEIGHT_SIZE = 20;
 	
 	/** 中间游戏区域的百分比 */
-	public static double percent = 0.9;
+	private static double percent = 0.9;
 	/** 每格的边长 */
-	public static float length = 32;
+	private static float length = 32;
 	/** 游戏区域宽 */
-	public static float game_width = 512;
+	private static float game_width = 512;
 	/** 游戏区域高 */
-	public static float game_height = 832;
+	private static float game_height = 832;
 	/** 菜单区域宽度 */
-	public static float menu_width = 208;
+	private static float menu_width = 208;
 	/** 控制区域高度 */
-	public static float control_height = 368;
+	private static float control_height = 368;
 	
 
     private World world;
@@ -114,12 +114,12 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     public static final float BOX_TO_WORLD = 20f;
     
 //    private Box2DDebugRenderer debugRenderer;
-	
-	public final static Array<GameActor> buildings = new Array<GameActor>();
-	
-	public final static Array<GameActor> armys = new Array<GameActor>();
-	
-	public final static Array<GameActor> connons = new Array<GameActor>();
+
+	private final static Array<GameActor> buildings = new Array<GameActor>();
+
+	private final static Array<GameActor> armys = new Array<GameActor>();
+
+	private final static Array<GameActor> connons = new Array<GameActor>();
 	
 	private final Array<Body> bodies = new Array<Body>();
 	

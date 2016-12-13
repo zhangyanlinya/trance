@@ -71,25 +71,25 @@ import java.util.Map.Entry;
 
 public class MapScreen extends BaseScreen implements InputProcessor {
 
-	public static float menu_width = 0;
-	/** 控制区域高度 */	
-	public int width;
-	public int height;
+	private float menu_width = 0;
+	/** 控制区域高度 */
+	private int width;
+	private int height;
 	/** 数组宽数量 */
-	public final static int ARR_WIDTH_SIZE = 16;
+	private final int ARR_WIDTH_SIZE = 16;
 	/** 数组高数量 */
-	public final static int ARR_HEIGHT_SIZE = 20;
+	private final int ARR_HEIGHT_SIZE = 20;
 	
 	/** 中间游戏区域的百分比 */
-	public final static double percent = 0.9;
+	private final  double percent = 0.9;
 	/** 每格的边长 */
-	public static float length = 45;
+	private  float length = 45;
 	/** 游戏区域宽 */
-	public static float game_width = 720;
+	private float game_width = 720;
 	/** 游戏区域高 */
-	public static float game_height = 900;
+	private float game_height = 900;
 	/** 菜单区域宽度 */
-	public static float control_height = 300;
+	private float control_height = 300;
 	private SpriteBatch spriteBatch;
 	private Image attack;
 	private Image toWorld;
@@ -328,7 +328,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			stage.addActor(label_upgrade);
 			stage.addActor(label_ranking);
 			stage.addActor(label_info);
-			initHarvist();
 		}else{
 			stage.addActor(toChange);
 			stage.addActor(attack);
@@ -579,33 +578,24 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 	}
 
-	private void initHarvist(){
-		addHarvist(BuildingType.HOUSE, 0);
-		addHarvist(BuildingType.BARRACKS, 1);
-	}
-	
-	private void addHarvist(final int buildingId, int index){
-		float side = width / 10;
-		BuildingDto dto = Player.player.getBuildings().get(buildingId);
-		Building buiding = Building.buildingPool.obtain();
-		float x = index * side + length + width/2;
-		float y = control_height - (length * 2 +  length * 2 );
-		buiding.init(null,dto.getId(), x, y, length,length,null, font, dto);
-		stage.addActor(buiding);
-		buiding.addListener( new ClickListener(){
+	private long havistTime; //收割临时时间
 
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				harvist(buildingId);
-			}
-		});
-	}
-	
 	/**
 	 * harvist
 	 * @param buildingId
 	 */
 	private void harvist(int buildingId){
+		if(buildingId != BuildingType.HOUSE && buildingId != BuildingType.BARRACKS){
+			return;
+		}
+
+		long now = System.currentTimeMillis();
+		long diffTime = now - havistTime;
+		if(diffTime <= 100000 ){
+			MsgUtil.getInstance().showMsg(Module.BUILDING, -10005);
+			return;
+		}
+
 		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, buildingId),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
@@ -628,6 +618,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 			Sound sound = ResUtil.getInstance().getSound(5);
 			sound.play();
+			havistTime = System.currentTimeMillis();
 		}
 	}
 	
@@ -662,7 +653,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		for (int i = 0; i < map.length; i++) {
 			float n = map.length - 1 - i;
 			for (int j = 0; j < map[i].length; j++) {
-				int type = map[i][j];
+				final int type = map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				if(i == 0 ){
@@ -753,6 +744,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 		
 		Building b = (Building) actor;
+		handleBuildingOnClick(b.type);
+
 		if(actor.getY() <= control_height - length){//增加
 			BuildingDto dto = playerDto.getBuildings().get(b.type);
 //			updateBuilding(dto);
@@ -767,13 +760,48 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		oldi = b.i;
 		oldj = b.j;
 		oldType = b.type;
-		return true;
+		return false;
+	}
+
+	//各种点击事件
+	private void handleBuildingOnClick(int buildingType){
+		switch (buildingType){
+			case BuildingType.OFFICE:
+
+				break;
+			case BuildingType.HOUSE:
+				harvist(buildingType);
+				break;
+			case BuildingType.BARRACKS:
+				harvist(buildingType);
+				break;
+			case BuildingType.CANNON:
+
+				break;
+			case BuildingType.ROCKET:
+
+				break;
+			case BuildingType.FLAME:
+
+				break;
+			case BuildingType.GUN:
+
+				break;
+			case BuildingType.TOWER:
+
+				break;
+			case BuildingType.MORTAR:
+
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if(a == null){
-			return true;
+			return false;
 		}
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);
 		camera.unproject(vector3); // 坐标转化  
@@ -783,7 +811,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(y < 0){
 			a.setPosition(oldx, oldy);
 			a = null;
-			return true;
+			return false;
 		}
 		
 		Building b = compute(x,y);
@@ -791,7 +819,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //			System.out.println("b = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
 			a = null;
-			return true;
+			return false;
 		}
 		
 		if(oldy <= control_height - length){//增加
@@ -827,7 +855,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			to.append(b.i).append("|").append(b.j).append("|").append(oldType);
 			saveMaptoServer(null,to.toString());
 			a = null;
-			return true;
+			return false;
 		}
 		
 		if(oldType == b.type){
@@ -853,7 +881,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		to.append(a.i).append("|").append(a.j).append("|").append(b.type);
 		saveMaptoServer(from.toString(),to.toString());
 		a = null;
-		return true;
+		return false;
 	}
 	
 	
@@ -865,14 +893,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			float x = vector3.x;
 			float y = vector3.y;
 			if(y < 0){
-				return true;
+				return false;
 			}
 			x = x - a.getWidth()/2;
 			y = y - a.getHeight()/2;
 			a.setTouchable(Touchable.disabled);//不让点中先
 			a.setPosition(x, y);
 		}
-		return true;
+		return false;
 	}
 	
 	/**
