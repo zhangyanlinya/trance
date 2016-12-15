@@ -24,6 +24,7 @@ import com.trance.android.util.GetDeviceId;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.event.BsuEvent;
 import com.trance.view.TranceGame;
+import com.trance.view.screens.GameScreen;
 import com.trance.view.screens.LoginScreen;
 import com.trance.view.screens.WorldScreen;
 import com.trance.view.screens.base.BaseScreen;
@@ -150,7 +151,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId(this);
 		Player.userName = getDeviceId.getCombinedId();
-//		Player.userName ="ddd";
+//		Player.userName ="and3";
 
 		//
 
@@ -211,6 +212,7 @@ public class AndroidLauncher extends AndroidApplication {
 							tranceGame.mapScreen.setRankUpDailog(false);
 						}else{
 							tranceGame.setScreen(tranceGame.worldScreen);
+							GameScreen.finishBattle(false);
 						}
 					}
 				});

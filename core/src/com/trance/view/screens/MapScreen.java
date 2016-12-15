@@ -767,31 +767,17 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private void handleBuildingOnClick(int buildingType){
 		switch (buildingType){
 			case BuildingType.OFFICE:
+			case BuildingType.CANNON:
+			case BuildingType.ROCKET:
+			case BuildingType.FLAME:
+			case BuildingType.GUN:
+			case BuildingType.TOWER:
+			case BuildingType.MORTAR:
+				break;
 
-				break;
 			case BuildingType.HOUSE:
-				harvist(buildingType);
-				break;
 			case BuildingType.BARRACKS:
 				harvist(buildingType);
-				break;
-			case BuildingType.CANNON:
-
-				break;
-			case BuildingType.ROCKET:
-
-				break;
-			case BuildingType.FLAME:
-
-				break;
-			case BuildingType.GUN:
-
-				break;
-			case BuildingType.TOWER:
-
-				break;
-			case BuildingType.MORTAR:
-
 				break;
 			default:
 				break;

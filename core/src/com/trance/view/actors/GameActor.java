@@ -33,6 +33,8 @@ public abstract class GameActor extends Actor {
 	public float hh;
 	
 	public boolean firing;
+
+	public boolean face = true;
 	
 	
 	public void init(float x, float y, float width,
@@ -73,7 +75,9 @@ public abstract class GameActor extends Actor {
 		degrees = -MathUtils.atan2(disX, disY);
 		vx = -MathUtils.sin(degrees);
 		vy =  MathUtils.cos(degrees);
-		setRotation(degrees * MathUtils.radiansToDegrees);
+		if(face) {
+			setRotation(degrees * MathUtils.radiansToDegrees);
+		}
 	}
 
 	public float dst(float x, float y) {
@@ -104,7 +108,7 @@ public abstract class GameActor extends Actor {
 		}
 		
 		if(camp == 2){
-			faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
+			faceTo(dest.getX() + dest.getWidth() / 2, dest.getY() + dest.getHeight() / 2);
 			if(min < range){
 				stop();
 				fire();
@@ -114,7 +118,7 @@ public abstract class GameActor extends Actor {
 			}
 		}else{
 			if(min < range){
-				faceTo(dest.getX() + dest.getWidth()/2, dest.getY() + dest.getHeight()/2);
+				faceTo(dest.getX() + dest.getWidth() / 2, dest.getY() + dest.getHeight() / 2);
 				fire();
 				firing = true;
 			}else{

@@ -67,7 +67,7 @@ public class Building extends GameActor {
 		
 		switch(type){
 		case BuildingType.OFFICE:
-			hp = 100; 
+			hp = 40;
 			break;
 		case BuildingType.HOUSE:
 			break;
@@ -75,8 +75,7 @@ public class Building extends GameActor {
 			break;
 		case BuildingType.CANNON:
 			range = 400;
-			fireDelay = 300;
-			atk = 20;
+			fireDelay = 800;
 			break;
 		case BuildingType.ROCKET:
 			range = 700;
@@ -93,6 +92,7 @@ public class Building extends GameActor {
 			range = 250;
 			break;
 		case BuildingType.MORTAR:
+			face = false;
 			break;
 		
 		}

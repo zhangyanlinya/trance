@@ -115,7 +115,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     
 //    private Box2DDebugRenderer debugRenderer;
 
-	private final static Array<GameActor> buildings = new Array<GameActor>();
+	public final static Array<GameActor> buildings = new Array<GameActor>();
 
 	private final static Array<GameActor> armys = new Array<GameActor>();
 

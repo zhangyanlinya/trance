@@ -67,11 +67,11 @@ public class Army extends GameActor {
 			break;
 		case FAT:
 			range = 100;
-			hp = 100;
+			hp = 50;
 			break;
 		case SISTER:
 			range = 500;
-			hp = 50;
+			hp = 30;
 			speed = 1;
 			break;
 		case FOOT:
@@ -88,7 +88,7 @@ public class Army extends GameActor {
 			move = false;
 			break;
 		case SEVEN:
-			hp = 100;
+			hp = 40;
 			break;
 		case EIGHT:
 			speed = 4;

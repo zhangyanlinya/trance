@@ -20,8 +20,13 @@ public class GetDeviceId {
 	//cc 1 The IMEI
 	//only useful for Android Phone(android.permission.READ_PHONE_STATE in Manifest)
 	public String getIMEI(){
-		TelephonyManager TelephonyMgr = (TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE); 
-		String szImei = TelephonyMgr.getDeviceId();
+		String szImei;
+		try {
+			TelephonyManager TelephonyMgr = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+			szImei = TelephonyMgr.getDeviceId();
+		}catch (Exception e){
+			szImei ="";
+		}
 		return szImei; 
 	}
 	
