@@ -27,7 +27,6 @@ import com.trance.view.TranceGame;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.screens.LoginScreen;
 import com.trance.view.screens.WorldScreen;
-import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.SocketUtil;
 
 import java.lang.ref.WeakReference;
@@ -199,9 +198,6 @@ public class AndroidLauncher extends AndroidApplication {
 
 					@Override
 					public void run() {
-						if(((BaseScreen)tranceGame.getScreen()).showloading){
-							return;
-						}
 						if(tranceGame.mapScreen.dialogArmyStage.isVisible()){
 							tranceGame.mapScreen.setArmyDailog(false);
 						}else if(tranceGame.mapScreen.dialogBuildingStage.isVisible()){

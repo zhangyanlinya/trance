@@ -57,15 +57,6 @@ public class TranceGame extends Game {
 	}
 
 
-	public void showLoading(){
-		((BaseScreen)this.getScreen()).showLoading();
-	}
-
-	public void hideLoading(){
-		((BaseScreen)this.getScreen()).hideLoading();
-	}
-
-
 	@Override
 	public void dispose() {
 		loginScreen.dispose();

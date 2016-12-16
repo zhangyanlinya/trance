@@ -112,18 +112,6 @@ public class LoginScreen extends BaseScreen {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
-	@Override
-	public void showLoading() {
-		super.showLoading();
-		inputMultiplexer.clear();
-	}
-
-	@Override
-	public void hideLoading() {
-		super.hideLoading();
-		inputMultiplexer.addProcessor(stage);
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
 
 	@Override
 	public void show() {

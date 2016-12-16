@@ -176,18 +176,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
-	@Override
-	public void showLoading() {
-		super.showLoading();
-		inputMultiplexer.clear();
-	}
 
-	@Override
-	public void hideLoading() {
-		super.hideLoading();
-		initInputProcessor();
-	}
-	
 	private void init(){
 		spriteBatch = new SpriteBatch();
 //		font = FontUtil.getFont();

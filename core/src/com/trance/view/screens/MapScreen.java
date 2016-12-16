@@ -355,25 +355,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
-	@Override
-	public void showLoading() {
-		super.showLoading();
-		inputMultiplexer.clear();
-	}
-
-	@Override
-	public void hideLoading() {
-		super.hideLoading();
-		initInputProcessor();
-		if(dialogArmyStage.isVisible()){
-			setArmyDailog(true);
-		}else if(dialogBuildingStage.isVisible()){
-			setBuildingDailog(true);
-		}else if(dialogRankUpStage.isVisible()){
-			setRankUpDailog(true);
-		}
-	}
-
 
 	/**
 	 *  地图是否可编辑
@@ -578,7 +559,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 	}
 
-	private long havistTime; //收割临时时间
+	private long huoseTime; //收割临时时间
+	private long barracksTime; //收割临时时间
 
 	/**
 	 * harvist
@@ -590,7 +572,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 
 		long now = System.currentTimeMillis();
-		long diffTime = now - havistTime;
+		long diffTime = 0;
+		if(buildingId == BuildingType.HOUSE){
+			diffTime = now - huoseTime;
+		}else{
+			diffTime = now - barracksTime;
+		}
+
 		if(diffTime <= 100000 ){
 			MsgUtil.getInstance().showMsg(Module.BUILDING, -10005);
 			return;
@@ -618,7 +606,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 			Sound sound = ResUtil.getInstance().getSound(5);
 			sound.play();
-			havistTime = System.currentTimeMillis();
+
+			if(buildingId == BuildingType.HOUSE){
+				huoseTime = System.currentTimeMillis();
+			}else{
+				barracksTime = now - barracksTime;
+			}
 		}
 	}
 	

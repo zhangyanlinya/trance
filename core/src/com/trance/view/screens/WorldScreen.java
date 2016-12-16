@@ -115,18 +115,6 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 
 	}
 
-	@Override
-	public void showLoading() {
-		super.showLoading();
-		inputMultiplexer.clear();
-	}
-
-	@Override
-	public void hideLoading() {
-		super.hideLoading();
-		initInputProcessor();
-	}
-	
 	private void init(){
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();

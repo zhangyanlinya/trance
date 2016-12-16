@@ -22,7 +22,6 @@ public abstract class BaseScreen extends ScreenAdapter{
     private Batch batch;
     private String msg;
     private FreeBitmapFont basefont;
-    public volatile boolean showloading;
 
 
 
@@ -48,14 +47,6 @@ public abstract class BaseScreen extends ScreenAdapter{
         this.msg = msg;
         basefont.appendText(msg);
         showTime = System.currentTimeMillis();
-    }
-
-    public void showLoading(){
-        showloading = true;
-    }
-
-    public void hideLoading(){
-        showloading = false;
     }
 
 
