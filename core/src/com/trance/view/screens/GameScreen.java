@@ -184,6 +184,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		height = Gdx.graphics.getHeight(); // 1200
 		font = FontUtil.getFont();
 		font.appendText(MsgUtil.getInstance().getLocalMsg("laud"));
+		font.appendText(MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"));
 		stage = new Stage(new FillViewport(width * 2, height * 2));
 
 		CELL_LENGHT = width / 10;
@@ -494,6 +495,15 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			i ++;
 		}
 	}
+
+	private void renderBattleArea(SpriteBatch batch){
+		shapeRenderer.setColor(Color.GREEN);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.rect(4, length, width - 8, control_height - length * 2);
+		shapeRenderer.end();
+
+		font.draw(batch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"), 4, control_height - length * 2 - 10);
+	}
 	
 	@Override
 	public void render(float delta) {
@@ -514,10 +524,18 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		
 		spriteBatch.begin();
 		renderKeepArmys(spriteBatch);
+//		renderBattleArea(spriteBatch);
 		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
+		font.draw(spriteBatch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"), 24, control_height - length * 2 - 10);
 		spriteBatch.end();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
+
+		shapeRenderer.setColor(Color.GREEN);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.rect(20, length * 2, width - 40, control_height - length * 4);
+		shapeRenderer.end();
+
 		checkGameOver();
 		
 		//box2d
