@@ -496,15 +496,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 	}
 
-	private void renderBattleArea(SpriteBatch batch){
-		shapeRenderer.setColor(Color.GREEN);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.rect(4, length, width - 8, control_height - length * 2);
-		shapeRenderer.end();
 
-		font.draw(batch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"), 4, control_height - length * 2 - 10);
-	}
-	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -524,7 +516,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		
 		spriteBatch.begin();
 		renderKeepArmys(spriteBatch);
-//		renderBattleArea(spriteBatch);
 		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
 		font.draw(spriteBatch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"), 24, control_height - length * 2 - 10);
 		spriteBatch.end();
