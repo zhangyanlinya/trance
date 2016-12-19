@@ -1,6 +1,5 @@
 package com.trance.view.actors;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -27,12 +26,12 @@ import com.trance.view.utils.WorldUtils;
 public class Army extends GameActor {
 	
 	public final static Pool<Army> armyPool = new ArmyPool();
-	public Body body;
+	private Body body;
 	public ArmyType armyType;
 	private TextureRegion textureRegion;
-  	public ShapeRenderer renderer;
-	public float speed = 2;
-	public long fireDelay = 2000;
+  	private ShapeRenderer renderer;
+	private float speed = 2;
+	private long fireDelay = 2000;
 	
 	private ArmyDto dto;
 	private BitmapFont font;
@@ -53,7 +52,8 @@ public class Army extends GameActor {
 		this.camp = 2;
 		this.hp = maxhp;
 		this.degrees = 0;
-		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyType.id);
+//		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyType.id);
+		textureRegion = ResUtil.getInstance().getBuildingTextureRegion(armyType.id);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
@@ -63,7 +63,6 @@ public class Army extends GameActor {
 			range = 300;
 			atk = 20;
 			fireDelay = 1000;
-			speed = 2;
 			break;
 		case FAT:
 			range = 100;
@@ -80,7 +79,7 @@ public class Army extends GameActor {
 		case FIVE:
 			fireDelay = 4000;
 			atk = 50;
-			speed = 0.5f;
+			speed = 1f;
 			break;
 		case SIX:
 			range = 800;
@@ -188,12 +187,12 @@ public class Army extends GameActor {
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		stateTime += Gdx.graphics.getDeltaTime();
+//		stateTime += Gdx.graphics.getDeltaTime();
         //下一帧
-        currentFrame = animation.getKeyFrame(stateTime, true);
-		batch.draw(currentFrame, getX(), getY(), hw,
+//        currentFrame = animation.getKeyFrame(stateTime, true);
+		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
-				getScaleY(), 0);
+				getScaleY(), getRotation());
 		
 		if(dto != null){
 			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());

@@ -29,6 +29,9 @@ public class Bullet extends GameActor {
 	
 	//纹理区域
 	private TextureRegion textureRegion;
+
+	private long createTime;//生成时间
+	private long liveTime = 5000L;//存活时间
 	
 	public final static Pool<Bullet> bulletPool = new BulletPool();
 	
@@ -76,7 +79,8 @@ public class Bullet extends GameActor {
 				body.getWorldCenter().x, body.getWorldCenter().y, true);
 //		body.setLinearVelocity(sin * speed,  cos * speed);
 		body.setUserData(this);
-			
+
+		createTime = System.currentTimeMillis();
 	}
 	
 	@Override
@@ -89,6 +93,15 @@ public class Bullet extends GameActor {
 				getScaleY(), getRotation());
 		
 		if(outofRange(x,y)){ // out of range
+			dead();
+		}
+
+		checkFireTime();
+	}
+
+	private void checkFireTime(){
+		long now  = System.currentTimeMillis();
+		if(now - createTime > liveTime){//到时间了
 			dead();
 		}
 	}

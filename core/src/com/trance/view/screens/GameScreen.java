@@ -190,7 +190,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
-//		debugRenderer = new Box2DDebugRenderer(); 
+//		debugRenderer = new Box2DDebugRenderer();
 		stage.getViewport().setCamera(camera);
 		
 		
@@ -253,7 +253,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			}
 			
 			dto.setGo(false);
-			dto.setRegion(ResUtil.getInstance().getArmyTextureRegion(dto.getId()));
+			dto.setRegion(ResUtil.getInstance().getBuildingTextureRegion(dto.getId()));
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
@@ -262,7 +262,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	
 	public static void finishBattle(boolean win){
 		if(finishBattle || !gobattle){
-			System.out.println("无派出 ：已结算");
+//			System.out.println("无派出 ：已结算");
 			return;
 		}
 		
@@ -416,25 +416,25 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			return;
 		}
 		
-		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-		float w = bg.getWidth();
-		float h = bg.getHeight();
-		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
-				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-				bg.setPosition(x, y);
-				stage.addActor(bg);
-			}
-		}
-		
-		for(int i = 0 ; i < 5; i ++){
-			int index = RandomUtil.nextInt(4) + 1;
-			int x = RandomUtil.nextInt((int)width);
-			int y = RandomUtil.nextInt((int)height);
-			Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
-			grass.setPosition(x, y);
-			stage.addActor(grass);
-		}
+//		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+//		float w = bg.getWidth();
+//		float h = bg.getHeight();
+//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+//			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
+//				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+//				bg.setPosition(x, y);
+//				stage.addActor(bg);
+//			}
+//		}
+//
+//		for(int i = 0 ; i < 5; i ++){
+//			int index = RandomUtil.nextInt(4) + 1;
+//			int x = RandomUtil.nextInt((int)width);
+//			int y = RandomUtil.nextInt((int)height);
+//			Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
+//			grass.setPosition(x, y);
+//			stage.addActor(grass);
+//		}
 		
 		
 		
@@ -573,7 +573,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         Body bodyB = fb.getBody();
         GameActor a =(GameActor) bodyA.getUserData();
         GameActor b =(GameActor) bodyB.getUserData();
-        if(a == null &&  b== null){
+        if(a == null &&  b == null){
         	return;
         }
         if(a != null && b == null){

@@ -61,7 +61,7 @@ public class WorldUtils {
     }
     public static Body createBlock(World world, float x, float y, float width, float height) {
     	BodyDef bodyDef = new BodyDef();
-    	bodyDef.type = BodyType.StaticBody;
+    	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation = true;
 //    	bodyDef.linearDamping = 1f;
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
@@ -72,8 +72,8 @@ public class WorldUtils {
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
     	f.density = 2f;//夹具的密度
-    	f.friction = 1f;//夹具的摩擦力
-    	f.restitution = 0f; //弹力
+    	f.friction = 0.9f;//夹具的摩擦力
+    	f.restitution = 1f; //弹力
     	body.createFixture(f);//刚体创建夹具.
     	shape.dispose();
     	return body;
