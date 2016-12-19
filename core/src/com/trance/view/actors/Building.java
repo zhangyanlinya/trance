@@ -89,6 +89,7 @@ public class Building extends GameActor {
 		case BuildingType.GUN:
 			break;
 		case BuildingType.TOWER:
+			face = false;
 			range = 250;
 			break;
 		case BuildingType.MORTAR:
