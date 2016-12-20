@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
@@ -208,7 +207,7 @@ public class Building extends GameActor {
 			float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
 			float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
 			this.setPosition(x, y);
-			this.setRotation(MathUtils.radiansToDegrees * body.getAngle());
+//			this.setRotation(MathUtils.radiansToDegrees * body.getAngle());
 			batch.draw(textureRegion, x, y, hw,
 					hh, getWidth(), getHeight(), getScaleX(),
 					getScaleY(), getRotation());

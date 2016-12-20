@@ -63,7 +63,7 @@ public class WorldUtils {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation = true;
-//    	bodyDef.linearDamping = 1f;
+    	bodyDef.linearDamping = 2f;
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	CircleShape shape = new CircleShape();
 //    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
@@ -71,9 +71,9 @@ public class WorldUtils {
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
-    	f.density = 2f;//夹具的密度
+    	f.density = 5.0f;//夹具的密度
     	f.friction = 0.9f;//夹具的摩擦力
-    	f.restitution = 1f; //弹力
+    	f.restitution = 0.9f; //弹力
     	body.createFixture(f);//刚体创建夹具.
     	shape.dispose();
     	return body;
@@ -83,6 +83,7 @@ public class WorldUtils {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation  = true;
+		bodyDef.linearDamping = 1f;
 //    	bodyDef.bullet = true;
 //    	PolygonShape shape = new PolygonShape();
     	CircleShape shape = new CircleShape();
@@ -121,7 +122,7 @@ public class WorldUtils {
 		}
     	f.density = density;//夹具的密度
     	f.friction = 0f;//夹具的摩擦力
-    	f.restitution = 0.8f;//反弹
+    	f.restitution = 0.9f;//反弹
 		f.filter.categoryBits = 4;
 		f.filter.maskBits = 4;
     	body.createFixture(f);//刚体创建夹具.
@@ -142,9 +143,9 @@ public class WorldUtils {
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
-    	f.density = 2f;//夹具的密度
-    	f.friction = 1f;//夹具的摩擦力
-    	f.restitution = 0f; //弹力
+    	f.density = 0.1f;//夹具的密度
+    	f.friction = 0.1f;//夹具的摩擦力
+    	f.restitution = 1.0f; //弹力
     	body.createFixture(f);//刚体创建夹具.
     	shape.dispose();
     	return body;

@@ -31,7 +31,7 @@ public class Bullet extends GameActor {
 	private TextureRegion textureRegion;
 
 	private long createTime;//生成时间
-	private long liveTime = 5000L;//存活时间
+	private long liveTime = 3000L;//存活时间
 	
 	public final static Pool<Bullet> bulletPool = new BulletPool();
 	

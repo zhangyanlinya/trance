@@ -6,13 +6,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.trance.empire.modules.army.model.ArmyType;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResUtil extends AssetManager {
 	
@@ -90,7 +86,7 @@ public class ResUtil extends AssetManager {
     	load("world/stone1.png", Texture.class);
     	load("world/stone2.png", Texture.class);
     	
-    	initAnimation();
+//    	initAnimation();
     	
     	ininSound();
     }
@@ -104,13 +100,13 @@ public class ResUtil extends AssetManager {
     	return this.get(uiType.getVlaue(),Texture.class);
     }
     
-    private void initAnimation() {
-    	for(ArmyType type : ArmyType.values()){
-    	 for (int i = 0; i < 6; i++) {
-    		 load("army/"+type.id + "/zoulu/" + i + ".png", Texture.class);
-         }
-    	}
-	}
+//    private void initAnimation() {
+//    	for(ArmyType type : ArmyType.values()){
+//    	 for (int i = 0; i < 6; i++) {
+//    		 load("army/"+type.id + "/zoulu/" + i + ".png", Texture.class);
+//         }
+//    	}
+//	}
 
 	/**
 	 * sound
@@ -142,45 +138,29 @@ public class ResUtil extends AssetManager {
 		return new TextureRegion(this.get("army/"+armyId+"/zoulu/0.png",Texture.class));
 	}
 	
-	private Map<Integer, TextureRegion[]> armyAnimations = new HashMap<Integer, TextureRegion[]>();
+//	private Map<Integer, TextureRegion[]> armyAnimations = new HashMap<Integer, TextureRegion[]>();
 	
-	public TextureRegion[] getArmyAnimation(int armyId) {
-		TextureRegion[] regions = armyAnimations.get(armyId);
-		if(regions != null && regions.length > 0){
-			return regions;
-		}
-		
-		regions = new TextureRegion[6];
-        //把Texture转换下
-        for (int i = 0; i < 6; i++) {
-        	Texture animation = this.get("army/"+armyId+"/zoulu/"+i+".png", Texture.class);
-        	regions[i] = new TextureRegion(animation);
-        }
-        armyAnimations.put(armyId, regions);
-		return regions;
-	}
+//	public TextureRegion[] getArmyAnimation(int armyId) {
+//		TextureRegion[] regions = armyAnimations.get(armyId);
+//		if(regions != null && regions.length > 0){
+//			return regions;
+//		}
+//
+//		regions = new TextureRegion[6];
+//        //把Texture转换下
+//        for (int i = 0; i < 6; i++) {
+//        	Texture animation = this.get("army/"+armyId+"/zoulu/"+i+".png", Texture.class);
+//        	regions[i] = new TextureRegion(animation);
+//        }
+//        armyAnimations.put(armyId, regions);
+//		return regions;
+//	}
     
     public TextureRegion getBulletTextureRegion(BulletType type) {
     	Texture texture = get(type.getValue(), Texture.class);
     	TextureRegion textureRegion = new TextureRegion(texture);
         return textureRegion;
     }
-
-	private TextureRegion[] loadingAnimation;
-
-	public TextureRegion[] getLoadingAnimation(){
-		if(loadingAnimation != null && loadingAnimation.length > 0){
-			return loadingAnimation;
-		}
-
-		loadingAnimation = new TextureRegion[4];
-		for(int i = 0; i < 4 ; i++){
-			Texture animation = this.get("loading/"+i+".png", Texture.class);
-			TextureRegion region = new TextureRegion(animation);
-			loadingAnimation[i] = region;
-		}
-		return loadingAnimation;
-	}
 
     
     public Texture getControlTextureRegion(ControlType value) {
@@ -211,7 +191,6 @@ public class ResUtil extends AssetManager {
 
     public void dispose() {
     	super.dispose();
-    	armyAnimations.clear();
-		loadingAnimation = null;
+//    	armyAnimations.clear();
     }
 }

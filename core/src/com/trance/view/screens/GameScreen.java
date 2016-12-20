@@ -380,7 +380,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			}
 		});
         
-//        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
+        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
     }
 	
 	private void initClock() {
@@ -416,25 +416,25 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			return;
 		}
 		
-//		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-//		float w = bg.getWidth();
-//		float h = bg.getHeight();
-//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-//			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
-//				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-//				bg.setPosition(x, y);
-//				stage.addActor(bg);
-//			}
-//		}
-//
-//		for(int i = 0 ; i < 5; i ++){
-//			int index = RandomUtil.nextInt(4) + 1;
-//			int x = RandomUtil.nextInt((int)width);
-//			int y = RandomUtil.nextInt((int)height);
-//			Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
-//			grass.setPosition(x, y);
-//			stage.addActor(grass);
-//		}
+		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
+				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
+
+		for(int i = 0 ; i < 5; i ++){
+			int index = RandomUtil.nextInt(4) + 1;
+			int x = RandomUtil.nextInt((int)width);
+			int y = RandomUtil.nextInt((int)height);
+			Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
+			grass.setPosition(x, y);
+			stage.addActor(grass);
+		}
 		
 		
 		
@@ -525,6 +525,11 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		shapeRenderer.setColor(Color.GREEN);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.rect(20, length * 2, width - 40, control_height - length * 4);
+
+		ArmyDto amryDto = Player.player.getArmys().get(chooseArmyId);
+		Rectangle rect = amryDto.getRect();
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.rect(rect.getX() ,rect.getY(), rect.getWidth(),rect.getHeight());
 		shapeRenderer.end();
 
 		checkGameOver();
@@ -578,13 +583,13 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         }
         if(a != null && b == null){
            if(a.role == 1){
-        	   a.dead();
+//        	   a.dead();
            }
            return;
         }
         if(a == null && b != null){
         	if(b.role == 1){
-        		b.dead();
+//        		b.dead();
         	}
         	return;
         }
@@ -604,10 +609,10 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         }
         
         if(a.role == 1){
-     	   a.dead();
+//     	   a.dead();
         }
         if(b.role == 1){
-    		b.dead();
+//    		b.dead();
     	}
     }
 	
