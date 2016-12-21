@@ -27,6 +27,7 @@ import com.trance.view.TranceGame;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.screens.LoginScreen;
 import com.trance.view.screens.WorldScreen;
+import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.SocketUtil;
 
 import java.lang.ref.WeakReference;
@@ -150,7 +151,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId(this);
 		Player.userName = getDeviceId.getCombinedId();
-		Player.userName ="i'm king";
+		Player.userName ="TARA";
 
 		//
 
@@ -218,7 +219,7 @@ public class AndroidLauncher extends AndroidApplication {
 		long now = System.currentTimeMillis();
 		if(time <= 0 || (now - time) > 2000){
 			this.time = now;
-			Toast.makeText(this, "再按一次退出游戏", Toast.LENGTH_SHORT)
+			Toast.makeText(this, MsgUtil.getInstance().getLocalMsg("Press again to exit the game"), Toast.LENGTH_SHORT)
 					.show();
 			return;
 		}

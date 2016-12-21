@@ -103,6 +103,7 @@ public class MsgUtil {
 			zh_local.put("Reconnect the server successfully", "重新连接服务器成功");
 			zh_local.put("Connection to server failed", "连接服务器失败！");
 			zh_local.put("please login again", "请重新登录");
+			zh_local.put("Press again to exit the game", "再按一次退出游戏");
 
 			//
 			zh_local.put("gold","金币");

@@ -253,7 +253,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			}
 			
 			dto.setGo(false);
-			dto.setRegion(ResUtil.getInstance().getBuildingTextureRegion(dto.getId()));
+			dto.setRegion(ResUtil.getInstance().getArmyTextureRegion(dto.getId()));
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
@@ -528,8 +528,10 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 		ArmyDto amryDto = Player.player.getArmys().get(chooseArmyId);
 		Rectangle rect = amryDto.getRect();
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.rect(rect.getX() ,rect.getY(), rect.getWidth(),rect.getHeight());
+		if(rect != null) {
+			shapeRenderer.setColor(Color.RED);
+			shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+		}
 		shapeRenderer.end();
 
 		checkGameOver();
@@ -597,9 +599,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         if(a.role != b.role){//角色不一样
 			if (a.camp != b.camp) {//敌对的
 				if (a.role == 1) {
-					b.byAttack(a);
+//					b.byAttack(a);
 				} else {
-					a.byAttack(b);
+//					a.byAttack(b);
 				}
 			}
         }

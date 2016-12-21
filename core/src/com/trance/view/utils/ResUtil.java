@@ -24,21 +24,19 @@ public class ResUtil extends AssetManager {
 	
     public void init() { 
 //    	Texture.setEnforcePotImages(false);//模拟器调试必须加上
-    	load("building/1.png", Texture.class);
-    	load("building/2.png", Texture.class);
-    	load("building/3.png", Texture.class);
-    	load("building/4.png", Texture.class);
-    	load("building/5.png", Texture.class);
-    	load("building/6.png", Texture.class);
-    	load("building/7.png", Texture.class);
-    	load("building/8.png", Texture.class);
-    	load("building/9.png", Texture.class);
+		loadBuilding();
+		//army
+		load("army/1.png", Texture.class);
+		load("army/2.png", Texture.class);
+		load("army/3.png", Texture.class);
+		load("army/8.png", Texture.class);
+		load("army/9.png", Texture.class);
+
+		//ui
     	load("ui/attack.png", Texture.class);
     	load("ui/to_world.png", Texture.class);
     	load("ui/to_home.png", Texture.class);
     	load("ui/rename.png", Texture.class);
-    	
-    	//UI
        	load("ui/level.png", Texture.class);
        	load("ui/gold.png", Texture.class);
        	load("ui/foods.png", Texture.class);
@@ -53,12 +51,7 @@ public class ResUtil extends AssetManager {
        	load("ui/fixed.png", Texture.class);
 
 		//Bullet
-		load("bullet/0.png", Texture.class);
-		load("bullet/1.png", Texture.class);
-		load("bullet/2.png", Texture.class);
-		load("bullet/3.png", Texture.class);
-		load("bullet/4.png", Texture.class);
-		load("bullet/5.png", Texture.class);
+		loadBullet();
 
     	load("world/me1.png", Texture.class);
     	load("world/me2.png", Texture.class);
@@ -87,9 +80,21 @@ public class ResUtil extends AssetManager {
     	load("world/stone2.png", Texture.class);
     	
 //    	initAnimation();
-    	
-    	ininSound();
+
+		loadSound();
     }
+
+	private void loadBuilding(){
+		for(int i = 1; i < 10; i++){
+			load("building/" + i +".png", Texture.class);
+		}
+	}
+
+	private void loadBullet(){
+		for(int i = 1; i < 8; i++){
+			load("bullet/" + i +".png", Texture.class);
+		}
+	}
     
     /**
      * 获得UI
@@ -111,7 +116,7 @@ public class ResUtil extends AssetManager {
 	/**
 	 * sound
      */
-    private void ininSound() {
+    private void loadSound() {
     	for(int i = 0 ; i < 10; i++)
     		load("audio/" + i + ".ogg", Sound.class);
     	
@@ -135,7 +140,10 @@ public class ResUtil extends AssetManager {
 	}
 	
 	public TextureRegion getArmyTextureRegion(int armyId) {
-		return new TextureRegion(this.get("army/"+armyId+"/zoulu/0.png",Texture.class));
+		if(armyId > 3 && armyId < 8){
+			return new TextureRegion(this.get("building/"+armyId+".png",Texture.class));
+		}
+		return new TextureRegion(this.get("army/"+armyId+".png",Texture.class));
 	}
 	
 //	private Map<Integer, TextureRegion[]> armyAnimations = new HashMap<Integer, TextureRegion[]>();

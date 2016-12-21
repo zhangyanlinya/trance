@@ -2,7 +2,6 @@ package com.trance.view.actors;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -36,11 +35,11 @@ public class Army extends GameActor {
 	private ArmyDto dto;
 	private BitmapFont font;
 	
-	private TextureRegion[] girlRegion;
-    private float stateTime;
-    //当前帧
-    private TextureRegion currentFrame;
-    private Animation animation;
+//	  private TextureRegion[] girlRegion;
+//    private float stateTime;
+//    //当前帧
+//    private TextureRegion currentFrame;
+//    private Animation animation;
 	
 	
 	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer){
@@ -52,21 +51,20 @@ public class Army extends GameActor {
 		this.camp = 2;
 		this.hp = maxhp;
 		this.degrees = 0;
-//		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyType.id);
-		textureRegion = ResUtil.getInstance().getBuildingTextureRegion(armyType.id);
+		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyType.id);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
 		}
 		switch(armyType){
 		case TANK:
+			range = 160;
+			hp = 50;
+			break;
+		case FAT:
 			range = 300;
 			atk = 20;
 			fireDelay = 1000;
-			break;
-		case FAT:
-			range = 100;
-			hp = 50;
 			break;
 		case SISTER:
 			range = 500;
@@ -107,7 +105,7 @@ public class Army extends GameActor {
 		    maxhp = hp;
 		}
 		
-		initAnimation(armyType.id);
+//		initAnimation(armyType.id);
 		
 		if(world == null){
 			body = null;
@@ -123,11 +121,11 @@ public class Army extends GameActor {
 		this.font = font;
 	}
 	
-	private void initAnimation(int armyId){
-		girlRegion = ResUtil.getInstance().getArmyAnimation(armyId);
-        //0.06*11=0.66 大概就是1秒钟播放完这个动画。
-        animation = new Animation(0.5f, girlRegion);
-	}
+//	private void initAnimation(int armyId){
+//		girlRegion = ResUtil.getInstance().getArmyAnimation(armyId);
+//        //0.06*11=0.66 大概就是1秒钟播放完这个动画。
+//        animation = new Animation(0.5f, girlRegion);
+//	}
 	
 	
 	public void move() {
@@ -174,15 +172,14 @@ public class Army extends GameActor {
 		if(id > 6){
 			id = 6;
 		}
+		Sound sound = ResUtil.getInstance().getSoundFire(id);
+		sound.play();
 
+		id--;
 		Bullet bullet = Bullet.bulletPool.obtain();
 		bullet.init(body.getWorld(), BulletType.valueOf(id), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
-
-
-		Sound sound = ResUtil.getInstance().getSoundFire(id);
-		sound.play();
 	}
 	
 	@Override

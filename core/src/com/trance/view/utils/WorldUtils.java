@@ -99,9 +99,6 @@ public class WorldUtils {
     	f.shape = shape;//夹具的形状
 		float density = 0.2f;
 		switch (type){
-			case COMMON:
-				density = 1.0f;
-				break;
 			case ONE:
 				density = 0.4f;
 				break;
@@ -115,7 +112,16 @@ public class WorldUtils {
 				density = 0.7f;
 				break;
 			case FIVE:
-				density = 0.8f;
+				density = 1.0f;
+				break;
+			case SEVEN:
+				density = 0.3f;
+				break;
+			case EIGHT:
+				density = 1.0f;
+				break;
+			case NIE:
+				density = 1.0f;
 				break;
 			default:
 				break;

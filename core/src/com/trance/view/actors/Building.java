@@ -182,16 +182,17 @@ public class Building extends GameActor {
 		if( body == null){
 			return;
 		}
-		
+
 		Bullet bullet = Bullet.bulletPool.obtain();
 		bullet.init(body.getWorld(), BulletType.valueOf(type - 4), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
-		
+
 		int id = type;
 		if(id > 6){
 			id = 6;
 		}
+
 		Sound sound = ResUtil.getInstance().getSoundFire(id);
 		sound.play();
 	}
