@@ -88,7 +88,7 @@ public class DialogRankUpStage extends BaseStage {
     	int i = 1;
     	float side = bgImage.getHeight() / MAX_RANKING;
     	for(PlayerDto dto : players){
-    		WorldImage rank = new WorldImage(ResUtil.getInstance().get("army/2/zoulu/0.png", Texture.class), font, dto);
+    		WorldImage rank = new WorldImage(ResUtil.getInstance().get("building/1.png", Texture.class), font, dto);
     		rank.setBounds(getWidth()/2 - bgImage.getWidth()/2 + side,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
     		addActor(rank);
 	    	i ++;
