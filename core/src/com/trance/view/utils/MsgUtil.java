@@ -117,7 +117,7 @@ public class MsgUtil {
 			zh_local.put("Click Build Image to upgrade","点击建筑图片升级");
 			zh_local.put("looted","掠夺了");
 			zh_local.put("Click on the building to search for enemies","点击建筑搜索敌人");
-			zh_local.put("Click on the green area to send soldiers","点击绿色区域派遣士兵或者其他方向");
+			zh_local.put("Click on the green area to send soldiers or other side","点击绿色区域派遣士兵或者其他方向");
 
 			zh_local.put("world","世界");
 			zh_local.put("rename","改名");

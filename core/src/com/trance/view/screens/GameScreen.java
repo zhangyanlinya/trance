@@ -184,7 +184,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		height = Gdx.graphics.getHeight(); // 1200
 		font = FontUtil.getFont();
 		font.appendText(MsgUtil.getInstance().getLocalMsg("laud"));
-		font.appendText(MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"));
+		font.appendText(MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers or other side"));
 		stage = new Stage(new StretchViewport(width * 2, height * 2));
 
 		CELL_LENGHT = width / 10;
@@ -522,6 +522,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		shapeRenderer.setColor(Color.GREEN);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.rect(20, length * 2, width - 40, control_height - length * 4);
+		shapeRenderer.rect(20, height + length * 2, width - 40, control_height - length * 4);
 
 		ArmyDto amryDto = Player.player.getArmys().get(chooseArmyId);
 		Rectangle rect = amryDto.getRect();
