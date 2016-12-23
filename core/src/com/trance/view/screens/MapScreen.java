@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -152,7 +152,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		camera = new OrthographicCamera(width, height);
 		camera.setToOrtho(false, width, height);
-		stage = new Stage(new ScreenViewport(camera));
+		stage = new Stage(new StretchViewport(width,height,camera));
 
 		spriteBatch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();

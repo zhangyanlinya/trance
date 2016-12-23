@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -136,7 +136,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		font.appendText(tips);
 
 		camera = new OrthographicCamera(width, height);
-		stage = new Stage(new FillViewport(sw, sh));
+		stage = new Stage(new StretchViewport(sw, sh));
 		camera.setToOrtho(false, width, height);
 		camera.translate(sw / 2 - 480, sh / 2 - 800);
 		stage.getViewport().setCamera(camera);

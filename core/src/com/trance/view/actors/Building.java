@@ -78,7 +78,7 @@ public class Building extends GameActor {
 			fireDelay = 800;
 			break;
 		case BuildingType.ROCKET:
-			range = 700;
+			range = 500;
 			fireDelay = 3500;
 			atk = 2;
 			break;

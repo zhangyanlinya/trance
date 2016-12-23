@@ -82,7 +82,7 @@ public class SocketUtil {
 	public static void destroy() {
 		clientService.destroy();
 	}
-	
+
 	public static boolean offlineReconnect() {
 //		String src = MainActivity.userName + MainActivity.loginKey;
 //		String LoginMD5 = null;

@@ -83,7 +83,7 @@ public class WorldUtils {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation  = true;
-		bodyDef.linearDamping = 1f;
+		bodyDef.linearDamping = 0f;
 //    	bodyDef.bullet = true;
 //    	PolygonShape shape = new PolygonShape();
     	CircleShape shape = new CircleShape();

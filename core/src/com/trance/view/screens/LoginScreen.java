@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -78,7 +78,7 @@ public class LoginScreen extends BaseScreen {
 		resUtil.init();
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
-		stage = new Stage(new FillViewport(width,height));
+		stage = new Stage(new StretchViewport(width,height));
 		spriteBatch = new SpriteBatch();
 		font = FreeFont.getBitmapFont("login");
 		msg = MsgUtil.getInstance().getLocalMsg("Click the picture to start the game");

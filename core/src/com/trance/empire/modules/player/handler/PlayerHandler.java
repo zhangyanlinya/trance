@@ -49,12 +49,12 @@ public class PlayerHandler extends HandlerSupport {
 								 Object message) {
 				if(response != null){ 
 					if(response.getStatus() == ResponseStatus.SUCCESS){
-						System.out.println("连接还活着...");
+//						System.out.println("连接还活着...");
 						return;//还活着
 					}
 				}
 				// 死了 则关闭连接
-				System.out.println("连接死掉了! 准备重连...");
+//				System.out.println("连接死掉了! 准备重连...");
 				session.close(true);
 			}
 		});

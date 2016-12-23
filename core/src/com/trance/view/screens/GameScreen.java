@@ -35,7 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -185,7 +185,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		font = FontUtil.getFont();
 		font.appendText(MsgUtil.getInstance().getLocalMsg("laud"));
 		font.appendText(MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"));
-		stage = new Stage(new FillViewport(width * 2, height * 2));
+		stage = new Stage(new StretchViewport(width * 2, height * 2));
 
 		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
@@ -244,14 +244,13 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		
 		int i = 0;
 		for(ArmyDto dto : amrys_map.values()){
-			if(dto.getAmout() <= 0){
+			if(dto.getAmout() < 0){
 				continue;
 			}
-			
-			if(i == 0){
+
+			if(chooseArmyId == 0) {
 				chooseArmyId = dto.getId();
 			}
-			
 			dto.setGo(false);
 			dto.setRegion(ResUtil.getInstance().getArmyTextureRegion(dto.getId()));
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
@@ -380,7 +379,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			}
 		});
         
-        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
+//        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
     }
 	
 	private void initClock() {
@@ -483,16 +482,14 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	}
 	
 	private void renderKeepArmys(SpriteBatch batch){
-		int i = 0;
 		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 		for(ArmyDto dto : myArmys.values()){
 			if(dto.getAmout() == 0){
 				continue;
 			}
-			batch.draw(dto.getRegion(), dto.getRect().x * i, dto.getRect().y, dto.getRect().width,dto.getRect().height);
+			batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width,dto.getRect().height);
 //			font.setColor(Color.BLUE);
-			font.draw(batch, dto.getAmout()+"", dto.getRect().x * i + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
-			i ++;
+			font.draw(batch, dto.getAmout()+"", dto.getRect().x  + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
 		}
 	}
 
@@ -517,7 +514,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		spriteBatch.begin();
 		renderKeepArmys(spriteBatch);
 		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
-		font.draw(spriteBatch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers"), 24, control_height - length * 2 - 10);
+		font.draw(spriteBatch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers or other side"), 24, control_height - length * 2 - 10);
 		spriteBatch.end();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -655,13 +652,13 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		camera.unproject(vector3); // coordinate convert
 		float x = vector3.x;
 		float y = vector3.y;
-//		if(x > -length * 2  && x < width + length * 2 
-//				&& y > control_height - length * 2  && y < height + length * 2){
-//			return false;
-//	    }
-		if(y > control_height - length * 2){
+		if(x > -length * 2  && x < width + length * 2
+				&& y > control_height - length * 2  && y < height + length * 2){
 			return false;
-		}
+	    }
+//		if(y > control_height - length * 2){
+//			return false;
+//		}
 		
 		screenY = (int)height - screenY;//y top to down
 		Integer type = hitKeepArmy(screenX, screenY);
@@ -676,12 +673,14 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 		for(ArmyDto army : myArmys.values()){
-			if(army.isGo()){
+			if(army.isGo() || army.getAmout() == 0){
 				continue;
 			}
+
 			if(army.getId() != chooseArmyId){
 				continue;
 			}
+
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
 				block.init(world, ArmyType.valueOf(army.getId()), 10 + x + i * length , 10 + y, length,length,shapeRenderer);
@@ -696,7 +695,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		
 		//for the next choose type;
 		for(ArmyDto army : myArmys.values()){
-			if(army.isGo()){
+			if(army.isGo() || army.getAmout() == 0){
 				continue;
 			}
 			chooseArmyId = army.getId();
