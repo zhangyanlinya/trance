@@ -13,6 +13,18 @@ public class ArmyDto {
 	private TextureRegion region;
 	private boolean go;
 	private Rectangle rect;
+	/**
+	 * 已派出数量
+	 */
+	private long sendAmount;
+	/**
+	 * 派出坐标x
+	 */
+	private float createX;
+	/**
+	 * 派出坐标Y
+	 */
+	private float createY;
 	
 	public int getId() {
 		return id;
@@ -62,6 +74,28 @@ public class ArmyDto {
 	public void setExpireTime(long expireTime) {
 		this.expireTime = expireTime;
 	}
-	
-	
+
+	public long getSendAmount() {
+		return sendAmount;
+	}
+
+	public void setSendAmount(long sendAmount) {
+		this.sendAmount = sendAmount;
+	}
+
+	public float getCreateX() {
+		return createX;
+	}
+
+	public void setCreateX(float createX) {
+		this.createX = createX;
+	}
+
+	public float getCreateY() {
+		return createY;
+	}
+
+	public void setCreateY(float createY) {
+		this.createY = createY;
+	}
 }

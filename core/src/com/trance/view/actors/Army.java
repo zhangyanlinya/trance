@@ -40,8 +40,8 @@ public class Army extends GameActor {
 //    //当前帧
 //    private TextureRegion currentFrame;
 //    private Animation animation;
-	
-	
+
+
 	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer){
 		super.init(x, y, width, height);
 		this.armyType = armyType;
@@ -106,7 +106,7 @@ public class Army extends GameActor {
 		}
 		
 //		initAnimation(armyType.id);
-		
+
 		if(world == null){
 			body = null;
 			return;

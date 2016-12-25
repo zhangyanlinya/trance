@@ -244,7 +244,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		
 		int i = 0;
 		for(ArmyDto dto : amrys_map.values()){
-			if(dto.getAmout() < 0){
+			if(dto.getAmout() == 0){
 				continue;
 			}
 
@@ -549,7 +549,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		if(armys.size == 0){
 			Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 			for(ArmyDto dto : myArmys.values()){
-				if(dto.isGo()){
+				if(dto.isGo() && dto.getAmout() > 0){
 					continue;
 				}
 				return;
@@ -690,6 +690,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			}
 
 			army.setGo(true);
+			army.setSendAmount(0);
+			army.setCreateX(x);
+			army.setCreateY(y);
 			gobattle = true;
 			
 		}
