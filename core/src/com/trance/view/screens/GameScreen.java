@@ -614,9 +614,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         if(a.role != b.role){//角色不一样
 			if (a.camp != b.camp) {//敌对的
 				if (a.role == 1) {
-//					b.byAttack(a);
+					b.byAttack(a);
 				} else {
-//					a.byAttack(b);
+					a.byAttack(b);
 				}
 			}
         }
