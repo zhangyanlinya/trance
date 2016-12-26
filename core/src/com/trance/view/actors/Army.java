@@ -1,6 +1,5 @@
 package com.trance.view.actors;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -34,12 +33,11 @@ public class Army extends GameActor {
 	
 	private ArmyDto dto;
 	private BitmapFont font;
-	
-//	  private TextureRegion[] girlRegion;
-//    private float stateTime;
-//    //当前帧
-//    private TextureRegion currentFrame;
-//    private Animation animation;
+
+	/**
+	 * 是否派出
+	 */
+	private boolean send;
 
 
 	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer){
@@ -105,7 +103,6 @@ public class Army extends GameActor {
 		    maxhp = hp;
 		}
 		
-//		initAnimation(armyType.id);
 
 		if(world == null){
 			body = null;
@@ -121,12 +118,7 @@ public class Army extends GameActor {
 		this.font = font;
 	}
 	
-//	private void initAnimation(int armyId){
-//		girlRegion = ResUtil.getInstance().getArmyAnimation(armyId);
-//        //0.06*11=0.66 大概就是1秒钟播放完这个动画。
-//        animation = new Animation(0.5f, girlRegion);
-//	}
-	
+
 	
 	public void move() {
 		if(!MapData.gamerunning){
@@ -157,6 +149,10 @@ public class Army extends GameActor {
 		if (!alive) {
 			return;
 		}
+
+		if(!send){
+			return;
+		}
 		
 		long now = System.currentTimeMillis();
 		if((now - time) < fireDelay){
@@ -172,8 +168,9 @@ public class Army extends GameActor {
 		if(id > 6){
 			id = 6;
 		}
-		Sound sound = ResUtil.getInstance().getSoundFire(id);
-		sound.play();
+
+		ResUtil.getInstance().playDeadSoundFire(id);
+//		sound.play();
 
 		id--;
 		Bullet bullet = Bullet.bulletPool.obtain();
@@ -184,9 +181,6 @@ public class Army extends GameActor {
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-//		stateTime += Gdx.graphics.getDeltaTime();
-        //下一帧
-//        currentFrame = animation.getKeyFrame(stateTime, true);
 		batch.draw(textureRegion, getX(), getY(), hw,
 				hh, getWidth(), getHeight(), getScaleX(),
 				getScaleY(), getRotation());
@@ -241,4 +235,17 @@ public class Army extends GameActor {
 		remove();
 		armyPool.free(this);
 	}
+
+	public boolean isSend() {
+		return send;
+	}
+
+	public void setSend(boolean send) {
+		this.send = send;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
 }

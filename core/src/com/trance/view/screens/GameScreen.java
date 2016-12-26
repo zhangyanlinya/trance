@@ -532,7 +532,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 		shapeRenderer.end();
 
-		checkGameOver();
+		checkGameOver(delta);
 		
 		//box2d
         world.step(TIME_STEP, 6, 2);
@@ -544,8 +544,10 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 		super.render(delta);
 	}
-	
-	private void checkGameOver() {
+
+	private float sendDelta = 0;
+
+	private void checkGameOver(float delta) {
 		if(armys.size == 0){
 			Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 			for(ArmyDto dto : myArmys.values()){
@@ -556,6 +558,21 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			}
 			MapData.gamerunning = false;
 			finishBattle(false);
+		}else{//监听是否有要派出
+			for(GameActor ga :armys){
+				Army a = (Army) ga;
+				if(a.isSend()){
+					continue;
+				}
+
+				sendDelta += delta;
+				if(sendDelta > a.getSpeed()){
+					stage.addActor(a);
+					a.setSend(true);
+					sendDelta = 0;
+				}
+
+			}
 		}
 	}
 
@@ -597,9 +614,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         if(a.role != b.role){//角色不一样
 			if (a.camp != b.camp) {//敌对的
 				if (a.role == 1) {
-					b.byAttack(a);
+//					b.byAttack(a);
 				} else {
-					a.byAttack(b);
+//					a.byAttack(b);
 				}
 			}
         }
@@ -684,15 +701,12 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 			for(int i = 0 ; i < army.getAmout(); i++){
 				Army block = Army.armyPool.obtain();
-				block.init(world, ArmyType.valueOf(army.getId()), 10 + x + i * length , 10 + y, length,length,shapeRenderer);
+				block.init(world, ArmyType.valueOf(army.getId()), x,  y, length,length,shapeRenderer);
 				armys.add(block);
-				stage.addActor(block);
+//				stage.addActor(block);
 			}
 
 			army.setGo(true);
-			army.setSendAmount(0);
-			army.setCreateX(x);
-			army.setCreateY(y);
 			gobattle = true;
 			
 		}

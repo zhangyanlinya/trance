@@ -8,7 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.ControlType;
+import com.trance.view.constant.SoundInfo;
 import com.trance.view.constant.UiType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ResUtil extends AssetManager {
 	
@@ -78,8 +82,6 @@ public class ResUtil extends AssetManager {
     	
     	load("world/stone1.png", Texture.class);
     	load("world/stone2.png", Texture.class);
-    	
-//    	initAnimation();
 
 		loadSound();
     }
@@ -105,13 +107,6 @@ public class ResUtil extends AssetManager {
     	return this.get(uiType.getVlaue(),Texture.class);
     }
     
-//    private void initAnimation() {
-//    	for(ArmyType type : ArmyType.values()){
-//    	 for (int i = 0; i < 6; i++) {
-//    		 load("army/"+type.id + "/zoulu/" + i + ".png", Texture.class);
-//         }
-//    	}
-//	}
 
 	/**
 	 * sound
@@ -127,10 +122,24 @@ public class ResUtil extends AssetManager {
     public Sound getSound(int id){
     	return this.get("audio/" + id + ".ogg", Sound.class);
     }
-    public Sound getSoundFire(int id){
-    	return this.get("audio/fire/" + id + ".ogg", Sound.class);
+
+	private Map<Integer,SoundInfo> soundIdMap = new HashMap<Integer,SoundInfo>();
+
+    public void playDeadSoundFire(int id){
+		SoundInfo info = soundIdMap.get(id);
+		if(info == null) {
+			Sound sound = this.get("audio/fire/" + id + ".ogg", Sound.class);
+			long soundId = sound.play(0);
+			info = new SoundInfo();
+			info.setSound(sound);
+			info.setSoundId(soundId);
+			soundIdMap.put(id, info);
+		}
+		info.getSound().stop(info.getSoundId());
+		info.getSound().play();
     }
-	
+
+
 	public TextureRegion getBuildingTextureRegion(int value) {
 		return new TextureRegion(getBuildingTexture(value));
 	}
@@ -146,23 +155,7 @@ public class ResUtil extends AssetManager {
 		return new TextureRegion(this.get("army/"+armyId+".png",Texture.class));
 	}
 	
-//	private Map<Integer, TextureRegion[]> armyAnimations = new HashMap<Integer, TextureRegion[]>();
-	
-//	public TextureRegion[] getArmyAnimation(int armyId) {
-//		TextureRegion[] regions = armyAnimations.get(armyId);
-//		if(regions != null && regions.length > 0){
-//			return regions;
-//		}
-//
-//		regions = new TextureRegion[6];
-//        //把Texture转换下
-//        for (int i = 0; i < 6; i++) {
-//        	Texture animation = this.get("army/"+armyId+"/zoulu/"+i+".png", Texture.class);
-//        	regions[i] = new TextureRegion(animation);
-//        }
-//        armyAnimations.put(armyId, regions);
-//		return regions;
-//	}
+
     
     public TextureRegion getBulletTextureRegion(BulletType type) {
     	Texture texture = get(type.getValue(), Texture.class);
@@ -199,6 +192,5 @@ public class ResUtil extends AssetManager {
 
     public void dispose() {
     	super.dispose();
-//    	armyAnimations.clear();
     }
 }

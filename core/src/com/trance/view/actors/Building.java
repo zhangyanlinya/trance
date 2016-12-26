@@ -1,6 +1,5 @@
 package com.trance.view.actors;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -193,8 +192,7 @@ public class Building extends GameActor {
 			id = 6;
 		}
 
-		Sound sound = ResUtil.getInstance().getSoundFire(id);
-		sound.play();
+		ResUtil.getInstance().playDeadSoundFire(id);
 	}
 
 	
