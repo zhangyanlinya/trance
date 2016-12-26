@@ -566,7 +566,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				}
 
 				sendDelta += delta;
-				float speed = 5 - a.getSpeed();//6可能是最大速度
+				float speed = 5 - a.getSpeed();//5可能是最大速度
 				if(sendDelta > speed){ //
 					stage.addActor(a);
 					a.setSend(true);
