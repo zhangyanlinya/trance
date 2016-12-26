@@ -49,6 +49,7 @@ public class Army extends GameActor {
 		this.camp = 2;
 		this.hp = maxhp;
 		this.degrees = 0;
+		this.send = false;
 		textureRegion = ResUtil.getInstance().getArmyTextureRegion(armyType.id);
 		if(this.getWidth() == 0 && this.getHeight() == 0){
 			this.setWidth(textureRegion.getRegionWidth());
