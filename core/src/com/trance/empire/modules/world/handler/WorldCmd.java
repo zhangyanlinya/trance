@@ -15,4 +15,6 @@ public interface WorldCmd {
 	int SPY = 3;
 	
 	int CHANGE_PLAYER= 4;
+
+	int SPY_ANYONE = 5;
 }

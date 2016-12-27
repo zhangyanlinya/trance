@@ -13,11 +13,13 @@ import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.ranking.handler.RankingCmd;
+import com.trance.empire.modules.world.handler.WorldCmd;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.WorldImage;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
 import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.mapdata.MapData;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
@@ -37,7 +39,7 @@ public class DialogRankUpStage extends BaseStage {
     private FreeBitmapFont font;
     private static final int MAX_RANKING = 10;
     private boolean init;
-    
+
     public DialogRankUpStage(TranceGame tranceGame) {
         super(tranceGame);
     }
@@ -87,10 +89,45 @@ public class DialogRankUpStage extends BaseStage {
 	    
     	int i = 1;
     	float side = bgImage.getHeight() / MAX_RANKING;
-    	for(PlayerDto dto : players){
+    	for(final PlayerDto dto : players){
     		WorldImage rank = new WorldImage(ResUtil.getInstance().get("building/1.png", Texture.class), font, dto);
     		rank.setBounds(getWidth()/2 - bgImage.getWidth()/2 + side,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
     		addActor(rank);
+
+			Image dest = new Image(ResUtil.getInstance().getUi(UiType.FIXED));
+			dest.setBounds(getWidth()/2 + bgImage.getWidth()/2 - side,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
+			addActor(dest);
+
+
+			dest.addListener(new ClickListener(){
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY_ANYONE, dto.getId()),true);
+					if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+						return;
+					}
+					byte[] bytes = response.getValueBytes();
+					String text = new String(bytes);
+					@SuppressWarnings("unchecked")
+					HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
+					int code = (Integer) result.get("result");
+					if(code != Result.SUCCESS){
+						MsgUtil.getInstance().showMsg(Module.WORLD, code);
+						return;
+					}
+					Object mobj = result.get("content");
+					if (mobj != null) {
+						int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
+						dto.setMap(map);
+					}else{
+						dto.setMap(MapData.clonemap());
+					}
+					getTranceGame().mapScreen.setRankUpDailog(false);
+					getTranceGame().mapScreen.setPlayerDto(dto);
+					getTranceGame().setScreen(getTranceGame().mapScreen);
+				}
+			});
 	    	i ++;
     	}
     }

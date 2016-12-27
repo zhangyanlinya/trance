@@ -529,15 +529,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		shapeRenderer.rect(20, length * 2, width - 40, control_height - length * 4);
 		shapeRenderer.rect(20, height + length * 2, width - 40, control_height - length * 4);
 
-//		ArmyDto amryDto = Player.player.getArmys().get(chooseArmyId);
-//		Rectangle rect = amryDto.getRect();
-//		if(rect != null) {
-//			shapeRenderer.setColor(Color.RED);
-//			shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-//		}
 		shapeRenderer.end();
 
-		checkGameOver(delta);
+		checkArmyStatus(delta);
 		
 		//box2d
         world.step(TIME_STEP, 6, 2);
@@ -552,8 +546,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 	private float sendDelta = 0;
 
-	private void checkGameOver(float delta) {
-		if(armys.size == 0){
+	private void checkArmyStatus(float delta) {
+		if(armys.size == 0){ // 是否已经派完
 			Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 			for(ArmyDto dto : myArmys.values()){
 				if(dto.isGo() && dto.getAmout() > 0){
