@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.ControlType;
-import com.trance.view.constant.SoundInfo;
+import com.trance.view.model.SoundInfo;
 import com.trance.view.constant.UiType;
 
 import java.util.HashMap;

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -54,6 +55,7 @@ import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
+import com.trance.view.model.RangeInfo;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.textinput.RenameInputListener;
 import com.trance.view.utils.FontUtil;
@@ -66,7 +68,8 @@ import com.trance.view.utils.SocketUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 
 public class MapScreen extends BaseScreen implements InputProcessor {
@@ -472,6 +475,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		stage.draw();
+
+		renderRange(delta);
+
 		spriteBatch.begin();
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch,msg,length,control_height -length * 2);
@@ -501,6 +507,21 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			dialogAttackInfoStage.draw();
 		}
 		super.render(delta);
+	}
+
+	private Queue<RangeInfo> rangeQueue = new ArrayBlockingQueue<RangeInfo>(10);
+
+	private void renderRange(float delta){
+		for (RangeInfo info :rangeQueue) {
+			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+			shapeRenderer.setColor(Color.GREEN);
+			shapeRenderer.circle(info.getX(), info.getY(), info.getRange());
+			shapeRenderer.end();
+			info.setShowTime(info.getShowTime() + delta);
+			if(info.getShowTime() > 2){
+				rangeQueue.poll();
+			}
+		}
 	}
 	
 	public void setRankUpDailog(boolean visible) {
@@ -719,9 +740,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(!isEdit()){
-			return false;
-		}
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
@@ -737,7 +755,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 		
 		Building b = (Building) actor;
-		handleBuildingOnClick(b.type);
+		handleBuildingOnClick(b , x, y);
+
+		if(!isEdit()){
+			return false;
+		}
 
 		if(actor.getY() <= control_height - length){//增加
 			BuildingDto dto = playerDto.getBuildings().get(b.type);
@@ -757,20 +779,25 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 
 	//各种点击事件
-	private void handleBuildingOnClick(int buildingType){
-		switch (buildingType){
+	private void handleBuildingOnClick(Building building, float x, float y){
+		switch (building.type){
 			case BuildingType.OFFICE:
+				break;
 			case BuildingType.CANNON:
 			case BuildingType.ROCKET:
 			case BuildingType.FLAME:
 			case BuildingType.GUN:
 			case BuildingType.TOWER:
 			case BuildingType.MORTAR:
+				RangeInfo e = new RangeInfo(x,y,building.range);
+				rangeQueue.offer(e);
 				break;
 
 			case BuildingType.HOUSE:
 			case BuildingType.BARRACKS:
-				harvist(buildingType);
+				if(isEdit()){
+					harvist(building.type);
+				}
 				break;
 			default:
 				break;

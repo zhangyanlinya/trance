@@ -66,7 +66,7 @@ public class Army extends GameActor {
 			fireDelay = 1000;
 			break;
 		case SISTER:
-			range = 500;
+			range = 400;
 			hp = 30;
 			speed = 1;
 			break;
@@ -79,7 +79,7 @@ public class Army extends GameActor {
 			speed = 1f;
 			break;
 		case SIX:
-			range = 800;
+			range = 500;
 			atk = 100;
 			move = false;
 			break;

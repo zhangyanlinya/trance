@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.trance.view.actors.Building;
 import com.trance.view.constant.BulletType;
 import com.trance.view.screens.GameScreen;
 
@@ -59,11 +60,11 @@ public class WorldUtils {
         return body;
         
     }
-    public static Body createBlock(World world, float x, float y, float width, float height) {
+    public static Body createBuilding(World world, Building building, float x, float y, float width, float height) {
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation = true;
-    	bodyDef.linearDamping = 2f;
+    	bodyDef.linearDamping = building.linearDamping;
     	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
     	CircleShape shape = new CircleShape();
 //    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
@@ -71,9 +72,9 @@ public class WorldUtils {
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
-    	f.density = 5.0f;//夹具的密度
-    	f.friction = 0.9f;//夹具的摩擦力
-    	f.restitution = 0.9f; //弹力
+    	f.density = building.density;//夹具的密度
+    	f.friction = building.friction;//夹具的摩擦力
+    	f.restitution = building.restitution; //弹力
     	body.createFixture(f);//刚体创建夹具.
     	shape.dispose();
     	return body;

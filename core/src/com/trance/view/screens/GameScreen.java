@@ -487,6 +487,11 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			if(dto.getAmout() == 0){
 				continue;
 			}
+			if(dto.getId() == chooseArmyId){
+				batch.setColor(Color.RED);
+			}else{
+				batch.setColor(Color.WHITE);
+			}
 			batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width,dto.getRect().height);
 //			font.setColor(Color.BLUE);
 			font.draw(batch, dto.getAmout()+"", dto.getRect().x  + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
@@ -524,12 +529,12 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		shapeRenderer.rect(20, length * 2, width - 40, control_height - length * 4);
 		shapeRenderer.rect(20, height + length * 2, width - 40, control_height - length * 4);
 
-		ArmyDto amryDto = Player.player.getArmys().get(chooseArmyId);
-		Rectangle rect = amryDto.getRect();
-		if(rect != null) {
-			shapeRenderer.setColor(Color.RED);
-			shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-		}
+//		ArmyDto amryDto = Player.player.getArmys().get(chooseArmyId);
+//		Rectangle rect = amryDto.getRect();
+//		if(rect != null) {
+//			shapeRenderer.setColor(Color.RED);
+//			shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+//		}
 		shapeRenderer.end();
 
 		checkGameOver(delta);

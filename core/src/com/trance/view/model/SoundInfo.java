@@ -1,4 +1,4 @@
-package com.trance.view.constant;
+package com.trance.view.model;
 
 import com.badlogic.gdx.audio.Sound;
 

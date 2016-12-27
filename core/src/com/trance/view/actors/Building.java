@@ -35,6 +35,10 @@ public class Building extends GameActor {
   	public ShapeRenderer renderer;
 	public float speed = 3;
 	public long fireDelay = 2000;
+	public float linearDamping;
+	public float density;
+	public float friction;
+	public float restitution;
 	private BitmapFont font;
 	private BuildingDto dto;
 	
@@ -52,6 +56,10 @@ public class Building extends GameActor {
 		this.alive = true;
 		this.camp = 1;
 		this.type = type;
+		this.linearDamping = 2;
+		this.density = 10f;//密度
+		this.friction = 0.9f;//摩擦力
+		this.restitution = 0.9f;//弹力
 		if(type <= 0){
 			textureRegion = null;
 			return;
@@ -75,17 +83,25 @@ public class Building extends GameActor {
 		case BuildingType.CANNON:
 			range = 400;
 			fireDelay = 800;
+			linearDamping = 0;
+			density = 0;
 			break;
 		case BuildingType.ROCKET:
 			range = 500;
 			fireDelay = 3500;
+			linearDamping = 0;
+			density = 0;
 			atk = 2;
 			break;
 		case BuildingType.FLAME:
 			fireDelay = 1000;
 			atk = 30;
+			linearDamping = 0;
+			density = 0;
 			break;
 		case BuildingType.GUN:
+			linearDamping = 0;
+			density = 0;
 			break;
 		case BuildingType.TOWER:
 			face = false;
@@ -108,7 +124,7 @@ public class Building extends GameActor {
 			body = null;
 			return;
 		}
-		body = WorldUtils.createBlock(world, x, y, width, height);
+		body = WorldUtils.createBuilding(world, this, x, y, width, height);
 		body.setUserData(this);
 
 	}
