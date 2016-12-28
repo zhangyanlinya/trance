@@ -16,6 +16,7 @@
 
 package com.trance.view.utils;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -27,6 +28,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.trance.view.actors.Building;
 import com.trance.view.constant.BulletType;
 import com.trance.view.screens.GameScreen;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorldUtils {
 
@@ -158,4 +162,34 @@ public class WorldUtils {
     	return body;
     }
 
+	public static List<Body> createExplode(World world, int numRays, float x, float y, float speed){
+		List<Body> bodies = new ArrayList<Body>();
+		for (int i = 0; i < numRays; i++) {
+			float angle = (i / (float)numRays) * 360 * MathUtils.degreesToRadians;
+
+			BodyDef bd = new BodyDef();
+			bd.type = BodyType.DynamicBody;
+			bd.fixedRotation = true; // rotation not necessary
+			bd.bullet = true; // prevent tunneling at high speed
+			bd.linearDamping = 0f; // drag due to moving through air
+			bd.gravityScale = 0; // ignore gravity
+			bd.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
+			Body body = world.createBody(bd);
+
+			CircleShape shape = new CircleShape();
+			shape.setRadius(10f); // very small
+
+			FixtureDef fd = new FixtureDef();
+			fd.shape = shape;
+			fd.density = 60 / (float)numRays; // very high - shared across all particles
+			fd.friction = 0; // friction not necessary
+			fd.restitution = 0.99f; // high restitution to reflect off obstacles
+			fd.filter.groupIndex = -1; // particles should not collide with each other
+			body.createFixture(fd);
+			shape.dispose();
+			bodies.add(body);
+			body.setLinearVelocity(MathUtils.sin(angle) * speed, MathUtils.cos(angle) * speed);
+		}
+		return bodies;
+	}
 }

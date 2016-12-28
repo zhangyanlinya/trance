@@ -1,6 +1,5 @@
 package com.trance.view.actors;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -24,10 +23,8 @@ public class WorldImage extends Image {
 		super.draw(batch, parentAlpha);
 		if(playerDto != null){
 			String name = playerDto.getPlayerName() + "           ";
-			font.setColor(Color.WHITE);
 			font.draw(batch, name ,this.getX() + getWidth(),this.getY() + getHeight()/2);
-//			font.setColor(Color.RED);
-			font.draw(batch, playerDto.getUp()+"" ,this.getX() + getWidth() * 2 + getWidth()/2, this.getY() + getHeight()/2);
+			font.draw(batch, playerDto.getLevel()+"" ,this.getX() + getWidth() * 2 + getWidth()/2, this.getY() + getHeight()/2);
 		}
 	}
 	

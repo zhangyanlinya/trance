@@ -16,6 +16,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -113,7 +114,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
     
-//    private Box2DDebugRenderer debugRenderer;
+    private Box2DDebugRenderer debugRenderer;
 
 	public final static Array<GameActor> buildings = new Array<GameActor>();
 
@@ -179,7 +180,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 	private void init(){
 		spriteBatch = new SpriteBatch();
-//		font = FontUtil.getFont();
 		width = Gdx.graphics.getWidth(); // 720
 		height = Gdx.graphics.getHeight(); // 1200
 		font = FontUtil.getFont();
@@ -190,7 +190,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
-//		debugRenderer = new Box2DDebugRenderer();
+		debugRenderer = new Box2DDebugRenderer();
 		stage.getViewport().setCamera(camera);
 		
 		
@@ -261,7 +261,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	
 	public static void finishBattle(boolean win){
 		if(finishBattle || !gobattle){
-//			System.out.println("无派出 ：已结算");
 			return;
 		}
 		
@@ -380,6 +379,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		});
         
 //        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
+		WorldUtils.createExplode(world,10,width/2, height/2, 10);
     }
 	
 	private void initClock() {
@@ -415,16 +415,16 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			return;
 		}
 		
-		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-		float w = bg.getWidth();
-		float h = bg.getHeight();
-		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
-				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-				bg.setPosition(x, y);
-				stage.addActor(bg);
-			}
-		}
+//		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+//		float w = bg.getWidth();
+//		float h = bg.getHeight();
+//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+//			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
+//				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+//				bg.setPosition(x, y);
+//				stage.addActor(bg);
+//			}
+//		}
 
 		for(int i = 0 ; i < 5; i ++){
 			int index = RandomUtil.nextInt(4) + 1;
@@ -493,7 +493,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				batch.setColor(Color.WHITE);
 			}
 			batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width,dto.getRect().height);
-//			font.setColor(Color.BLUE);
 			font.draw(batch, dto.getAmout()+"", dto.getRect().x  + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
 		}
 	}
@@ -508,8 +507,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 		
 		//debug---
-//		camera.update();
-//		debugRenderer.render(world, camera.combined);
+		debugRenderer.render(world, camera.combined);
 		//debug---
 		
 		scan();
@@ -758,7 +756,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 
 		shapeRenderer.dispose();
-//		debugRenderer.dispose();
+		debugRenderer.dispose();
 		
 		if(world != null){
 			world.dispose();
