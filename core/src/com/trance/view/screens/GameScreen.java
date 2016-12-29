@@ -56,9 +56,11 @@ import com.trance.view.TranceGame;
 import com.trance.view.actors.Army;
 import com.trance.view.actors.Building;
 import com.trance.view.actors.Bullet;
+import com.trance.view.actors.Explode;
 import com.trance.view.actors.GameActor;
 import com.trance.view.actors.MapImage;
 import com.trance.view.constant.ControlType;
+import com.trance.view.constant.ExplodeType;
 import com.trance.view.controller.GestureController;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.mapdata.MapData;
@@ -379,7 +381,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		});
         
 //        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
-		WorldUtils.createExplode(world,10,width/2, height/2, 10);
     }
 	
 	private void initClock() {
@@ -415,16 +416,16 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			return;
 		}
 		
-//		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-//		float w = bg.getWidth();
-//		float h = bg.getHeight();
-//		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-//			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
-//				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-//				bg.setPosition(x, y);
-//				stage.addActor(bg);
-//			}
-//		}
+		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+		float w = bg.getWidth();
+		float h = bg.getHeight();
+		for(float x = -w ; x < stage.getWidth(); x += w){//background;
+			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
+				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
+				bg.setPosition(x, y);
+				stage.addActor(bg);
+			}
+		}
 
 		for(int i = 0 ; i < 5; i ++){
 			int index = RandomUtil.nextInt(4) + 1;
@@ -444,29 +445,29 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				
-				if(i == 0 ){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					grass.setPosition(x, y + length);
-					stage.addActor(grass);
-				}else if(i == map.length - 1){
+//				if(i == 0 ){
 //					int index = RandomUtil.nextInt(5) + 1;
 //					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-//					grass.setPosition(x, y - length * 2);
+//					grass.setPosition(x, y + length);
 //					stage.addActor(grass);
-				}
-				
-				if(j == 0){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					grass.setPosition(x - length, y);
-					stage.addActor(grass);
-				}else if(j == map[i].length -1){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					grass.setPosition(x + length, y);
-					stage.addActor(grass);
-				}
+//				}else if(i == map.length - 1){
+////					int index = RandomUtil.nextInt(5) + 1;
+////					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+////					grass.setPosition(x, y - length * 2);
+////					stage.addActor(grass);
+//				}
+//
+//				if(j == 0){
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					grass.setPosition(x - length, y);
+//					stage.addActor(grass);
+//				}else if(j == map[i].length -1){
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					grass.setPosition(x + length, y);
+//					stage.addActor(grass);
+//				}
 				
 				if (type > 0){
 					Building block = Building.buildingPool.obtain();
@@ -598,13 +599,13 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         }
         if(a != null && b == null){
            if(a.role == 1){
-//        	   a.dead();
+        	   a.dead();
            }
            return;
         }
         if(a == null && b != null){
         	if(b.role == 1){
-//        		b.dead();
+        		b.dead();
         	}
         	return;
         }
@@ -624,10 +625,10 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         }
         
         if(a.role == 1){
-//     	   a.dead();
+     	   a.dead();
         }
         if(b.role == 1){
-//    		b.dead();
+    		b.dead();
     	}
     }
 	
@@ -661,7 +662,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     }
     
     public static boolean gobattle;
-    
+
+
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);
@@ -670,12 +672,11 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		float y = vector3.y;
 		if(x > -length * 2  && x < width + length * 2
 				&& y > control_height - length * 2  && y < height + length * 2){
+
+			sendExplode(x, y);
 			return false;
 	    }
-//		if(y > control_height - length * 2){
-//			return false;
-//		}
-		
+
 		screenY = (int)height - screenY;//y top to down
 		Integer type = hitKeepArmy(screenX, screenY);
 		if(type != null){
@@ -719,6 +720,15 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 		
 		return true;
+	}
+
+	/**
+	 *  执行指向性操作
+	 */
+	private void sendExplode(float x, float y){
+		Explode explode = Explode.pool.obtain();
+		explode.init(world, ExplodeType.Fire_Red, x, y);
+		stage.addActor(explode);
 	}
 
 	public boolean keyUp (int keycode){

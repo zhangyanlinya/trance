@@ -83,24 +83,24 @@ public class Building extends GameActor {
 		case BuildingType.CANNON:
 			range = 300;
 			fireDelay = 800;
-			linearDamping = 0;
+//			linearDamping = 0;
 			density = 0;
 			break;
 		case BuildingType.ROCKET:
 			range = 400;
 			fireDelay = 3500;
-			linearDamping = 0;
+//			linearDamping = 0;
 			density = 0;
 			atk = 2;
 			break;
 		case BuildingType.FLAME:
 			fireDelay = 1000;
 			atk = 30;
-			linearDamping = 0;
+//			linearDamping = 0;
 			density = 0;
 			break;
 		case BuildingType.GUN:
-			linearDamping = 0;
+//			linearDamping = 0;
 			density = 0;
 			break;
 		case BuildingType.TOWER:

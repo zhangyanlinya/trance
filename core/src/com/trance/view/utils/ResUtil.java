@@ -8,8 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.ControlType;
-import com.trance.view.model.SoundInfo;
+import com.trance.view.constant.ExplodeType;
 import com.trance.view.constant.UiType;
+import com.trance.view.model.SoundInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,8 +84,42 @@ public class ResUtil extends AssetManager {
     	load("world/stone1.png", Texture.class);
     	load("world/stone2.png", Texture.class);
 
+		loadAnimation();
+
 		loadSound();
     }
+
+	private void loadAnimation(){
+		for(ExplodeType type : ExplodeType.values()){
+			for(int i = 0; i< 10; i++){
+				load("explode/" + type.getId() + "/" + i +".png", Texture.class);
+			}
+		}
+	}
+
+	private Map<ExplodeType, TextureRegion[]> explodeTypeMap = new HashMap<ExplodeType, TextureRegion[]>();
+
+	/**
+	 *  ExplodeAnimation
+	 * @param type
+	 * @return
+     */
+	public TextureRegion[] getExplodeAnimation(ExplodeType type){
+		TextureRegion[] regions = explodeTypeMap.get(type);
+		if(regions != null && regions.length > 0){
+			return regions;
+		}
+
+		regions = new TextureRegion[10];
+		for(int i = 0; i < 10 ; i++){
+			Texture animation = this.get("explode/"+ type.getId() +"/" + i +".png", Texture.class);
+			TextureRegion region = new TextureRegion(animation);
+			regions[i] = region;
+		}
+		return regions;
+	}
+
+
 
 	private void loadBuilding(){
 		for(int i = 1; i < 10; i++){

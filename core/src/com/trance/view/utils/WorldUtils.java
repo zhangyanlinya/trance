@@ -162,7 +162,7 @@ public class WorldUtils {
     	return body;
     }
 
-	public static List<Body> createExplode(World world, int numRays, float x, float y, float speed){
+	public static List<Body> createExplode(World world, int numRays, float x, float y, float power){
 		List<Body> bodies = new ArrayList<Body>();
 		for (int i = 0; i < numRays; i++) {
 			float angle = (i / (float)numRays) * 360 * MathUtils.degreesToRadians;
@@ -188,7 +188,7 @@ public class WorldUtils {
 			body.createFixture(fd);
 			shape.dispose();
 			bodies.add(body);
-			body.setLinearVelocity(MathUtils.sin(angle) * speed, MathUtils.cos(angle) * speed);
+			body.setLinearVelocity(MathUtils.sin(angle) * power, MathUtils.cos(angle) * power);
 		}
 		return bodies;
 	}
