@@ -114,6 +114,8 @@ public class ResUtil extends AssetManager {
 		for(int i = 0; i < 10 ; i++){
 			Texture animation = this.get("explode/"+ type.getId() +"/" + i +".png", Texture.class);
 			TextureRegion region = new TextureRegion(animation);
+			region.setRegionWidth(200);
+			region.setRegionHeight(200);
 			regions[i] = region;
 		}
 		return regions;

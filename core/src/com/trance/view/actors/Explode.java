@@ -58,7 +58,7 @@ public class Explode extends Actor {
 
         intAnimation(type);
 
-        bodies = WorldUtils.createExplode(world, 10, x, y, 5);
+        bodies = WorldUtils.createExplode(world, 10, x , y, 5);
     }
 
     public void intAnimation(ExplodeType type){
