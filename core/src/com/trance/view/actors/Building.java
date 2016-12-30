@@ -74,7 +74,7 @@ public class Building extends GameActor {
 		
 		switch(type){
 		case BuildingType.OFFICE:
-			hp = 40;
+			hp = 80;
 			break;
 		case BuildingType.HOUSE:
 			break;

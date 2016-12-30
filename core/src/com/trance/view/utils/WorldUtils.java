@@ -174,7 +174,7 @@ public class WorldUtils {
 			Body body = world.createBody(bd);
 
 			CircleShape shape = new CircleShape();
-			shape.setRadius(1f); // very small
+			shape.setRadius(0.5f); // very small
 
 			FixtureDef fd = new FixtureDef();
 			fd.shape = shape;

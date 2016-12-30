@@ -47,7 +47,7 @@ public class Explode extends GameActor {
         this.setY(y - 100);
         this.camp = 2;
         this.role = 1;
-        this.atk = 20;
+        this.atk = 5;
         animation = ResUtil.getInstance().getExplodeAnimation(type);
         animation.setPlayMode(Animation.PlayMode.NORMAL);
         WorldUtils.createExplode(world, this, num, x , y, power);
