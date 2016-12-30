@@ -2,8 +2,10 @@
 package com.trance.view.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.view.constant.BulletType;
@@ -84,6 +86,8 @@ public class ResUtil extends AssetManager {
     	load("world/stone1.png", Texture.class);
     	load("world/stone2.png", Texture.class);
 
+		load("explode/1.png",Texture.class);
+
 		loadAnimation();
 
 		loadSound();
@@ -97,28 +101,29 @@ public class ResUtil extends AssetManager {
 		}
 	}
 
-	private Map<ExplodeType, TextureRegion[]> explodeTypeMap = new HashMap<ExplodeType, TextureRegion[]>();
+	private Map<ExplodeType, Animation> explodeTypeMap = new HashMap<ExplodeType, Animation>();
 
 	/**
 	 *  ExplodeAnimation
 	 * @param type
 	 * @return
      */
-	public TextureRegion[] getExplodeAnimation(ExplodeType type){
-		TextureRegion[] regions = explodeTypeMap.get(type);
-		if(regions != null && regions.length > 0){
-			return regions;
+	public Animation getExplodeAnimation(ExplodeType type){
+		Animation animation = explodeTypeMap.get(type);
+		if(animation != null ){
+			return animation;
 		}
 
-		regions = new TextureRegion[10];
+		TextureRegion[] regions = new TextureRegion[10];
 		for(int i = 0; i < 10 ; i++){
-			Texture animation = this.get("explode/"+ type.getId() +"/" + i +".png", Texture.class);
-			TextureRegion region = new TextureRegion(animation);
+			Texture texture = this.get("explode/"+ type.getId() +"/" + i +".png", Texture.class);
+			TextureRegion region = new TextureRegion(texture);
 			region.setRegionWidth(200);
 			region.setRegionHeight(200);
 			regions[i] = region;
 		}
-		return regions;
+		float frameDuration = 0.4f;
+		return new Animation(frameDuration, regions);
 	}
 
 
@@ -149,13 +154,14 @@ public class ResUtil extends AssetManager {
 	 * sound
      */
     private void loadSound() {
+		load("audio/explode/explode.mp3",Music.class);//mp3
     	for(int i = 0 ; i < 10; i++)
     		load("audio/" + i + ".ogg", Sound.class);
     	
     	for(int i = 1 ; i < 7; i++)
         	load("audio/fire/" + i + ".ogg", Sound.class);
 	}
-    
+
     public Sound getSound(int id){
     	return this.get("audio/" + id + ".ogg", Sound.class);
     }
@@ -191,9 +197,11 @@ public class ResUtil extends AssetManager {
 		}
 		return new TextureRegion(this.get("army/"+armyId+".png",Texture.class));
 	}
-	
 
-    
+	public TextureRegion getExplodeTextureRegion(int techId) {
+		return new TextureRegion(this.get("explode/"+techId+".png",Texture.class));
+	}
+
     public TextureRegion getBulletTextureRegion(BulletType type) {
     	Texture texture = get(type.getValue(), Texture.class);
     	TextureRegion textureRegion = new TextureRegion(texture);

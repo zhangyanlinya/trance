@@ -249,7 +249,7 @@ public class Building extends GameActor {
 			}else if(percent < 0.5){
 				renderer.setColor(Color.YELLOW);
 			}else{
-				renderer.setColor(Color.GREEN);
+				renderer.setColor(Color.BLUE);
 			}
 			renderer.begin(ShapeType.Filled);
 			

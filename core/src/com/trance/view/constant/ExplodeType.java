@@ -20,4 +20,12 @@ public enum ExplodeType {
         return id;
     }
 
+    public static ExplodeType valueOf(int id){
+        for(ExplodeType et : ExplodeType.values()){
+            if(et.getId() == id){
+                return et;
+            }
+        }
+        return  null;
+    }
 }

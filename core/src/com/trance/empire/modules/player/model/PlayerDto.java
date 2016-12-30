@@ -1,6 +1,7 @@
 package com.trance.empire.modules.player.model;
 
 import com.trance.empire.modules.army.model.ArmyDto;
+import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 
@@ -83,7 +84,9 @@ public class PlayerDto{
 	private final ConcurrentMap<Integer,BuildingDto> buildings = new ConcurrentHashMap<Integer,BuildingDto>();
 	
 	private final ConcurrentMap<Integer,CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer,CoolQueueDto>();
-	
+
+	private final ConcurrentMap<Integer,TechDto> techs = new ConcurrentHashMap<Integer,TechDto>();
+
 	private int x;
 	
 	private int y;
@@ -248,5 +251,12 @@ public class PlayerDto{
 	public void setY(int y) {
 		this.y = y;
 	}
-	
+
+	public ConcurrentMap<Integer, TechDto> getTechs() {
+		return techs;
+	}
+
+	public void addTech(TechDto dto) {
+		techs.put(dto.getId(), dto);
+	}
 }

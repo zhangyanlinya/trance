@@ -18,7 +18,7 @@ public enum UiType {
 	
 	private final String value;
 	
-	private UiType(String value){
+	UiType(String value){
 		this.value = value;
 	}
 	

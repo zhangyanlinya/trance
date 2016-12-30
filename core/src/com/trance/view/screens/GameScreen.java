@@ -16,7 +16,6 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -45,6 +44,7 @@ import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ArmyType;
 import com.trance.empire.modules.army.model.ArmyVo;
+import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.player.handler.PlayerCmd;
@@ -111,12 +111,12 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
     private World world;
     private ShapeRenderer shapeRenderer;
-    private final float TIME_STEP = 1 / 50f;;
+    private final float TIME_STEP = 1 / 50f;
     
     public static final float WORLD_TO_BOX = 0.05f;
     public static final float BOX_TO_WORLD = 20f;
     
-    private Box2DDebugRenderer debugRenderer;
+//    private Box2DDebugRenderer debugRenderer;
 
 	public final static Array<GameActor> buildings = new Array<GameActor>();
 
@@ -192,7 +192,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
-		debugRenderer = new Box2DDebugRenderer();
+//		debugRenderer = new Box2DDebugRenderer();
 		stage.getViewport().setCamera(camera);
 		
 		
@@ -237,6 +237,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	
 	private static float CELL_LENGHT;
 	private int chooseArmyId;
+	private int chooseTechId;
 	private void initArmy(){
 		armys.clear();
 		Map<Integer,ArmyDto> amrys_map = Player.player.getArmys();
@@ -258,6 +259,18 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
 			dto.setRect(rect);
 			i++;
+		}
+
+		int j = 0;
+		for(TechDto techDto : Player.player.getTechs().values()){
+			if(chooseTechId == 0){
+				chooseTechId = techDto.getId();
+			}
+			techDto.resetAmount();
+			techDto.setRegion(ResUtil.getInstance().getExplodeTextureRegion(techDto.getId()));
+			Rectangle rect = new Rectangle(j * CELL_LENGHT, CELL_LENGHT, CELL_LENGHT, CELL_LENGHT);
+			techDto.setRect(rect);
+			j++;
 		}
 	}
 	
@@ -445,36 +458,36 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				
-//				if(i == 0 ){
+				if(i == 0 ){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					grass.setPosition(x, y + length);
+					stage.addActor(grass);
+				}else if(i == map.length - 1){
 //					int index = RandomUtil.nextInt(5) + 1;
 //					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-//					grass.setPosition(x, y + length);
+//					grass.setPosition(x, y - length * 2);
 //					stage.addActor(grass);
-//				}else if(i == map.length - 1){
-////					int index = RandomUtil.nextInt(5) + 1;
-////					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-////					grass.setPosition(x, y - length * 2);
-////					stage.addActor(grass);
-//				}
-//
-//				if(j == 0){
-//					int index = RandomUtil.nextInt(5) + 1;
-//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-//					grass.setPosition(x - length, y);
-//					stage.addActor(grass);
-//				}else if(j == map[i].length -1){
-//					int index = RandomUtil.nextInt(5) + 1;
-//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-//					grass.setPosition(x + length, y);
-//					stage.addActor(grass);
-//				}
+				}
+
+				if(j == 0){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					grass.setPosition(x - length, y);
+					stage.addActor(grass);
+				}else if(j == map[i].length -1){
+					int index = RandomUtil.nextInt(5) + 1;
+					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					grass.setPosition(x + length, y);
+					stage.addActor(grass);
+				}
 				
 				if (type > 0){
 					Building block = Building.buildingPool.obtain();
 					if(type >= BuildingType.CANNON){
 						connons.add(block);
 					}
-					block.init(world,type, x, y, length,length,null);
+					block.init(world,type, x, y, length,length,shapeRenderer);
 					buildings.add(block);
 					stage.addActor(block);
 				}
@@ -482,7 +495,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 	}
 	
-	private void renderKeepArmys(SpriteBatch batch){
+	private void renderKeeps(SpriteBatch batch){
 		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 		for(ArmyDto dto : myArmys.values()){
 			if(dto.getAmout() == 0){
@@ -496,6 +509,16 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width,dto.getRect().height);
 			font.draw(batch, dto.getAmout()+"", dto.getRect().x  + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
 		}
+
+		for(TechDto dto : Player.player.getTechs().values()){
+			if(dto.getId() == chooseTechId){
+				batch.setColor(Color.RED);
+			}else{
+				batch.setColor(Color.WHITE);
+			}
+			batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width,dto.getRect().height);
+			font.draw(batch, dto.getUseAmount()+"", dto.getRect().x  + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
+		}
 	}
 
 
@@ -508,7 +531,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 		
 		//debug---
-		debugRenderer.render(world, camera.combined);
+//		debugRenderer.render(world, camera.combined);
 		//debug---
 		
 		scan();
@@ -516,7 +539,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		stage.act(delta);
 		
 		spriteBatch.begin();
-		renderKeepArmys(spriteBatch);
+		renderKeeps(spriteBatch);
 		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
 		font.draw(spriteBatch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers or other side"), 24, control_height - length * 2 - 10);
 		spriteBatch.end();
@@ -658,8 +681,22 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     			return dto.getId();
     		}
     	}
+
     	return null;
     }
+
+	private Integer hitKeepTech(float x, float y){
+		for(TechDto dto : Player.player.getTechs().values()){
+			if(dto.getUseAmount() == 0){
+				continue;
+			}
+			if(dto.getRect().contains(x, y)){
+				return dto.getId();
+			}
+		}
+
+		return null;
+	}
     
     public static boolean gobattle;
 
@@ -673,15 +710,26 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		if(x > -length * 2  && x < width + length * 2
 				&& y > control_height - length * 2  && y < height + length * 2){
 
-			sendExplode(x, y);
+			if(chooseTechId > 0) {
+				TechDto tech = Player.player.getTechs().get(chooseTechId);
+				if(tech != null && tech.getUseAmount() > 0) {
+					sendExplode(x, y, tech);
+				}
+			}
 			return false;
 	    }
 
 		screenY = (int)height - screenY;//y top to down
-		Integer type = hitKeepArmy(screenX, screenY);
-		if(type != null){
-			chooseArmyId = type;	
+		Integer armyType = hitKeepArmy(screenX, screenY);
+		if(armyType != null){
+			chooseArmyId = armyType;
 			return false;
+		}else{
+			Integer techType = hitKeepTech(screenX, screenY);
+			if(techType != null){
+				chooseTechId = techType;
+				return false;
+			}
 		}
 		
 		Actor actor = stage.hit(x, y, true);
@@ -702,7 +750,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				Army block = Army.armyPool.obtain();
 				block.init(world, ArmyType.valueOf(army.getId()), x,  y, length,length,shapeRenderer);
 				armys.add(block);
-//				stage.addActor(block);
 			}
 
 			army.setGo(true);
@@ -723,12 +770,14 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	}
 
 	/**
-	 *  执行指向性操作
+	 *  执行EXPLODE
 	 */
-	private void sendExplode(float x, float y){
+	private void sendExplode(float x, float y, TechDto tech){
 		Explode explode = Explode.pool.obtain();
-		explode.init(world, ExplodeType.Fire_Red, x, y);
+		explode.init(world, ExplodeType.valueOf(tech.getId()), x, y);
 		stage.addActor(explode);
+		tech.setUseAmount(tech.getUseAmount() - 1);
+		gobattle = true;
 	}
 
 	public boolean keyUp (int keycode){
@@ -766,7 +815,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 
 		shapeRenderer.dispose();
-		debugRenderer.dispose();
+//		debugRenderer.dispose();
 		
 		if(world != null){
 			world.dispose();

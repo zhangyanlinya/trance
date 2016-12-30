@@ -26,11 +26,9 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.trance.view.actors.Building;
+import com.trance.view.actors.Explode;
 import com.trance.view.constant.BulletType;
 import com.trance.view.screens.GameScreen;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorldUtils {
 
@@ -162,8 +160,7 @@ public class WorldUtils {
     	return body;
     }
 
-	public static List<Body> createExplode(World world, int numRays, float x, float y, float power){
-		List<Body> bodies = new ArrayList<Body>();
+	public static void createExplode(World world, Explode explode, int numRays, float x, float y, float power){
 		for (int i = 0; i < numRays; i++) {
 			float angle = (i / (float)numRays) * 360 * MathUtils.degreesToRadians;
 
@@ -177,7 +174,7 @@ public class WorldUtils {
 			Body body = world.createBody(bd);
 
 			CircleShape shape = new CircleShape();
-			shape.setRadius(10f); // very small
+			shape.setRadius(1f); // very small
 
 			FixtureDef fd = new FixtureDef();
 			fd.shape = shape;
@@ -187,9 +184,8 @@ public class WorldUtils {
 			fd.filter.groupIndex = -1; // particles should not collide with each other
 			body.createFixture(fd);
 			shape.dispose();
-			bodies.add(body);
+			body.setUserData(explode);
 			body.setLinearVelocity(MathUtils.sin(angle) * power, MathUtils.cos(angle) * power);
 		}
-		return bodies;
 	}
 }

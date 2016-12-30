@@ -11,7 +11,7 @@ public enum ControlType {
 
 	private final int value;
 
-	private ControlType(int value) {
+	ControlType(int value) {
 		this.value = value;
 	}
 	

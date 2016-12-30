@@ -24,6 +24,7 @@ import com.trance.common.socket.model.ResponseStatus;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
+import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
@@ -231,6 +232,22 @@ public class LoginScreen extends BaseScreen {
 					playerDto.addBuilding(dto);
 				}
 			}
+
+			//Tech
+			Object tobj = result.get("techs");
+			if(tobj != null){
+				List<TechDto> techDtos = JSON.parseArray(tobj.toString(), TechDto.class);
+				for(TechDto dto : techDtos){
+					playerDto.addTech(dto);
+				}
+			}
+			//TEST
+			TechDto techDto = new TechDto();
+			techDto.setId(1);
+			techDto.setAmout(3);
+			techDto.setLevel(1);
+			playerDto.addTech(techDto);
+
 			
 			Player.player = playerDto;
 			
