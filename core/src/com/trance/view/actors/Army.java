@@ -13,6 +13,7 @@ import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ArmyType;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.view.constant.BulletType;
+import com.trance.view.constant.RangeType;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.pools.ArmyPool;
 import com.trance.view.screens.GameScreen;
@@ -57,29 +58,28 @@ public class Army extends GameActor {
 		}
 		switch(armyType){
 		case TANK:
-			range = 160;
+			range = RangeType.SHORT;
 			hp = 50;
 			break;
 		case FAT:
-			range = 300;
 			atk = 20;
 			fireDelay = 1000;
 			break;
 		case SISTER:
-			range = 350;
+			range = RangeType.LONG;
 			hp = 30;
-			speed = 1;
+			speed = 1.5f;
 			break;
 		case FOOT:
 			
 			break;
 		case FIVE:
 			fireDelay = 4000;
-			atk = 50;
-			speed = 1f;
+			atk = 40;
+			speed = 1.5f;
 			break;
 		case SIX:
-			range = 400;
+			range = RangeType.TOOLONG;
 			atk = 80;
 			move = false;
 			break;

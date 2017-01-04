@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.view.constant.BulletType;
+import com.trance.view.constant.RangeType;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.pools.BuildingPool;
 import com.trance.view.screens.GameScreen;
@@ -81,17 +82,18 @@ public class Building extends GameActor {
 		case BuildingType.BARRACKS:
 			break;
 		case BuildingType.CANNON:
-			range = 300;
-			fireDelay = 800;
+			fireDelay = 4000;
+			atk = 50;
+			range = RangeType.LONG;
 //			linearDamping = 0;
 			density = 0;
 			break;
 		case BuildingType.ROCKET:
-			range = 400;
 			fireDelay = 3500;
+			range = RangeType.LONG;
 //			linearDamping = 0;
 			density = 0;
-			atk = 2;
+			atk = 1;
 			break;
 		case BuildingType.FLAME:
 			fireDelay = 1000;
@@ -105,7 +107,7 @@ public class Building extends GameActor {
 			break;
 		case BuildingType.TOWER:
 			face = false;
-			range = 250;
+			range = RangeType.TOOLONG;
 			break;
 		case BuildingType.MORTAR:
 			face = false;
@@ -114,7 +116,7 @@ public class Building extends GameActor {
 		}
 		
 		if(dto != null){
-			atk += dto.getLevel();
+			atk *= dto.getLevel();
 		    hp *= dto.getLevel();
 		}
 		hp *= 10;
@@ -287,8 +289,6 @@ public class Building extends GameActor {
 		if(type == BuildingType.OFFICE){
 			MapData.gamerunning = false;
 			GameScreen.finishBattle(true);
-//			Music music = AssetsManager.getInstance().get("audio/game_over.mp3");
-//			music.play();
 		}
 	}
 

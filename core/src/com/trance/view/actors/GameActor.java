@@ -3,6 +3,7 @@ package com.trance.view.actors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.trance.view.constant.RangeType;
 
 public abstract class GameActor extends Actor {
 	
@@ -20,11 +21,11 @@ public abstract class GameActor extends Actor {
 
 	public float hp = 10;
 	public float maxhp = 10;
-	public int atk = 10 ;
+	public float atk = 10 ;
 	
 	public boolean alive = true;
 
-	public float range = 200;
+	public float range = RangeType.NORMAL;
 	public boolean move;
 	
 	public float vx;
@@ -95,8 +96,7 @@ public abstract class GameActor extends Actor {
 				actors.removeValue(actor, true);
 				continue;
 			}
-			
-			
+
 			float dst = actor.dst(this.getX() + this.getWidth()/2, this.getY() + this.getHeight()/2);
 			if(min == 0 || dst < min){
 				min = dst;
@@ -125,7 +125,7 @@ public abstract class GameActor extends Actor {
 				firing = false;
 			}
 		}
-		
+
 		return dest;
 	}
 
