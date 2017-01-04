@@ -66,7 +66,7 @@ public class Army extends GameActor {
 			fireDelay = 1000;
 			break;
 		case SISTER:
-			range = RangeType.LONG;
+			range = RangeType.SHORT;
 			hp = 30;
 			speed = 1.5f;
 			break;
@@ -79,8 +79,7 @@ public class Army extends GameActor {
 			speed = 1.5f;
 			break;
 		case SIX:
-			range = RangeType.TOOLONG;
-			atk = 80;
+			atk = 50;
 			move = false;
 			break;
 		case SEVEN:
@@ -91,7 +90,7 @@ public class Army extends GameActor {
 			range = 20;
 			break;
 		case NINE:
-			atk = 150;
+			atk = 100;
 			break;
 		default:
 			break;
