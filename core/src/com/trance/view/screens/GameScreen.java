@@ -586,14 +586,13 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 					continue;
 				}
 
-				sendDelta += delta;
 				float speed = 5 - a.getSpeed();//5可能是最大速度
-				if(sendDelta > speed){ //
+				if(sendDelta == 0 || sendDelta > speed){ //
 					stage.addActor(a);
 					a.setSend(true);
 					sendDelta = 0;
 				}
-
+				sendDelta += delta;
 			}
 		}
 	}
