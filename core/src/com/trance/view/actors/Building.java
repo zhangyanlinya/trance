@@ -153,8 +153,8 @@ public class Building extends GameActor {
 			return;
 		}
 		
-		float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
-		float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
+		float x = body.getPosition().x * WorldUtils.BOX_TO_WORLD - hw;
+		float y = body.getPosition().y * WorldUtils.BOX_TO_WORLD - hh;
 		setPosition(x,y);
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
@@ -221,8 +221,8 @@ public class Building extends GameActor {
 		}
 
 		if(body != null) {
-			float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
-			float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
+			float x = body.getPosition().x * WorldUtils.BOX_TO_WORLD - hw;
+			float y = body.getPosition().y * WorldUtils.BOX_TO_WORLD - hh;
 			this.setPosition(x, y);
 //			this.setRotation(MathUtils.radiansToDegrees * body.getAngle());
 			batch.draw(textureRegion, x, y, hw,

@@ -28,9 +28,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.trance.view.actors.Building;
 import com.trance.view.actors.Explode;
 import com.trance.view.constant.BulletType;
-import com.trance.view.screens.GameScreen;
 
 public class WorldUtils {
+
+	public static final float WORLD_TO_BOX = 0.05f;
+	public static final float BOX_TO_WORLD = 20f;
 
     public static World createWorld() {
         return new World(new Vector2(0, 0), true);
@@ -38,10 +40,10 @@ public class WorldUtils {
 
     public static Body createBorder(World world, float x, float y, float width, float height) {
     	// Create ball body and shape
-    	x = x * GameScreen.WORLD_TO_BOX;
-    	y = y * GameScreen.WORLD_TO_BOX;
-        width=width* GameScreen.WORLD_TO_BOX;
-        height=height* GameScreen.WORLD_TO_BOX;
+    	x = x * WORLD_TO_BOX;
+    	y = y * WORLD_TO_BOX;
+        width=width*WORLD_TO_BOX;
+        height=height* WORLD_TO_BOX;
     	
     	BodyDef bodyDef = new BodyDef();
     	bodyDef.type = BodyType.StaticBody;
@@ -67,10 +69,10 @@ public class WorldUtils {
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation = true;
     	bodyDef.linearDamping = building.linearDamping;
-    	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
+    	bodyDef.position.set((x + width/2) * WORLD_TO_BOX, (y + height/ 2) * WORLD_TO_BOX);
     	CircleShape shape = new CircleShape();
 //    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
-    	shape.setRadius((width/ 2 - 4) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 2 - 4) * WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
@@ -95,8 +97,8 @@ public class WorldUtils {
 //    	float hy = height/2 * GameScreen.WORLD_TO_BOX;
     	
 //    	shape.setAsBox(hx,hy);
-    	shape.setRadius(width/2 * GameScreen.WORLD_TO_BOX);
-    	bodyDef.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius(width/2 * WORLD_TO_BOX);
+    	bodyDef.position.set(x * WORLD_TO_BOX, y * WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
@@ -145,10 +147,10 @@ public class WorldUtils {
     	bodyDef.type = BodyType.DynamicBody;
     	bodyDef.fixedRotation = true;
 //    	bodyDef.linearDamping = 1f;
-    	bodyDef.position.set((x + width/2) * GameScreen.WORLD_TO_BOX, (y + height/ 2) * GameScreen.WORLD_TO_BOX);
+    	bodyDef.position.set((x + width/2) * WORLD_TO_BOX, (y + height/ 2) * WORLD_TO_BOX);
     	CircleShape shape = new CircleShape();
 //    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
-    	shape.setRadius((width/ 2 - 6) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 2 - 6) * WORLD_TO_BOX);
     	Body body = world.createBody(bodyDef);
     	FixtureDef f = new FixtureDef();
     	f.shape = shape;//夹具的形状
@@ -170,7 +172,7 @@ public class WorldUtils {
 			bd.bullet = true; // prevent tunneling at high speed
 			bd.linearDamping = 0f; // drag due to moving through air
 			bd.gravityScale = 0; // ignore gravity
-			bd.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
+			bd.position.set(x * WORLD_TO_BOX, y * WORLD_TO_BOX);
 			Body body = world.createBody(bd);
 
 			CircleShape shape = new CircleShape();

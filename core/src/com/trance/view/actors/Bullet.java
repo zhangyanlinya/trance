@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.view.constant.BulletType;
 import com.trance.view.pools.BulletPool;
-import com.trance.view.screens.GameScreen;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.WorldUtils;
 
@@ -86,8 +85,8 @@ public class Bullet extends GameActor {
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		float x = body.getPosition().x  * GameScreen.BOX_TO_WORLD - hw;
-		float y = body.getPosition().y  * GameScreen.BOX_TO_WORLD - hh;
+		float x = body.getPosition().x  * WorldUtils.BOX_TO_WORLD - hw;
+		float y = body.getPosition().y  * WorldUtils.BOX_TO_WORLD - hh;
 		this.setRotation(MathUtils.radiansToDegrees * body.getAngle());
 		batch.draw(textureRegion, x, y, hw,
 				hh, getWidth(), getHeight(), getScaleX(),

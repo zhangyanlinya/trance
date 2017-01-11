@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -83,7 +84,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 	private Image toWorld;
 	private Window window;
-	private SpriteBatch spriteBatch;
+	private Batch spriteBatch;
 	public static PlayerDto playerDto;
 	private Stage stage;
 	private FreeBitmapFont font;
@@ -113,9 +114,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     private ShapeRenderer shapeRenderer;
     private final float TIME_STEP = 1 / 50f;
     
-    public static final float WORLD_TO_BOX = 0.05f;
-    public static final float BOX_TO_WORLD = 20f;
-    
+
 //    private Box2DDebugRenderer debugRenderer;
 
 	public final static Array<GameActor> buildings = new Array<GameActor>();
@@ -194,8 +193,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         camera.setToOrtho(false, width, height);
 //		debugRenderer = new Box2DDebugRenderer();
 		stage.getViewport().setCamera(camera);
-		
-		
+
 		length = (int) (width * percent / ARR_WIDTH_SIZE);
 		game_width   = length * ARR_WIDTH_SIZE;
 		game_height  = length * ARR_HEIGHT_SIZE;
@@ -263,9 +261,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 		int j = 0;
 		for(TechDto techDto : Player.player.getTechs().values()){
-			if(chooseTechId == 0){
-				chooseTechId = techDto.getId();
-			}
+//			if(chooseTechId == 0){
+//				chooseTechId = techDto.getId();
+//			}
 			techDto.resetAmount();
 			techDto.setRegion(ResUtil.getInstance().getExplodeTextureRegion(techDto.getId()));
 			Rectangle rect = new Rectangle(j * CELL_LENGHT, CELL_LENGHT, CELL_LENGHT, CELL_LENGHT);
@@ -495,7 +493,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 	}
 	
-	private void renderKeeps(SpriteBatch batch){
+	private void renderKeeps(Batch batch){
 		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 		for(ArmyDto dto : myArmys.values()){
 			if(dto.getAmout() == 0){
@@ -537,7 +535,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		scan();
 		stage.draw();
 		stage.act(delta);
-		
+
 		spriteBatch.begin();
 		renderKeeps(spriteBatch);
 		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);

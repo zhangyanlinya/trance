@@ -16,7 +16,6 @@ import com.trance.view.constant.BulletType;
 import com.trance.view.constant.RangeType;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.pools.ArmyPool;
-import com.trance.view.screens.GameScreen;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.TimeUtil;
 import com.trance.view.utils.WorldUtils;
@@ -129,8 +128,8 @@ public class Army extends GameActor {
 			return;
 		}
 		
-		float x = body.getPosition().x * GameScreen.BOX_TO_WORLD - hw;
-		float y = body.getPosition().y * GameScreen.BOX_TO_WORLD - hh;
+		float x = body.getPosition().x * WorldUtils.BOX_TO_WORLD - hw;
+		float y = body.getPosition().y * WorldUtils.BOX_TO_WORLD - hh;
 		setPosition(x,y);
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
