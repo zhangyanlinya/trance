@@ -14,6 +14,7 @@ import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.RangeType;
 import com.trance.view.mapdata.MapData;
+import com.trance.view.particle.ParticleService;
 import com.trance.view.pools.BuildingPool;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.utils.RandomUtil;
@@ -42,7 +43,8 @@ public class Building extends GameActor {
 	public float restitution;
 	private BitmapFont font;
 	private BuildingDto dto;
-	
+
+
 	/**
 	 * 初始化
 	 * @param type
@@ -238,7 +240,10 @@ public class Building extends GameActor {
 			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());
 			font.draw(batch, "a: " + dto.getLeftAmount(), getX(), getY() - getHeight()/2);
 		}
-		
+		if(firing){
+			ParticleService.getInstance().draw(batch,getX(), getY());
+		}
+
 		if(renderer != null){
 			batch.end();
 			renderer.setColor(Color.GREEN);
@@ -275,7 +280,7 @@ public class Building extends GameActor {
 		if(!firing && type > 3 && type < 8){
 			randomDir();
 		}
-		
+
 	}
 	
 	

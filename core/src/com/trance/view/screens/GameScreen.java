@@ -65,6 +65,7 @@ import com.trance.view.constant.ExplodeType;
 import com.trance.view.controller.GestureController;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.mapdata.MapData;
+import com.trance.view.particle.ParticleService;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
@@ -824,6 +825,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		connons.clear();
 		Bullet.bulletPool.clear();
 		Building.buildingPool.clear();
+
+		ParticleService.getInstance().disponse();
 		
 	}
 
