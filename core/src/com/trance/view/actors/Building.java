@@ -213,7 +213,7 @@ public class Building extends GameActor {
 			id = 6;
 		}
 
-		Actor actor = ParticleService.getInstance().addEffectActor(getX(), getY());
+		Actor actor = ParticleService.getInstance().addEffectActor(getX() + hw, getY() + hh);
 		getStage().addActor(actor);
 
 		ResUtil.getInstance().playDeadSoundFire(id);

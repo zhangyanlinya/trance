@@ -9,8 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
 import com.trance.view.particle.actor.ParticleEffectActor;
 
-import java.util.ArrayList;
-
 /**
  * Created by Administrator on 2017/1/19 0019.
  */
@@ -21,7 +19,6 @@ public class ParticleService {
     private ParticleEffect particle;  //粒子实例
     private ParticleEffect effect;  //临时变量
     private ParticleEffectPool particlepool;   //一个粒子系统的统一管理的类，负责管理粒子系统的产生回收，可以用它的obtain()方法得到一个ParticleEffect实例
-    private ArrayList<ParticleEffect> particlelist;
 
     public static ParticleService getInstance(){
         if(particleService == null){
@@ -34,9 +31,8 @@ public class ParticleService {
         particle = new ParticleEffect();
         //Gdx.files.internal()的位置是在项目的asset根目录下，同理在asset下的data文件夹的话，格式应该为Gdx.files.internal(“data/particle.p”).
         //第一个参数是Particle Editor生成的编辑文件（注意后缀名也是自己取的，读取的时候记得对应），第二个参数是形成单个粒子的图片文件。
-        particle.load(Gdx.files.internal("fire.p"), Gdx.files.internal(""));  //还可以换成particle_fire.p
+        particle.load(Gdx.files.internal("fire1.p"), Gdx.files.internal(""));  //还可以换成particle_fire.p
         particlepool = new ParticleEffectPool(particle, 5, 10);
-        particlelist = new ArrayList<ParticleEffect>();  //实例化装粒子效应的集合
     }
 
     public Actor addEffectActor(float x, float y){
