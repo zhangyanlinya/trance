@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
@@ -212,6 +213,9 @@ public class Building extends GameActor {
 			id = 6;
 		}
 
+		Actor actor = ParticleService.getInstance().addEffectActor(getX(), getY());
+		getStage().addActor(actor);
+
 		ResUtil.getInstance().playDeadSoundFire(id);
 	}
 
@@ -240,9 +244,9 @@ public class Building extends GameActor {
 			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());
 			font.draw(batch, "a: " + dto.getLeftAmount(), getX(), getY() - getHeight()/2);
 		}
-		if(firing){
-			ParticleService.getInstance().draw(batch,getX(), getY());
-		}
+//		if(firing){
+//
+//		}
 
 		if(renderer != null){
 			batch.end();
