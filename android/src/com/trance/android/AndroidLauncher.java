@@ -151,7 +151,6 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId(this);
 		Player.userName = getDeviceId.getCombinedId();
-		Player.userName = "good day";
 
 		//
 

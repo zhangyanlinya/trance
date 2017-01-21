@@ -41,7 +41,7 @@ public class Building extends GameActor {
 	public float density;
 	public float friction;
 	public float restitution;
-	private static FreeBitmapFont font;
+	public static FreeBitmapFont font;
 	private BuildingDto dto;
 	private boolean detail;
 
@@ -93,7 +93,7 @@ public class Building extends GameActor {
 			break;
 		case BuildingType.CANNON:
 			fireDelay = 4000;
-			atk = 200;
+			atk = 300;
 			range = RangeType.LONG;
 //			linearDamping = 0;
 			density = 0;

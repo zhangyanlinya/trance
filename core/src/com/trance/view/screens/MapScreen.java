@@ -994,6 +994,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(dialogBuildingStage != null){
 			dialogBuildingStage.dispose();
 		}
+		if(Building.font != null){
+			Building.font.dispose();
+		}
 	}
 
 }
