@@ -15,7 +15,7 @@ import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.ranking.handler.RankingCmd;
 import com.trance.empire.modules.world.handler.WorldCmd;
 import com.trance.view.TranceGame;
-import com.trance.view.actors.WorldImage;
+import com.trance.view.actors.RankImage;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
 import com.trance.view.freefont.FreeBitmapFont;
@@ -90,7 +90,15 @@ public class DialogRankUpStage extends BaseStage {
     	int i = 1;
     	float side = bgImage.getHeight() / MAX_RANKING;
     	for(final PlayerDto dto : players){
-    		WorldImage rank = new WorldImage(ResUtil.getInstance().get("building/1.png", Texture.class), font, dto);
+			Texture texture = ResUtil.getInstance().get("building/1.png");
+			if(i == 1){
+				texture = ResUtil.getInstance().getUi(UiType.ONE);
+			}else if(i == 2){
+				texture = ResUtil.getInstance().getUi(UiType.TWO);
+			}else if(i == 3){
+				texture = ResUtil.getInstance().getUi(UiType.THREE);
+			}
+    		RankImage rank = new RankImage(texture, font, dto);
     		rank.setBounds(getWidth()/2 - bgImage.getWidth()/2 + side,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
     		addActor(rank);
 

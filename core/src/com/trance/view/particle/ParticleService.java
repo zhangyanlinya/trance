@@ -31,7 +31,7 @@ public class ParticleService {
         particle = new ParticleEffect();
         //Gdx.files.internal()的位置是在项目的asset根目录下，同理在asset下的data文件夹的话，格式应该为Gdx.files.internal(“data/particle.p”).
         //第一个参数是Particle Editor生成的编辑文件（注意后缀名也是自己取的，读取的时候记得对应），第二个参数是形成单个粒子的图片文件。
-        particle.load(Gdx.files.internal("fire.p"), Gdx.files.internal(""));  //还可以换成particle_fire.p
+        particle.load(Gdx.files.internal("particle/fire.p"), Gdx.files.internal("particle/"));  //还可以换成particle_fire.p
         particlepool = new ParticleEffectPool(particle, 5, 10);
     }
 

@@ -281,6 +281,7 @@ public class DialogArmyStage extends BaseStage {
 			
 			Sound sound = ResUtil.getInstance().getSound(4);
 			sound.play();
+			show();
 		}
 	}
 	

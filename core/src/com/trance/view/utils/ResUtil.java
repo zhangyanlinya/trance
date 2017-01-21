@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.ControlType;
@@ -19,8 +18,6 @@ import java.util.Map;
 
 public class ResUtil extends AssetManager {
 	
-	public TextureAtlas textureAtlas;
-	public TextureAtlas textureAtlas2;
 	private static ResUtil resUtil;
 	public static ResUtil getInstance(){
 		if(resUtil == null){
@@ -56,6 +53,10 @@ public class ResUtil extends AssetManager {
        	load("ui/levelup.png", Texture.class);
        	load("ui/upbuilding.png", Texture.class);
        	load("ui/fixed.png", Texture.class);
+
+       	load("ui/1.png", Texture.class);
+       	load("ui/2.png", Texture.class);
+       	load("ui/3.png", Texture.class);
 
 		//Bullet
 		loadBullet();
@@ -211,7 +212,7 @@ public class ResUtil extends AssetManager {
     
     public Texture getControlTextureRegion(ControlType value) {
     	Texture texture = null;
-    	String fileName = null;
+    	String fileName;
     	switch(value){
     	case RENAME:
     		fileName = "ui/rename.png";

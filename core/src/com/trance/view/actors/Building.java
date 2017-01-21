@@ -2,7 +2,6 @@ package com.trance.view.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -13,6 +12,8 @@ import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.RangeType;
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.pools.BuildingPool;
 import com.trance.view.screens.GameScreen;
@@ -40,9 +41,17 @@ public class Building extends GameActor {
 	public float density;
 	public float friction;
 	public float restitution;
-	private BitmapFont font;
+	private static FreeBitmapFont font;
 	private BuildingDto dto;
+	private boolean detail;
 
+	static {
+		if(font == null){
+			font = FreeFont.getBitmapFont("building");
+			font.setSize(15);
+			font.appendText("1234567890levelcount");
+		}
+	}
 
 	/**
 	 * 初始化
@@ -76,7 +85,7 @@ public class Building extends GameActor {
 		
 		switch(type){
 		case BuildingType.OFFICE:
-			hp = 80;
+			hp = 200;
 			break;
 		case BuildingType.HOUSE:
 			break;
@@ -132,12 +141,17 @@ public class Building extends GameActor {
 
 	}
 	
-	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, BitmapFont font, BuildingDto dto){
+	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, BuildingDto dto){
 		init(world, type, x, y, width, height, renderer);
-		this.font = font;
 		this.dto = dto;
 	}
-	
+
+	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, BuildingDto dto, boolean detail){
+		init(world, type, x, y, width, height, renderer);
+		this.dto = dto;
+		this.detail = detail;
+	}
+
 	public void setIndex(int i,int j){
 		this.i = i;
 		this.j = j;
@@ -236,12 +250,13 @@ public class Building extends GameActor {
 
 		}
 		if(dto != null){
-			font.draw(batch, "lv:" + dto.getLevel(), getX(), getY());
-			font.draw(batch, "a: " + dto.getLeftAmount(), getX(), getY() - getHeight()/2);
+			if(detail){
+				font.draw(batch, "level  " + dto.getLevel(), getX(), getY());
+				font.draw(batch, "count  " + dto.getLeftAmount(), getX(), getY() - getHeight()/2);
+			}else{
+				font.draw(batch, "" + dto.getLevel(), getX(), getY());
+			}
 		}
-//		if(firing){
-//
-//		}
 
 		if(renderer != null){
 			batch.end();

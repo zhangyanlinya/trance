@@ -47,6 +47,7 @@ import com.trance.empire.modules.army.model.ArmyType;
 import com.trance.empire.modules.army.model.ArmyVo;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.battle.handler.BattleCmd;
+import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
@@ -486,7 +487,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 					if(type >= BuildingType.CANNON){
 						connons.add(block);
 					}
-					block.init(world,type, x, y, length,length,shapeRenderer);
+
+					BuildingDto dto = Player.player.getBuildings().get(type);
+					block.init(world,type, x, y, length,length,shapeRenderer,dto);
 					buildings.add(block);
 					stage.addActor(block);
 				}

@@ -696,7 +696,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				
 				Building block = Building.buildingPool.obtain();
 				block.setIndex(i, j);
-				block.init(null,type, x, y, length,length,null);
+				BuildingDto dto = Player.player.getBuildings().get(type);
+				block.init(null,type, x, y, length,length, null, dto);
 				stage.addActor(block);
 			}
 		}
@@ -725,7 +726,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			float x = rate * side + length;
 			int rate2 = i/5 + 1;
 			float y = control_height - (length * 2 + rate2 * length * 2 );
-			buiding.init(null,dto.getId(), x, y, length,length,null, font, dto);
+			buiding.init(null,dto.getId(), x, y, length,length,null, dto, true);
 			stage.addActor(buiding);
 			i++;
 		}
@@ -853,7 +854,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			
 			if(dto.getLeftAmount() > 0){
 				Building block = Building.buildingPool.obtain();
-				block.init(null,oldType, oldx, oldy, length, length, null, font, dto);
+				block.init(null,oldType, oldx, oldy, length, length, null, dto);
 				stage.addActor(block);
 			}
 			
