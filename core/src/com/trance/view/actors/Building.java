@@ -92,7 +92,7 @@ public class Building extends GameActor {
 		case BuildingType.BARRACKS:
 			break;
 		case BuildingType.CANNON:
-			fireDelay = 4000;
+			fireDelay = 5000;
 			atk = 300;
 			range = RangeType.LONG;
 //			linearDamping = 0;
