@@ -254,7 +254,7 @@ public class Building extends GameActor {
 				font.draw(batch, "level  " + dto.getLevel(), getX(), getY());
 				font.draw(batch, "count  " + dto.getLeftAmount(), getX(), getY() - getHeight()/2);
 			}else{
-				font.draw(batch, "" + dto.getLevel(), getX(), getY());
+				font.draw(batch, "" + dto.getLevel(), getX() + hw/2 , getY() + getHeight());
 			}
 		}
 
