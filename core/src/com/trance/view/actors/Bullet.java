@@ -5,8 +5,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.view.constant.BulletType;
+import com.trance.view.particle.ParticleService;
 import com.trance.view.pools.BulletPool;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.WorldUtils;
@@ -37,7 +40,7 @@ public class Bullet extends GameActor {
 	public Bullet() {}
 	
 	//初始化
-	public void init(World world, BulletType type, GameActor gameActor, float x, float y, float width, float height){
+	public void init(World world, Stage stage, BulletType type, GameActor gameActor, float x, float y, float width, float height){
 		this.alive = true;
 		this.type  = type;
 		this.gameActor = gameActor;
@@ -60,7 +63,6 @@ public class Bullet extends GameActor {
 		radius += 1;
 		float sin = -MathUtils.sin(degrees);
 		float cos =  MathUtils.cos(degrees);
-//		System.out.println("cos:" + cos +" sin :" + sin);
 		x += sin * radius;
 		y += cos * radius;
 		orgX = x;
@@ -81,6 +83,9 @@ public class Bullet extends GameActor {
 		body.setUserData(this);
 
 //		createTime = System.currentTimeMillis();
+
+		Actor actor = ParticleService.getInstance().addEffectActor(x, y);
+		stage.addActor(actor);
 	}
 	
 	@Override

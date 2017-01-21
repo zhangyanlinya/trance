@@ -8,14 +8,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.RangeType;
 import com.trance.view.mapdata.MapData;
-import com.trance.view.particle.ParticleService;
 import com.trance.view.pools.BuildingPool;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.utils.RandomUtil;
@@ -86,7 +84,7 @@ public class Building extends GameActor {
 			break;
 		case BuildingType.CANNON:
 			fireDelay = 4000;
-			atk = 50;
+			atk = 200;
 			range = RangeType.LONG;
 //			linearDamping = 0;
 			density = 0;
@@ -204,7 +202,7 @@ public class Building extends GameActor {
 		}
 
 		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(body.getWorld(), BulletType.valueOf(type - 4), this, getX(), getY(), 0,
+		bullet.init(body.getWorld(), this.getStage(), BulletType.valueOf(type - 4), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 
@@ -212,9 +210,6 @@ public class Building extends GameActor {
 		if(id > 6){
 			id = 6;
 		}
-
-		Actor actor = ParticleService.getInstance().addEffectActor(getX() + hw, getY() + hh);
-		getStage().addActor(actor);
 
 		ResUtil.getInstance().playDeadSoundFire(id);
 	}

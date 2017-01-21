@@ -6,7 +6,7 @@ lowMin: 3000.0
 lowMax: 3000.0
 - Count - 
 min: 0
-max: 50
+max: 20
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
@@ -62,8 +62,8 @@ timeline0: 0.0
 - Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 60.0
-highMax: 60.0
+highMin: 50.0
+highMax: 50.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -93,8 +93,8 @@ scaling1: 1.0
 scaling2: 1.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.5273973
-timeline2: 0.98630136
+timeline1: 0.5753425
+timeline2: 0.9726027
 - Rotation - 
 active: false
 - Wind - 
@@ -117,12 +117,12 @@ relative: false
 scalingCount: 4
 scaling0: 0.0
 scaling1: 1.0
-scaling2: 0.75
+scaling2: 0.24561404
 scaling3: 0.0
 timelineCount: 4
 timeline0: 0.0
-timeline1: 0.2
-timeline2: 0.8
+timeline1: 0.09589041
+timeline2: 0.19178082
 timeline3: 1.0
 - Options - 
 attached: false

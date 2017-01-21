@@ -74,12 +74,13 @@ public class Army extends GameActor {
 			break;
 		case FIVE:
 			fireDelay = 4000;
-			atk = 40;
+			atk = 200;
 			speed = 1.5f;
 			break;
 		case SIX:
 			atk = 50;
-			move = false;
+			range = RangeType.SHORT;
+			speed = 1;
 			break;
 		case SEVEN:
 			hp = 40;
@@ -173,7 +174,7 @@ public class Army extends GameActor {
 
 		id--;
 		Bullet bullet = Bullet.bulletPool.obtain();
-		bullet.init(body.getWorld(), BulletType.valueOf(id), this, getX(), getY(), 0,
+		bullet.init(body.getWorld(), this.getStage(), BulletType.valueOf(id), this, getX(), getY(), 0,
 				0);
 		this.getStage().addActor(bullet);
 	}
