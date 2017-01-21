@@ -160,6 +160,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		MapData.gamerunning = true;
 		finishBattle = false;
 		gobattle = false;
+		chooseTechId = 0;
 		camera.position.set(width/2 , height/2 , 0);
 		currTime = TOTAL_TIME;//初始化时间 
 		stage.clear();
