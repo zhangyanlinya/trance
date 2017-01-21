@@ -376,6 +376,18 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(armys == null || armys.isEmpty()){
 			return;
 		}
+
+		boolean deadAll = true;
+		for(ArmyDto dto : armys.values()){
+			if(dto.getAmout() > 0){
+				deadAll = false;
+				break;
+			}
+		}
+		if(deadAll){
+			MsgUtil.getInstance().showMsg(Module.BATTLE,-10003);
+			return;
+		}
 		
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("x", playerDto.getX());

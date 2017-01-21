@@ -99,7 +99,6 @@ public class MsgUtil {
 			zh_local.put("Account is blocked", "账号被封");
 			zh_local.put("server is colosed please wait", "服务器已关闭 请等待");
 			zh_local.put("Being attacked, wait 4 minutes", "正在遭到攻击 等待4分钟");
-			zh_local.put("The maximum number of trains has been reached", "已达到最大训练数量");
 			zh_local.put("Reconnect the server successfully", "重新连接服务器成功");
 			zh_local.put("Connection to server failed", "连接服务器失败！");
 			zh_local.put("please login again", "请重新登录");

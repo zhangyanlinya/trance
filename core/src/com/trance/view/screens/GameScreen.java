@@ -574,10 +574,11 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		if(armys.size == 0){ // 是否已经派完
 			Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 			for(ArmyDto dto : myArmys.values()){
-				if(dto.isGo() && dto.getAmout() > 0){
-					continue;
+				if(dto.getAmout() > 0) {
+					if (!dto.isGo()) {
+						return;
+					}
 				}
-				return;
 			}
 			MapData.gamerunning = false;
 			finishBattle(false);
