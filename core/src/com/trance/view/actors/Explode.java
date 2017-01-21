@@ -24,7 +24,7 @@ public class Explode extends GameActor {
     private ExplodeType type;
 
     private int num = 8;
-    private float power = 10;
+    private float power = 7;
 
     private float stateTime;
     private TextureRegion currentFrame;
