@@ -16,11 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
+import com.trance.empire.modules.building.model.BuildingDto;
+import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.dailyreward.handler.DailyRewardCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
@@ -41,7 +44,9 @@ import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -256,6 +261,28 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 								}else{
 									dto.setMap(MapData.clonemap());
 								}
+
+								Object bobj = result.get("buildings");
+								if(bobj == null){//defalut;
+									Collection<CityElement> citys = BasedbService.listAll(CityElement.class);
+									for(CityElement city : citys){
+										if(city.getOpenLevel()  == 1){
+											BuildingDto bto = new BuildingDto();
+											bto.setId(city.getId());
+											bto.setAmount(1);
+											bto.setLevel(1);
+											bto.setBuildAmount(1);
+											dto.addBuilding(bto);
+										}
+									}
+								}else{
+									List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+									for(BuildingDto bto : buildings){
+										dto.addBuilding(bto);
+									}
+								}
+
+
 								dto.setX(ox);
 								dto.setY(oy);
 								location.setPlayerDto(dto);
@@ -292,6 +319,26 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 								dto.setMap(map);
 							}else{
 								dto.setMap(MapData.clonemap());
+							}
+
+							Object bobj = result.get("buildings");
+							if(bobj == null){//defalut;
+								Collection<CityElement> citys = BasedbService.listAll(CityElement.class);
+								for(CityElement city : citys){
+									if(city.getOpenLevel()  == 1){
+										BuildingDto bto = new BuildingDto();
+										bto.setId(city.getId());
+										bto.setAmount(1);
+										bto.setLevel(1);
+										bto.setBuildAmount(1);
+										dto.addBuilding(bto);
+									}
+								}
+							}else{
+								List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+								for(BuildingDto bto : buildings){
+									dto.addBuilding(bto);
+								}
 							}
 
 							location.setPlayerDto(dto);

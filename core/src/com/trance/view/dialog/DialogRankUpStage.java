@@ -6,11 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
+import com.trance.empire.modules.building.model.BuildingDto;
+import com.trance.empire.modules.building.model.basedb.CityElement;
+import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.ranking.handler.RankingCmd;
 import com.trance.empire.modules.world.handler.WorldCmd;
@@ -25,6 +29,7 @@ import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -111,6 +116,9 @@ public class DialogRankUpStage extends BaseStage {
 
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
+					if(Player.player.getId() == dto.getId()){
+						return;
+					}
 					Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY_ANYONE, dto.getId()),true);
 					if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 						return;
@@ -131,6 +139,27 @@ public class DialogRankUpStage extends BaseStage {
 					}else{
 						dto.setMap(MapData.clonemap());
 					}
+
+					Object bobj = result.get("buildings");
+					if(bobj == null){//defalut;
+						Collection<CityElement> citys = BasedbService.listAll(CityElement.class);
+						for(CityElement city : citys){
+							if(city.getOpenLevel()  == 1){
+								BuildingDto bto = new BuildingDto();
+								bto.setId(city.getId());
+								bto.setAmount(1);
+								bto.setLevel(1);
+								bto.setBuildAmount(1);
+								dto.addBuilding(bto);
+							}
+						}
+					}else{
+						List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+						for(BuildingDto bto : buildings){
+							dto.addBuilding(bto);
+						}
+					}
+
 					getTranceGame().mapScreen.setRankUpDailog(false);
 					getTranceGame().mapScreen.setPlayerDto(dto);
 					getTranceGame().setScreen(getTranceGame().mapScreen);

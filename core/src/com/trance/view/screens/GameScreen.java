@@ -489,7 +489,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 						connons.add(block);
 					}
 
-					BuildingDto dto = Player.player.getBuildings().get(type);
+					BuildingDto dto = playerDto.getBuildings().get(type);
 					block.init(world,type, x, y, length,length,shapeRenderer,dto);
 					buildings.add(block);
 					stage.addActor(block);

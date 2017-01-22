@@ -182,7 +182,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 		});
 
-
 		label_rename = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("rename"));
 		label_rename.setPosition(side * 1 + side/2, side, Align.center);
 		//Rename
@@ -708,7 +707,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				
 				Building block = Building.buildingPool.obtain();
 				block.setIndex(i, j);
-				BuildingDto dto = Player.player.getBuildings().get(type);
+				BuildingDto dto = playerDto.getBuildings().get(type);
 				block.init(null,type, x, y, length,length, null, dto);
 				stage.addActor(block);
 			}
