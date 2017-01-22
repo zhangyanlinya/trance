@@ -111,7 +111,6 @@ public class DialogRankUpStage extends BaseStage {
 			dest.setBounds(getWidth()/2 + bgImage.getWidth()/2 - side,  getHeight()/2 + bgImage.getHeight()/2 - side * i, side, side);
 			addActor(dest);
 
-
 			dest.addListener(new ClickListener(){
 
 				@Override
