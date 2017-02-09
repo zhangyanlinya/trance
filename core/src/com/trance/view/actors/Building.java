@@ -44,6 +44,7 @@ public class Building extends GameActor {
 	public static FreeBitmapFont font;
 	private BuildingDto dto;
 	private boolean detail;
+	private boolean hasfire;
 
 	static {
 		if(font == null){
@@ -71,6 +72,7 @@ public class Building extends GameActor {
 		this.density = 10f;//密度
 		this.friction = 0.9f;//摩擦力
 		this.restitution = 0.9f;//弹力
+		this.hasfire = false;
 		if(type <= 0){
 			textureRegion = null;
 			return;
@@ -85,7 +87,7 @@ public class Building extends GameActor {
 		
 		switch(type){
 		case BuildingType.OFFICE:
-			hp = 200;
+			hp = 400;
 			break;
 		case BuildingType.HOUSE:
 			break;
@@ -180,6 +182,9 @@ public class Building extends GameActor {
 	private boolean flag = RandomUtil.nextBoolean();
 	private long faceTime;
 	private void randomDir(){
+		if(hasfire){
+			return;
+		}
 		setRotation(tmpRotation);
 		long now = System.currentTimeMillis();
 		if((now - faceTime) < RandomUtil.betweenValue(50, 100)){
@@ -226,6 +231,8 @@ public class Building extends GameActor {
 		}
 
 		ResUtil.getInstance().playDeadSoundFire(id);
+
+		hasfire = true;
 	}
 
 	

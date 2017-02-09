@@ -682,25 +682,31 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				if(i == 0 ){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
 				}else if(i == map.length-1){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					grass.setPosition(x, y - length * 2);
-					stage.addActor(grass);
+					if(x < length * 4 || x > width - length * 5) { //形成一个口
+//						int index = RandomUtil.nextInt(5) + 1;
+//						Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+						Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
+						grass.setPosition(x, y - length * 2);
+						stage.addActor(grass);
+					}
 				}
 				
 				if(j == 0){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
 					grass.setPosition(x - length, y);
 					stage.addActor(grass);
 				}else if(j == map[i].length -1){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}

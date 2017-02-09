@@ -161,6 +161,26 @@ public class WorldUtils {
     	shape.dispose();
     	return body;
     }
+	public static Body createFitting(World world, int type, float x, float y,
+								  float width, float height) {
+    	BodyDef bodyDef = new BodyDef();
+    	bodyDef.type = BodyType.DynamicBody;
+    	bodyDef.fixedRotation = true;
+//    	bodyDef.linearDamping = 1f;
+    	bodyDef.position.set((x + width/2) * WORLD_TO_BOX, (y + height/ 2) * WORLD_TO_BOX);
+    	CircleShape shape = new CircleShape();
+//    	shape.setAsBox((width/ 2 - 2) * GameScreen.WORLD_TO_BOX, (height / 2  - 2) * GameScreen.WORLD_TO_BOX);
+    	shape.setRadius((width/ 2 - 6) * WORLD_TO_BOX);
+    	Body body = world.createBody(bodyDef);
+    	FixtureDef f = new FixtureDef();
+    	f.shape = shape;//夹具的形状
+    	f.density = 0.1f;//夹具的密度
+    	f.friction = 0.1f;//夹具的摩擦力
+    	f.restitution = 1.0f; //弹力
+    	body.createFixture(f);//刚体创建夹具.
+    	shape.dispose();
+    	return body;
+    }
 
 	public static void createExplode(World world, Explode explode, int numRays, float x, float y, float power){
 		for (int i = 0; i < numRays; i++) {

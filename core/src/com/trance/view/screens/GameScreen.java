@@ -394,7 +394,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			}
 		});
         
-//        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
+        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
     }
 	
 	private void initClock() {
@@ -460,25 +460,31 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				float y = control_height + n * length;
 				
 				if(i == 0 ){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
 					grass.setPosition(x, y + length);
 					stage.addActor(grass);
 				}else if(i == map.length - 1){
-//					int index = RandomUtil.nextInt(5) + 1;
-//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-//					grass.setPosition(x, y - length * 2);
-//					stage.addActor(grass);
+					if(x < length * 4 || x > width - length * 5) { //形成一个口
+//						int index = RandomUtil.nextInt(5) + 1;
+//						Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+						Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
+						grass.setPosition(x, y - length * 2);
+						stage.addActor(grass);
+					}
 				}
 
 				if(j == 0){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
 					grass.setPosition(x - length, y);
 					stage.addActor(grass);
 				}else if(j == map[i].length -1){
-					int index = RandomUtil.nextInt(5) + 1;
-					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+//					int index = RandomUtil.nextInt(5) + 1;
+//					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
+					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}
@@ -551,8 +557,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 		shapeRenderer.setColor(Color.GREEN);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.rect(20, length * 2, width - 40, control_height - length * 4);
-		shapeRenderer.rect(20, height + length * 2, width - 40, control_height - length * 4);
+		shapeRenderer.rect(length * 4, length * 2, width - length * 8, control_height - length * 4);
+//		shapeRenderer.rect(20, height + length * 2, width - 40, control_height - length * 4);
 
 		shapeRenderer.end();
 
@@ -710,9 +716,19 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		camera.unproject(vector3); // coordinate convert
 		float x = vector3.x;
 		float y = vector3.y;
-		if(x > -length * 2  && x < width + length * 2
-				&& y > control_height - length * 2  && y < height + length * 2){
+//		if(x > -length * 2  && x < width + length * 2
+//				&& y > control_height - length * 2  && y < height + length * 2){//四面可以进攻
+//
+//			if(chooseTechId > 0) {
+//				TechDto tech = Player.player.getTechs().get(chooseTechId);
+//				if(tech != null && tech.getUseAmount() > 0) {
+//					sendExplode(x, y, tech);
+//				}
+//			}
+//			return false;
+//	    }
 
+		if(y > control_height - length * 2 || x <  length * 4 || x > width -length * 4 ){ // 只有下面一个区域可能进攻
 			if(chooseTechId > 0) {
 				TechDto tech = Player.player.getTechs().get(chooseTechId);
 				if(tech != null && tech.getUseAmount() > 0) {
@@ -720,7 +736,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				}
 			}
 			return false;
-	    }
+		}
 
 		screenY = (int)height - screenY;//y top to down
 		Integer armyType = hitKeepArmy(screenX, screenY);

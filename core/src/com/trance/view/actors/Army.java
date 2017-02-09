@@ -39,6 +39,11 @@ public class Army extends GameActor {
 	 */
 	private boolean send;
 
+	private Fitting left;
+	private Fitting right;
+	private Fitting top;
+	private Fitting down;
+
 
 	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer){
 		super.init(x, y, width, height);
@@ -170,7 +175,6 @@ public class Army extends GameActor {
 		}
 
 		ResUtil.getInstance().playDeadSoundFire(id);
-//		sound.play();
 
 		id--;
 		Bullet bullet = Bullet.bulletPool.obtain();
