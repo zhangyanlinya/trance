@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ArmyType;
+import com.trance.empire.modules.fitting.model.FittingDto;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.RangeType;
@@ -41,8 +42,6 @@ public class Army extends GameActor {
 
 	private Fitting left;
 	private Fitting right;
-	private Fitting top;
-	private Fitting down;
 
 
 	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer){
@@ -101,7 +100,7 @@ public class Army extends GameActor {
 			break;
 		}
 		
-		ArmyDto dto = Player.player.getArmys().get(armyType.id);
+		FittingDto dto = Player.player.getFittings().get(armyType.id);
 		if(dto != null && dto.getLevel() > 0){
 			atk *= dto.getLevel();
 		    hp *= dto.getLevel();
