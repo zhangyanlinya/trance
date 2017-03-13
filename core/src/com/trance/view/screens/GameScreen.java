@@ -264,9 +264,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 		int j = 0;
 		for(TechDto techDto : Player.player.getTechs().values()){
-//			if(chooseTechId == 0){
-//				chooseTechId = techDto.getId();
-//			}
+			if(chooseTechId == 0){
+				chooseTechId = techDto.getId();
+			}
 			techDto.resetAmount();
 			techDto.setRegion(ResUtil.getInstance().getExplodeTextureRegion(techDto.getId()));
 			Rectangle rect = new Rectangle(j * CELL_LENGHT, CELL_LENGHT, CELL_LENGHT, CELL_LENGHT);
