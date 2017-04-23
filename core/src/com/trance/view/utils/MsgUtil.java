@@ -96,7 +96,7 @@ public class MsgUtil {
 			zh_local.put("Account in other places login", "账号在其他地方登录");
 			zh_local.put("Account has kicked out by admin", "账号被管理后台踢下线");
 			zh_local.put("IP is blocked", "IP被封");
-			zh_local.put("Account is blocked", "账号被封");
+			zh_local.put("login agin ", "请稍后登录");
 			zh_local.put("server is colosed please wait", "服务器已关闭 请等待");
 			zh_local.put("Being attacked, wait 4 minutes", "正在遭到攻击 等待4分钟");
 			zh_local.put("Reconnect the server successfully", "重新连接服务器成功");

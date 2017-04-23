@@ -183,7 +183,7 @@ public class DialogBuildingStage extends BaseStage {
 					if(pbd != null){
 						pbd.setLevel(playerBuildingDto.getLevel());
 						if(pbd.getId() != BuildingType.OFFICE){
-							pbd.setAmount(levelToAmount(playerBuildingDto.getLevel()));
+							pbd.setAmount(playerBuildingDto.getLevel());
 						}
 					}
 					this.getTranceGame().mapScreen.refreshLeftBuiding();
@@ -224,8 +224,6 @@ public class DialogBuildingStage extends BaseStage {
 
 	/**
 	 * 多少等级对应有多少数量(要与服务器对应起来)
-	 * @param level
-	 * @return
 	 */
 	private int levelToAmount(int level){
 		if(level < 4){

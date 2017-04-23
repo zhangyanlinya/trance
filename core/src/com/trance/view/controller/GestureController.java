@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class GestureController extends GestureAdapter implements GestureListener {
 	
 	private OrthographicCamera camera;
-	public float zoom = 1.0f;
+	public float zoom = 5.0f;
 	public float initialScale = 1.0f;
 	private float leftX;
 	private float rightX;
