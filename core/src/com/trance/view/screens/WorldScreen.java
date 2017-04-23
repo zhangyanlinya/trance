@@ -142,8 +142,8 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 
 		camera = new OrthographicCamera(width, height);
 		stage = new Stage(new StretchViewport(sw, sh));
-		camera.setToOrtho(false, width, height);
-		camera.translate(sw / 2 - 480, sh / 2 - 800);
+		camera.setToOrtho(false, width/2, height/2);
+		camera.translate(sw / 2 - 480/2, sh / 2 - 800/2);
 		stage.getViewport().setCamera(camera);
 		
 		Image bg = new Image(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
