@@ -635,7 +635,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
            }
            return;
         }
-        if(a == null && b != null){
+        if(a == null){
         	if(b.role == 1){
         		b.dead();
         	}

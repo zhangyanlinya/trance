@@ -233,6 +233,7 @@ public class Building extends GameActor {
 		ResUtil.getInstance().playDeadSoundFire(id);
 
 		hasfire = true;
+		move = true;
 	}
 
 	
