@@ -123,7 +123,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private Stage stage;
 	private FreeBitmapFont font;
 	
-	public ShapeRenderer shapeRenderer;
+	private ShapeRenderer shapeRenderer;
 	
 	private InputMultiplexer inputMultiplexer;
     public DialogArmyStage dialogArmyStage;

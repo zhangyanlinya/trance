@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -20,9 +21,6 @@ public class AdmobActivity extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
-    /**
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +41,8 @@ public class AdmobActivity extends AppCompatActivity {
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
 
+        // 5秒后跳转
+        new TimeThread(5).start();
     }
 
 
@@ -76,14 +76,12 @@ public class AdmobActivity extends AppCompatActivity {
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         } else {
-     //       Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
+           Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void loadInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        mInterstitialAd.loadAd(adRequest);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     private boolean start;
@@ -108,9 +106,9 @@ public class AdmobActivity extends AppCompatActivity {
         }
     };
 
-    class TimeThread extends Thread{
+   private class TimeThread extends Thread{
         private int delay;
-        public TimeThread(int delay){
+        private TimeThread(int delay){
             this.delay = delay;
         }
         public void run(){

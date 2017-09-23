@@ -5,20 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import com.trance.android.font.AndroidFreeFont;
 import com.trance.android.util.GetDeviceId;
 import com.trance.empire.modules.player.model.Player;
@@ -43,9 +37,9 @@ public class AndroidLauncher extends AndroidApplication {
 //	private static final String AD_UNITID ="ca-app-pub-3940256099942544/6300978111";
 
 	//Admob 横屏广告ID(自己的)
-	private static final String AD_UNITID ="ca-app-pub-5713066340300541/1056902518";
+	//private static final String AD_UNITID ="ca-app-pub-5713066340300541/1056902518";
 
-	private static AdView adView;
+	//private static AdView adView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +75,8 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useCompass = false;		  //禁用罗盘
 //        config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
 		AndroidFreeFont.Strat();//初始化文本
-		View gameView = initializeForView(tranceGame,config);
-		showAD(gameView);
+		initialize(tranceGame,config);
+		//showAD(gameView);
 
 		init();
 	}
@@ -90,7 +84,7 @@ public class AndroidLauncher extends AndroidApplication {
 	/**
 	 * 显示Admob banner
 	 */
-	private void showAD(final View gameView){
+/*	private void showAD(final View gameView){
 		// Create the layout
 		RelativeLayout layout = new RelativeLayout(this);
 
@@ -121,18 +115,18 @@ public class AndroidLauncher extends AndroidApplication {
 				adView.setVisibility(View.VISIBLE);
 			}
 		});
-	}
+	}*/
 
 	@Override
 	protected void onPause() {
-		adView.pause();
+		//adView.pause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		adView.resume();
+		//adView.resume();
 	}
 
 
@@ -149,10 +143,13 @@ public class AndroidLauncher extends AndroidApplication {
 //		UpdateManager update = new UpdateManager(this);
 //		update.checkUpdate();
 
-		GetDeviceId getDeviceId  = new GetDeviceId(this);
-		Player.userName = getDeviceId.getCombinedId();
-
-		//
+		GetDeviceId getDeviceId  = new GetDeviceId();
+//        long start = System.currentTimeMillis();
+//		Player.userName = getDeviceId.getCombinedId();
+//        System.err.println("getCombinedId()用时： " + (System.currentTimeMillis() -start) + "  " +Player.userName);
+//        start = System.currentTimeMillis();
+		Player.userName =  getDeviceId.getUniquePsuedoID();
+       // System.err.println("getUniquePsuedoID()用时： "+ Player.userName);
 
 		isInit = true;
 	}
@@ -175,7 +172,7 @@ public class AndroidLauncher extends AndroidApplication {
 					break;
 				case 2:
 					dialog.dismiss();
-					adView.setVisibility(View.GONE);
+					//adView.setVisibility(View.GONE);
 					break;
 				default:
 					Toast.makeText(reference.get(), msg.obj+"",
@@ -228,7 +225,7 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		adView.destroy();
+		//adView.destroy();
 		tranceGame.dispose();
 		SocketUtil.destroy();
 		Gdx.app.exit();
