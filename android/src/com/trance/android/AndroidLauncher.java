@@ -144,12 +144,7 @@ public class AndroidLauncher extends AndroidApplication {
 //		update.checkUpdate();
 
 		GetDeviceId getDeviceId  = new GetDeviceId();
-//        long start = System.currentTimeMillis();
-//		Player.userName = getDeviceId.getCombinedId();
-//        System.err.println("getCombinedId()用时： " + (System.currentTimeMillis() -start) + "  " +Player.userName);
-//        start = System.currentTimeMillis();
 		Player.userName =  getDeviceId.getUniquePsuedoID();
-       // System.err.println("getUniquePsuedoID()用时： "+ Player.userName);
 
 		isInit = true;
 	}

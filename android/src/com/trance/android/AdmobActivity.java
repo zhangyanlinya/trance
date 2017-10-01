@@ -31,8 +31,8 @@ public class AdmobActivity extends AppCompatActivity {
         UpdateManager update = new UpdateManager(this , new Handler.Callback(){
             @Override
             public boolean handleMessage(Message message) {
-                int delay = message.what;
-                new TimeThread(delay).start();
+//                int delay = message.what;
+//                new TimeThread(delay).start();
                 return false;
             }
         });
@@ -93,13 +93,15 @@ public class AdmobActivity extends AppCompatActivity {
         start = true;
         Intent intent = new Intent(AdmobActivity.this, AndroidLauncher.class);
         startActivity(intent);
-        AdmobActivity.this.finish();
+        this.finish();
+
     }
 
     public Handler handler = new Handler(){
 
         public void handleMessage(android.os.Message msg) {
             int count = msg.what;
+            Toast.makeText(AdmobActivity.this, count + "s", Toast.LENGTH_SHORT).show();
             if(count < 1){
                 startGame();
             }

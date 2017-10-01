@@ -189,7 +189,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		rename = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.RENAME));
 		rename.setBounds(side * 1, 0, side, side);
 		rename.addListener(new ClickListener(){
-			
+
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
@@ -307,8 +307,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		for(int i = 0 ; i < 5; i ++){
 			int index = RandomUtil.nextInt(4) + 1;
-			int x = RandomUtil.nextInt((int)width);
-			int y = RandomUtil.nextInt((int)height);
+			int x = RandomUtil.nextInt(width);
+			int y = RandomUtil.nextInt(height);
 			Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
 			grass.setPosition(x, y);
 			stage.addActor(grass);
