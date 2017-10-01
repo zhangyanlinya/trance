@@ -103,7 +103,7 @@ public class PlayerDto{
 
 	public String getPlayerName() {
 		int len = playerName.length();
-		playerName = len > 8 ? playerName.substring(0,8) : playerName;
+		playerName = len > 10 ? playerName.substring(0,10) : playerName;
 		return playerName;
 	}
 
