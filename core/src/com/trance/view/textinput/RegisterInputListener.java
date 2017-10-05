@@ -61,7 +61,7 @@ public class RegisterInputListener implements TextInputListener {
 			return;
 		}
 
-		Player.player.setPlayerName(text);
+//		Player.player.setPlayerName(text);
 		FontUtil.getFont().appendText(text);
 		callback.handleMessage(result);
 
