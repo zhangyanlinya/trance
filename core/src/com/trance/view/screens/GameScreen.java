@@ -84,7 +84,6 @@ import java.util.Map;
 
 public class GameScreen extends BaseScreen implements ContactListener,InputProcessor{
 
-	private Image toWorld;
 	private Window window;
 	private Batch spriteBatch;
 	public static PlayerDto playerDto;
@@ -205,7 +204,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		shapeRenderer = new ShapeRenderer();
 		
 		//返回家
-		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
+		Image toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
 		toWorld.addListener(new ClickListener(){
 			

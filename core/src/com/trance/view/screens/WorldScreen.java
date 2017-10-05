@@ -63,11 +63,10 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 	private boolean init;
 	private Image home;
 	private Image fixed;
-	private Image dailyReward;
 	private float sw = 480 * BASE;
 	private float sh = 800 * BASE;
 	private final static Map<String,WorldImage> locations = new HashMap<String,WorldImage>();
-	public final static Map<String,PlayerDto> playerDtos = new HashMap<String,PlayerDto>();
+	final static Map<String,PlayerDto> playerDtos = new HashMap<String,PlayerDto>();
 	private float side;
 	private InputMultiplexer inputMultiplexer;
 	private GestureDetector gestureHandler;
@@ -78,12 +77,12 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		super(tranceGame);
 	}
 	
-	public static PlayerDto getWorldPlayerDto(int x, int y) {
+	private static PlayerDto getWorldPlayerDto(int x, int y) {
 		String key = createKey(x, y);
 		return playerDtos.get(key);
 	}
 	
-	public static void setWorldPlayerDto(int x, int y, PlayerDto newPlayerDto) {
+	static void setWorldPlayerDto(int x, int y, PlayerDto newPlayerDto) {
 		String key = createKey(x, y);
 		playerDtos.put(key, newPlayerDto);
 		locations.get(key).setPlayerDto(newPlayerDto);
@@ -95,7 +94,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		locations.get(key).setPlayerDto(null);
 	}
 	
-	public static String createKey(int x ,int y){
+	private static String createKey(int x, int y){
 		return new StringBuilder().append(x).append("_").append(y).toString();
 	}
 
@@ -212,7 +211,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 					}
 				}
 				
-				final WorldImage location = new WorldImage(ResUtil.getInstance().get(filename, Texture.class), font, dto);
+				final WorldImage location = new WorldImage(ResUtil.getInstance().get(filename, Texture.class), dto);
 				float opx =  x * 480 +(x ^ y) * 20;
 				float opy =  y * 800 + ((BASE - x) ^ (BASE - y)) * 40;
 				location.setPosition(opx , opy);
@@ -359,7 +358,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		fixed.setBounds(width - side - 20 , 10, side, side);
 		
 		//itembox
-		dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
+		Image dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
 		int x = RandomUtil.betweenValue(20, (int)sw -20);
 		int y = RandomUtil.betweenValue(20, (int)sh -20);
 		dailyReward.setBounds(x, y, dailyReward.getWidth() + dailyReward.getWidth()/2, dailyReward.getHeight() + dailyReward.getHeight()/2);

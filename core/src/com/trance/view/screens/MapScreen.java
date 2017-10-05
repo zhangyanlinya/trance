@@ -670,7 +670,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 	
 	// 初始化关卡地图
-	public void initMap() {
+	private void initMap() {
 		if(playerDto == null){
 			return;
 		}

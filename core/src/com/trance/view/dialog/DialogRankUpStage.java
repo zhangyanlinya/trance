@@ -39,8 +39,7 @@ import java.util.List;
  */
 public class DialogRankUpStage extends BaseStage {
 
-    private Image bgImage;
-    private List<PlayerDto> players;
+	private List<PlayerDto> players;
     private FreeBitmapFont font;
     private static final int MAX_RANKING = 10;
     private boolean init;
@@ -69,8 +68,8 @@ public class DialogRankUpStage extends BaseStage {
     	
     	this.clear();
     	this.setVisible(true);
-    	
-    	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
+
+		Image bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
         bgImage.getColor().a = 0.6f;
 	    bgImage.setWidth(getWidth() * 0.6f);
 	    bgImage.setHeight(getHeight() * 0.5f);

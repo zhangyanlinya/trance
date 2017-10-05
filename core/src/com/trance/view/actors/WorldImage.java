@@ -2,19 +2,20 @@ package com.trance.view.actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.trance.empire.modules.player.model.PlayerDto;
+import com.trance.view.freefont.FreeBitmapFont;
+import com.trance.view.utils.FontUtil;
 
 public class WorldImage extends Image {
 	
-	private BitmapFont font;
+	private FreeBitmapFont font;
 	
 	private PlayerDto playerDto;
 	
-	public WorldImage(Texture texture, BitmapFont font, PlayerDto dto) {
+	public WorldImage(Texture texture, PlayerDto dto) {
 		super(texture);
-		this.font = font;
+		this.font = FontUtil.getFont();
 		this.playerDto = dto;
 	}
 
@@ -22,9 +23,7 @@ public class WorldImage extends Image {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if(playerDto != null){
-			String name = playerDto.getPlayerName() + " ";
-			font.draw(batch, name ,this.getX() + getWidth(),this.getY() + getHeight()/2);
-			font.draw(batch, playerDto.getLevel()+"" ,this.getX() + getWidth() * 2 + getWidth()/2, this.getY() + getHeight()/2);
+			font.draw(batch, playerDto.getPlayerName() +" [" + playerDto.getLevel() +"]" ,this.getX(),this.getY() + + getHeight());
 		}
 	}
 	

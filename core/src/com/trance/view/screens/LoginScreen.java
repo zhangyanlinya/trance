@@ -39,7 +39,6 @@ import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.screens.callback.LoginCallback;
 import com.trance.view.textinput.RegisterInputListener;
-import com.trance.view.textinput.RenameInputListener;
 import com.trance.view.utils.CharUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
@@ -59,18 +58,12 @@ public class LoginScreen extends BaseScreen {
 	private Texture background;
 	private Stage stage;
 	private float width;
-	private float height;
-	private Image start;
 	private SpriteBatch spriteBatch;
 	private boolean init;
 	private ResUtil resUtil;
 	private FreeBitmapFont font;
 	//画笔
-  	public ShapeRenderer renderer;
-  	
-  	public static boolean loginSuccess;
-
-	private InputMultiplexer inputMultiplexer;
+	private ShapeRenderer renderer;
 
 	private String msg;
 
@@ -83,8 +76,8 @@ public class LoginScreen extends BaseScreen {
 		resUtil = ResUtil.getInstance();
 		resUtil.init();
 		width = Gdx.graphics.getWidth();
-		height = Gdx.graphics.getHeight();
-		stage = new Stage(new StretchViewport(width,height));
+		float height = Gdx.graphics.getHeight();
+		stage = new Stage(new StretchViewport(width, height));
 		spriteBatch = new SpriteBatch();
 		font = FreeFont.getBitmapFont("login");
 		msg = MsgUtil.getInstance().getLocalMsg("Click the picture to start the game");
@@ -93,7 +86,7 @@ public class LoginScreen extends BaseScreen {
 		background = new Texture(Gdx.files.internal("ui/loginbg.png"));
 		TextureRegionDrawable startDrawable = new TextureRegionDrawable(new TextureRegion(
 				background));
-		start = new Image(startDrawable);
+		Image start = new Image(startDrawable);
 		start.addListener(new ClickListener(){
 			
 			@Override
@@ -112,8 +105,8 @@ public class LoginScreen extends BaseScreen {
 		start.setX(x);
 		start.setY(y);
 		stage.addActor(start);
-		
-		inputMultiplexer = new InputMultiplexer();
+
+		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(stage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
@@ -125,7 +118,6 @@ public class LoginScreen extends BaseScreen {
 			init();
 			init = true;
 		}
-		loginSuccess = false;
 	}
 
 	private void showRegisterInputDialog(){
@@ -141,7 +133,7 @@ public class LoginScreen extends BaseScreen {
 		Gdx.input.getTextInput(listener, newNameMsg, newName,"");
 	}
 	
-	protected void login() {
+	private void login() {
 //		String src = Player.userName + Player.loginKey;
 //		String loginMD5 = null;
 //		try {
@@ -277,8 +269,6 @@ public class LoginScreen extends BaseScreen {
 
 
 		Player.player = playerDto;
-
-		loginSuccess = true;
 
 		SocketUtil.heartbeat = true;
 		Gdx.app.postRunnable(new Runnable() {
