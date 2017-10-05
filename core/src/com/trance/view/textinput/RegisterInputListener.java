@@ -30,11 +30,13 @@ public class RegisterInputListener implements TextInputListener {
 
 	@Override
 	public void input(String text) {
-		if(text == null || text.trim().length() < 2 || text.trim().length() > 10){
+		if(text == null || text.trim().length() < 2 || text.trim().length() > 22){
+			MsgUtil.getInstance().showMsg("name is too long or too short");
 			return;
 		}
 
 		if(stringFilter(text)){
+			MsgUtil.getInstance().showMsg("name is illegal");
 			return;
 		}
 		

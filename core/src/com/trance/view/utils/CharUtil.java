@@ -234,10 +234,30 @@ public class CharUtil {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 100; i++) {
-            String name = getRandomName();
-            System.out.println(name);
+        int max = 0;
+        for (String lastName :  LAST_NAMES) {
+            if(lastName.length() > max ){
+                max = lastName.length();
+            }
         }
+        System.out.println(max);
+
+        int max1 = 0;
+        for(String name :MALE_FIRST_NAMES){
+            if(name.length() > max1 ){
+                max1 = name.length();
+            }
+        }
+        System.out.println(max1);
+
+        int max2 = 0;
+        for(String name :FEMALE_FIRST_NAMES){
+            if(name.length() > max2 ){
+                max2 = name.length();
+            }
+        }
+        System.out.println(max2);
+
     }
 }
 
