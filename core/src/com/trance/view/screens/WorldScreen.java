@@ -39,6 +39,7 @@ import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.base.BaseScreen;
+import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
@@ -285,7 +286,8 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 								dto.setX(ox);
 								dto.setY(oy);
 								location.setPlayerDto(dto);
-								font.appendText(dto.getPlayerName());
+//								font.appendText(dto.getPlayerName());
+								FontUtil.getFont().appendText(dto.getPlayerName());
 								tranceGame.mapScreen.setPlayerDto(dto);
 								tranceGame.setScreen(tranceGame.mapScreen);
 							}
@@ -341,7 +343,8 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 							}
 
 							location.setPlayerDto(dto);
-							font.appendText(dto.getPlayerName());
+//							font.appendText(dto.getPlayerName());
+							FontUtil.getFont().appendText(dto.getPlayerName());
 							tranceGame.mapScreen.setPlayerDto(dto);
 							tranceGame.setScreen(tranceGame.mapScreen);
 					   }

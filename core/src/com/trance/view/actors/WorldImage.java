@@ -17,6 +17,9 @@ public class WorldImage extends Image {
 		super(texture);
 		this.font = FontUtil.getFont();
 		this.playerDto = dto;
+		if(dto != null){
+			font.appendText(dto.getPlayerName());
+		}
 	}
 
 	@Override

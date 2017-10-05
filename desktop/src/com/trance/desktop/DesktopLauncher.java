@@ -15,7 +15,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		DesktopFreeFont.Strat();
-		Player.userName ="test6";
+		Player.userName ="test8";
 		new LwjglApplication(new TranceGame(new BsuEvent() {
 			@Override
 			public void notify(int what, Object obj) {

@@ -1,6 +1,7 @@
 package com.trance.view.textinput;
 
 import com.alibaba.fastjson.JSON;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -40,7 +41,7 @@ public class RegisterInputListener implements TextInputListener {
 			return;
 		}
 		
-		text = removeEmoji(text);
+		final String playerName = removeEmoji(text);
 
 		Map<String, Object> parms = new HashMap<String, Object>();
 		parms.put("userName", Player.userName);
@@ -64,6 +65,13 @@ public class RegisterInputListener implements TextInputListener {
 		}
 
 		callback.handleMessage(result);
+
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				FontUtil.getFont().appendText(playerName);
+			}
+		});
 	}
 
 	@Override
@@ -72,7 +80,7 @@ public class RegisterInputListener implements TextInputListener {
 	}
 	
 	// 过滤特殊字符
-	public  boolean stringFilter(String str) throws PatternSyntaxException {
+	private boolean stringFilter(String str) throws PatternSyntaxException {
 		// 清除掉所有特殊字符
 		String regEx = "[`~!@#$%^&*()+=|{}':;',//[//].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 		Pattern p = Pattern.compile(regEx);
@@ -80,7 +88,7 @@ public class RegisterInputListener implements TextInputListener {
 		return m.find();
 	}  
 	
-	public String removeEmoji(String str){
+	private String removeEmoji(String str){
 		str = str.replaceAll("[^\\u0000-\\uFFFF]", "");
 		return str;
 	}
