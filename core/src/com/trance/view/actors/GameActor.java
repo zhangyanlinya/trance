@@ -17,25 +17,25 @@ public abstract class GameActor extends Actor {
 	 */
 	public int camp;
 	
-	public float degrees;
+	float degrees;
 
-	public float hp = 10;
-	public float maxhp = 10;
-	public float atk = 10 ;
+	float hp = 10;
+	float maxhp = 10;
+	float atk = 10 ;
 	
 	public boolean alive = true;
 
 	public float range = RangeType.NORMAL;
-	public boolean move;
+	boolean move;
 	
-	public float vx;
-	public float vy;
-	public float hw;
-	public float hh;
+	float vx;
+	float vy;
+	float hw;
+	float hh;
 	
-	public boolean firing;
+	boolean firing;
 
-	public boolean face = true;
+	boolean face = true;
 	
 	
 	public void init(float x, float y, float width,
@@ -61,7 +61,7 @@ public abstract class GameActor extends Actor {
 		}
 	}
 	
-	public void stop() {
+	private void stop() {
 		vx = 0;
 		vy = 0;
 		
@@ -70,7 +70,7 @@ public abstract class GameActor extends Actor {
 	public abstract void dead();
 	
 	
-	public void faceTo(float destX, float destY) {
+	private void faceTo(float destX, float destY) {
 		float disX = destX - (this.getX() + hw);
 		float disY = destY - (this.getY() + hh);
 		degrees = -MathUtils.atan2(disX, disY);
@@ -81,7 +81,7 @@ public abstract class GameActor extends Actor {
 		}
 	}
 
-	public float dst(float x, float y) {
+	private float dst(float x, float y) {
 		final float x_d = x - getX();
 		final float y_d = y - getY();
 		return (float)Math.sqrt(x_d * x_d + y_d * y_d);

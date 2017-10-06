@@ -42,7 +42,7 @@ public class AdmobActivity extends AppCompatActivity {
         loadInterstitial();
 
         // 5秒后跳转
-        new TimeThread(5).start();
+        new TimeThread(6).start();
     }
 
 

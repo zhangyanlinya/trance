@@ -29,14 +29,13 @@ import com.trance.view.utils.WorldUtils;
 public class Building extends GameActor {
 	
 	public final static Pool<Building> buildingPool = new BuildingPool();
-	public Body body;
+	private Body body;
 	public int type;
 	public int i;
 	public int j;
 	private TextureRegion textureRegion;
-  	public ShapeRenderer renderer;
-	public float speed = 3;
-	public long fireDelay = 2000;
+  	private ShapeRenderer renderer;
+	private long fireDelay = 2000;
 	public float linearDamping;
 	public float density;
 	public float friction;
@@ -173,6 +172,7 @@ public class Building extends GameActor {
 		float x = body.getPosition().x * WorldUtils.BOX_TO_WORLD - hw;
 		float y = body.getPosition().y * WorldUtils.BOX_TO_WORLD - hh;
 		setPosition(x,y);
+		float speed = 3;
 		body.setLinearVelocity(vx * speed, vy * speed);
 	}
 	

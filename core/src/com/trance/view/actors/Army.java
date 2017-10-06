@@ -70,7 +70,7 @@ public class Army extends GameActor {
 			break;
 		case SISTER:
 			range = RangeType.SHORT;
-			hp = 30;
+			maxhp = hp = 30;
 			speed = 1.5f;
 			break;
 		case FOOT:
@@ -87,7 +87,7 @@ public class Army extends GameActor {
 			speed = 1;
 			break;
 		case SEVEN:
-			hp = 40;
+			maxhp = hp = 40;
 			break;
 		case EIGHT:
 			speed = 4;
@@ -104,9 +104,9 @@ public class Army extends GameActor {
 		if(dto != null && dto.getLevel() > 0){
 			atk *= dto.getLevel();
 		    hp *= dto.getLevel();
-		    maxhp = hp;
 		}
-		
+
+		maxhp = hp;
 
 		if(world == null){
 			body = null;

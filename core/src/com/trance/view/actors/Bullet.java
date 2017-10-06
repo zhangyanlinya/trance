@@ -21,10 +21,10 @@ import com.trance.view.utils.WorldUtils;
  */
 public class Bullet extends GameActor {
 	
-	public Body body;
+	private Body body;
 	public BulletType type;
-	public GameActor gameActor;
-	public float speed = 2;//
+	private GameActor gameActor;
+	private float speed = 2;//
 	
 	private float orgX;
 	private float orgY;
