@@ -456,6 +456,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				map = JSON.parseObject(mobj.toString(), int[][].class);
 			}
 			playerDto.setMap(map);
+			FontUtil.getFont().appendText(playerDto.getPlayerName());
 			show();
 			Sound sound = ResUtil.getInstance().getSound(8);
 			sound.play();

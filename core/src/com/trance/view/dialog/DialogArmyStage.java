@@ -168,7 +168,7 @@ public class DialogArmyStage extends BaseStage {
     private Timer timer;
 
 
-    protected void levelup(int armyId) {
+    private void levelup(int armyId) {
 		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.UPGRADE_LEVEL, armyId),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;

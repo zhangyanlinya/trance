@@ -62,7 +62,7 @@ public class Army extends GameActor {
 		switch(armyType){
 		case TANK:
 			range = RangeType.SHORT;
-			hp = 50;
+			maxhp = hp = 50;
 			break;
 		case FAT:
 			atk = 20;

@@ -70,8 +70,8 @@ public class Building extends GameActor {
 		this.type = type;
 		this.linearDamping = 2;
 		this.density = 10f;//密度
-		this.friction = 0.9f;//摩擦力
-		this.restitution = 0.9f;//弹力
+		this.friction = 1.0f;//摩擦力
+		this.restitution = 0.1f;//弹力
 		this.hasfire = false;
 		if(type <= 0){
 			textureRegion = null;
