@@ -202,7 +202,7 @@ public class ResUtil extends AssetManager {
 	}
 
 	public TextureRegion getExplodeTextureRegion(int techId) {
-		return new TextureRegion(this.get("explode/"+techId+".png",Texture.class));
+		return new TextureRegion(this.get("explode/1.png",Texture.class));
 	}
 
     public TextureRegion getBulletTextureRegion(BulletType type) {

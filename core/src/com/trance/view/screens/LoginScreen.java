@@ -267,6 +267,11 @@ public class LoginScreen extends BaseScreen {
 		techDto.setLevel(1);
 		playerDto.addTech(techDto);
 
+		TechDto lampDto = new TechDto();
+		lampDto.setId(2);
+		lampDto.setAmout(3);
+		lampDto.setLevel(1);
+		playerDto.addTech(lampDto);
 
 		Player.player = playerDto;
 

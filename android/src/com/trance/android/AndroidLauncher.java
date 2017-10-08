@@ -176,10 +176,7 @@ public class AndroidLauncher extends AndroidApplication {
 			}
 		}
 	}
-
-
 	private long time;
-
 
 	@Override
 	public void onBackPressed() {

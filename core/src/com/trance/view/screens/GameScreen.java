@@ -728,11 +728,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 //	    }
 
 		if(y > control_height - length * 2 || x <  length * 4 || x > width -length * 4 ){ // 只有下面一个区域可能进攻
-			if(chooseTechId > 0) {
-				TechDto tech = Player.player.getTechs().get(chooseTechId);
-				if(tech != null && tech.getUseAmount() > 0) {
-					sendExplode(x, y, tech);
-				}
+			if (chooseTechId > 0) {
+				sendTechEffect(x, y);
 			}
 			return false;
 		}
@@ -788,6 +785,21 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	}
 
 	/**
+	 *  执行科技效果
+	 */
+	private void sendTechEffect(float x, float y) {
+		TechDto tech = Player.player.getTechs().get(chooseTechId);
+		if(tech == null ) {
+			return;
+		}
+		if(tech.getId() == 1){
+			sendExplode(x, y, tech);
+		}else if( tech.getId() ==  2){
+			sendLamp(x, y, tech);
+		}
+	}
+
+	/**
 	 *  执行EXPLODE
 	 */
 	private void sendExplode(float x, float y, TechDto tech){
@@ -795,6 +807,17 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		explode.init(world, ExplodeType.valueOf(tech.getId()), x, y);
 		stage.addActor(explode);
 		tech.setUseAmount(tech.getUseAmount() - 1);
+		gobattle = true;
+	}
+
+	/**
+	 *  执行LAMP
+	 */
+	private void sendLamp(float x, float y, TechDto tech){
+		for(GameActor army : armys){
+			army.firing = false;
+			army.faceTo(x, y);
+		}
 		gobattle = true;
 	}
 

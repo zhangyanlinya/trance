@@ -33,7 +33,7 @@ public abstract class GameActor extends Actor {
 	float hw;
 	float hh;
 	
-	boolean firing;
+	public boolean firing;
 
 	boolean face = true;
 	
@@ -70,7 +70,7 @@ public abstract class GameActor extends Actor {
 	public abstract void dead();
 	
 	
-	private void faceTo(float destX, float destY) {
+	public void faceTo(float destX, float destY) {
 		float disX = destX - (this.getX() + hw);
 		float disY = destY - (this.getY() + hh);
 		degrees = -MathUtils.atan2(disX, disY);
