@@ -15,7 +15,7 @@ import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 
 public class TranceGame extends Game {
-	public BaseScreen loginScreen;//
+	private BaseScreen loginScreen;//
 	public WorldScreen worldScreen;//
 	public MapScreen mapScreen;    //
 	public GameScreen gameScreen;  //

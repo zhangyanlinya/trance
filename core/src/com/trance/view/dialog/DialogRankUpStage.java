@@ -176,7 +176,7 @@ public class DialogRankUpStage extends BaseStage {
 		
 		byte[] bytes = response.getValueBytes();
 		String text = new String(bytes);
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		HashMap result = JSON.parseObject(text, HashMap.class);
 		if(result == null){
 			return null;
 			
@@ -189,8 +189,7 @@ public class DialogRankUpStage extends BaseStage {
 		
 		Object cobj = result.get("content");
 		if(cobj != null){
-			List<PlayerDto> rankList = JSON.parseArray(JSON.toJSON(cobj).toString(), PlayerDto.class);
-			return rankList;
+			return JSON.parseArray(JSON.toJSON(cobj).toString(), PlayerDto.class);
 		}
 		return null;
 	}

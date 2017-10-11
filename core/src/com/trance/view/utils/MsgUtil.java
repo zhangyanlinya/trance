@@ -144,7 +144,7 @@ public class MsgUtil {
 	}
 
 	
-	public  void tomap(String jsonString, Map<Integer,Msg> map){
+	private void tomap(String jsonString, Map<Integer, Msg> map){
 		map.clear();
 		List<CodeJson> list = JSON.parseArray(jsonString,CodeJson.class);
 		for(CodeJson e : list){
@@ -155,7 +155,7 @@ public class MsgUtil {
 		}
 	}
 	
-	 public class Msg{
+	 private class Msg{
 		private long time;
 		private String msg;
 		

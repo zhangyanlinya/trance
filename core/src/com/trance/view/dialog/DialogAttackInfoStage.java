@@ -32,10 +32,8 @@ import java.util.List;
  */
 public class DialogAttackInfoStage extends BaseStage {
 
-    private Image bgImage;
-    private List<AttackInfoDto> attackInfos;
-    private FreeBitmapFont font;
-    private static final int MAX_RANKING = 10;
+	private List<AttackInfoDto> attackInfos;
+	private static final int MAX_RANKING = 10;
     private boolean init;
 
     public DialogAttackInfoStage(TranceGame tranceGame) {
@@ -51,7 +49,7 @@ public class DialogAttackInfoStage extends BaseStage {
 			}
 		}
 
-		font = FontUtil.getFont();
+		FreeBitmapFont font = FontUtil.getFont();
 		font.appendText(sb.toString());
         init = true;
     }
@@ -63,8 +61,8 @@ public class DialogAttackInfoStage extends BaseStage {
 
     	this.clear();
     	this.setVisible(true);
-    	
-    	bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
+
+		Image bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
         bgImage.getColor().a = 0.6f;
 	    bgImage.setWidth(getWidth() * 0.6f);
 	    bgImage.setHeight(getHeight() * 0.5f);
@@ -105,10 +103,9 @@ public class DialogAttackInfoStage extends BaseStage {
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		if(text != null){
-			List<AttackInfoDto> rankList = JSON.parseArray(text, AttackInfoDto.class);
-			return rankList;
+		if(bytes != null){
+			String text = new String(bytes);
+			return JSON.parseArray(text, AttackInfoDto.class);
 		}
 		return null;
 	}

@@ -706,7 +706,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		return null;
 	}
     
-    public static boolean gobattle;
+    private static boolean gobattle;
 
 
 	@Override
