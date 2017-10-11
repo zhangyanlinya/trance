@@ -125,8 +125,11 @@ public class ResUtil extends AssetManager {
 			region.setRegionHeight(200);
 			regions[i] = region;
 		}
+
 		float frameDuration = 0.4f;
-		return new Animation(frameDuration, regions);
+		animation = new Animation(frameDuration, regions);
+		explodeTypeMap.put(type, animation);
+		return animation;
 	}
 
 
@@ -145,8 +148,6 @@ public class ResUtil extends AssetManager {
     
     /**
      * 获得UI
-     * @param
-     * @return
      */
     public Texture getUi(UiType uiType){
     	return this.get(uiType.getVlaue(),Texture.class);
@@ -202,13 +203,12 @@ public class ResUtil extends AssetManager {
 	}
 
 	public TextureRegion getExplodeTextureRegion(int techId) {
-		return new TextureRegion(this.get("explode/1.png",Texture.class));
+		return new TextureRegion(this.get("explode/"+techId+".png",Texture.class));
 	}
 
     public TextureRegion getBulletTextureRegion(BulletType type) {
     	Texture texture = get(type.getValue(), Texture.class);
-    	TextureRegion textureRegion = new TextureRegion(texture);
-        return textureRegion;
+		return new TextureRegion(texture);
     }
 
     
