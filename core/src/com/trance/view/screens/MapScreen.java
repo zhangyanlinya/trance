@@ -808,7 +808,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return;
 		}
 		int buttionId = (int)(screenX / side);
-		switch (buttionId){
+		switch (buttionId){//D
 		}
 
 	}
