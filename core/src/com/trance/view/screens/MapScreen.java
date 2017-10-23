@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
@@ -95,7 +96,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private float control_height = 300;
 	private SpriteBatch spriteBatch;
 	private Image attack;
-	private Image toWorld;
+	private Sprite toWorld;
 	private Image toChange;
 	private Image toTrain;
 	private Image toUpBuilding;
@@ -172,15 +173,15 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		label_world = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("world"));
 		label_world.setPosition(10 + side/2, side, Align.center);
 
-		toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
+		toWorld = new Sprite(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 0, side, side);
-		toWorld.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				toWorld();
-			}
-		});
+//		toWorld.addListener(new ClickListener(){
+//
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				toWorld();
+//			}
+//		});
 
 		label_rename = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("rename"));
 		label_rename.setPosition(side * 1 + side/2, side, Align.center);
@@ -338,7 +339,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			stage.addActor(label_attack);
 		}
 		initPlayerInfo();
-		stage.addActor(toWorld);
+//		stage.addActor(toWorld);
+//		toWorld.draw(spriteBatch);
 		stage.addActor(label_world);
 
 		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
@@ -500,6 +502,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}else{
 			font.draw(spriteBatch, playerDto.getPlayerName(),length,height - length);
 		}
+
+		toWorld.draw(spriteBatch);
 		spriteBatch.end();
 		
 		if(dialogArmyStage.isVisible()){
@@ -759,6 +763,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		tochTaskButton(screenX, screenY,pointer, button);
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
@@ -795,6 +800,17 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		oldj = b.j;
 		oldType = b.type;
 		return false;
+	}
+
+	private void tochTaskButton(int screenX, int screenY, int pointer, int button){
+		float side = width/8;
+		if(screenY > side){
+			return;
+		}
+		int buttionId = (int)(screenX / side);
+		switch (buttionId){
+		}
+
 	}
 
 	//各种点击事件
