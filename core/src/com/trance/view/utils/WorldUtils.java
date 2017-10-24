@@ -66,7 +66,7 @@ public class WorldUtils {
     }
     public static Body createBuilding(World world, Building building, float x, float y, float width, float height) {
     	BodyDef bodyDef = new BodyDef();
-    	bodyDef.type = BodyType.DynamicBody;
+    	bodyDef.type = BodyType.StaticBody;
     	bodyDef.fixedRotation = true;
     	bodyDef.linearDamping = building.linearDamping;
     	bodyDef.position.set((x + width/2) * WORLD_TO_BOX, (y + height/ 2) * WORLD_TO_BOX);

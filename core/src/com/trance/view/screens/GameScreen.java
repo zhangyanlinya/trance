@@ -792,11 +792,12 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		if(tech == null ) {
 			return;
 		}
-		if(tech.getId() == 1){
-			sendExplode(x, y, tech);
-		}else if( tech.getId() ==  2){
+//		if(tech.getId() == 1){
+//			sendExplode(x, y, tech);
+//		}else if( tech.getId() ==  2){
 			sendLamp(x, y, tech);
-		}
+            System.out.println("x = " + x + "  y= " + y);
+//		}
 	}
 
 	/**
@@ -816,6 +817,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	private void sendLamp(float x, float y, TechDto tech){
 		for(GameActor army : armys){
 			army.firing = false;
+            army.scaning = false;
 			army.faceTo(x, y);
 		}
 		gobattle = true;

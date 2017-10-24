@@ -32,10 +32,12 @@ public abstract class GameActor extends Actor {
 	float vy;
 	float hw;
 	float hh;
-	
+
 	public boolean firing;
 
 	boolean face = true;
+
+    public boolean scaning = true;
 	
 	
 	public void init(float x, float y, float width,
@@ -88,6 +90,9 @@ public abstract class GameActor extends Actor {
 	}
 
 	public GameActor scan(Array<GameActor> actors) {
+        if(!scaning){
+            return null;
+        }
 		GameActor dest = null;
 		float min = 0;
 		for(int i = 0; i < actors.size; i++){
