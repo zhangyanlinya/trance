@@ -58,6 +58,7 @@ import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.model.RangeInfo;
 import com.trance.view.screens.base.BaseScreen;
+import com.trance.view.screens.type.ButtonType;
 import com.trance.view.textinput.RenameInputListener;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.FormulaUtil;
@@ -804,12 +805,21 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	private void tochTaskButton(int screenX, int screenY, int pointer, int button){
 		float side = width/8;
-		if(screenY > side){
+        float y =  height - screenY;
+		if(y > side){
 			return;
 		}
+
 		int buttionId = (int)(screenX / side);
-		switch (buttionId){//D
-		}
+        ButtonType buttonType = ButtonType.valueOf(buttionId);
+		switch (buttonType){//
+            case WORLD:
+                toWorld();
+                break;
+            case RENAME:
+
+                break;
+        }
 
 	}
 
