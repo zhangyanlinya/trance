@@ -90,6 +90,7 @@ public class ResUtil extends AssetManager {
     	load("world/wall.png", Texture.class);
 
 		load("explode/1.png",Texture.class);
+		load("explode/2.png",Texture.class);
 
 		loadAnimation();
 

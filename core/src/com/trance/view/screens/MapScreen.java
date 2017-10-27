@@ -103,7 +103,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private Image toUpBuilding;
 	private Image toRankUp;
 	private Image toAttackInfo;
-	private Image rename;
+	private Sprite rename;
 
 	private Label label_world;
 	private Label label_rename;
@@ -134,8 +134,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     public DialogAttackInfoStage dialogAttackInfoStage;
 
 	private String msg;
-	
-	public MapScreen(TranceGame tranceGame){
+
+    private String newNameMsg;
+
+    public MapScreen(TranceGame tranceGame){
 		super(tranceGame);
 	}
 	
@@ -152,7 +154,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		font.appendText(playerDto.getPlayerName());
 		msg = MsgUtil.getInstance().getLocalMsg("Drag building placement");
 		font.appendText(msg);
-		final String newNameMsg = MsgUtil.getInstance().getLocalMsg("input new name");
+		newNameMsg = MsgUtil.getInstance().getLocalMsg("input new name");
 		font.appendText(newNameMsg);
 
 		camera = new OrthographicCamera(width, height);
@@ -188,15 +190,15 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		label_rename.setPosition(side * 1 + side/2, side, Align.center);
 		//Rename
 		listener = new RenameInputListener();
-		rename = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.RENAME));
+		rename = new Sprite(ResUtil.getInstance().getControlTextureRegion(ControlType.RENAME));
 		rename.setBounds(side * 1, 0, side, side);
-		rename.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
+//		rename.addListener(new ClickListener(){
+//
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
 				Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
-			}
-		});
+//			}
+//		});
 
 
 		label_train = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("train"));
@@ -320,7 +322,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(isEdit()){
 			refreshPlayerDtoData();
 			refreshLeftBuiding();
-			stage.addActor(rename);
+//			stage.addActor(rename);
 			stage.addActor(toTrain);
 			stage.addActor(toUpBuilding);
 			stage.addActor(toRankUp);
@@ -505,6 +507,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 
 		toWorld.draw(spriteBatch);
+		rename.draw(spriteBatch);
 		spriteBatch.end();
 		
 		if(dialogArmyStage.isVisible()){
@@ -817,7 +820,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 toWorld();
                 break;
             case RENAME:
-
+                Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
                 break;
         }
 
