@@ -610,9 +610,11 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		for(GameActor block : connons){
 			block.scan(armys);
 		}
-		
-		for(GameActor army : armys){
-			army.scan(buildings);
+
+        if(System.currentTimeMillis() > lampExpireTime) {
+            for(GameActor army : armys){
+                army.scan(buildings);
+            }
 		}
 	}
 	
@@ -711,10 +713,42 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		Vector3 vector3 = new Vector3(screenX, screenY, 0);
-		camera.unproject(vector3); // coordinate convert
-		float x = vector3.x;
-		float y = vector3.y;
+        int Y = (int)height - screenY; //y top to down
+        if(Y > (width / 10) * 2 ){
+            System.out.println("########上");
+            chooseArea(screenX, Y); //选择区域
+        }else{
+            System.out.println("------下");
+            executeArea(screenX, screenY); //执行区域
+        }
+
+        return  false;
+	}
+
+    /**
+     * 选择区域事件
+     */
+	private void chooseArea(int screenX, int screenY) {
+        Integer armyType = hitKeepArmy(screenX, screenY);
+        if(armyType != null){
+            chooseArmyId = armyType;
+        }else{
+            Integer techType = hitKeepTech(screenX, screenY);
+            if(techType != null){
+                System.out.println( "选中类型： " + techType);
+                chooseTechId = techType;
+            }
+        }
+    }
+
+    /**
+     * 执行区域事件
+     */
+	private void executeArea(int screenX, int screenY) {
+        Vector3 vector3 = new Vector3(screenX, screenY, 0);
+        camera.unproject(vector3); // coordinate convert
+        float x = vector3.x;
+        float y = vector3.y;
 //		if(x > -length * 2  && x < width + length * 2
 //				&& y > control_height - length * 2  && y < height + length * 2){//四面可以进攻
 //
@@ -727,62 +761,48 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 //			return false;
 //	    }
 
-		if(y > control_height - length * 2 || x <  length * 4 || x > width -length * 4 ){ // 只有下面一个区域可能进攻
-			if (chooseTechId > 0) {
-				sendTechEffect(x, y);
-			}
-			return false;
-		}
+        if(y > control_height - length * 2 || x <  length * 4 || x > width -length * 4 ){ // 只有下面一个区域可能进攻
+            if (chooseTechId > 0) {
+                sendTechEffect(x, y);
+            }
+            return;
+        }
 
-		screenY = (int)height - screenY;//y top to down
-		Integer armyType = hitKeepArmy(screenX, screenY);
-		if(armyType != null){
-			chooseArmyId = armyType;
-			return false;
-		}else{
-			Integer techType = hitKeepTech(screenX, screenY);
-			if(techType != null){
-				chooseTechId = techType;
-				return false;
-			}
-		}
-		
-		Actor actor = stage.hit(x, y, true);
-		if(actor != null){
-			return false;
-		}
-		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-		for(ArmyDto army : myArmys.values()){
-			if(army.isGo() || army.getAmout() == 0){
-				continue;
-			}
 
-			if(army.getId() != chooseArmyId){
-				continue;
-			}
+        Actor actor = stage.hit(x, y, true);
+        if(actor != null){
+            return;
+        }
+        Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
+        for(ArmyDto army : myArmys.values()){
+            if(army.isGo() || army.getAmout() == 0){
+                continue;
+            }
 
-			for(int i = 0 ; i < army.getAmout(); i++){
-				Army block = Army.armyPool.obtain();
-				block.init(world, ArmyType.valueOf(army.getId()), x,  y, length,length,shapeRenderer);
-				armys.add(block);
-			}
+            if(army.getId() != chooseArmyId){
+                continue;
+            }
 
-			army.setGo(true);
-			gobattle = true;
-			
-		}
-		
-		//for the next choose type;
-		for(ArmyDto army : myArmys.values()){
-			if(army.isGo() || army.getAmout() == 0){
-				continue;
-			}
-			chooseArmyId = army.getId();
-			break;
-		}
-		
-		return true;
-	}
+            for(int i = 0 ; i < army.getAmout(); i++){
+                Army block = Army.armyPool.obtain();
+                block.init(world, ArmyType.valueOf(army.getId()), x,  y, length,length,shapeRenderer);
+                armys.add(block);
+            }
+
+            army.setGo(true);
+            gobattle = true;
+
+        }
+
+        //for the next choose type;
+        for(ArmyDto army : myArmys.values()){
+            if(army.isGo() || army.getAmout() == 0){
+                continue;
+            }
+            chooseArmyId = army.getId();
+            break;
+        }
+    }
 
 	/**
 	 *  执行科技效果
@@ -792,12 +812,11 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		if(tech == null ) {
 			return;
 		}
-//		if(tech.getId() == 1){
-//			sendExplode(x, y, tech);
-//		}else if( tech.getId() ==  2){
-			sendLamp(x, y, tech);
-            System.out.println("x = " + x + "  y= " + y);
-//		}
+		if(tech.getId() == 1){
+			sendExplode(x, y, tech);
+		}else if( tech.getId() ==  2){
+            sendLamp(x, y, tech);
+		}
 	}
 
 	/**
@@ -811,15 +830,19 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		gobattle = true;
 	}
 
+	// 信号灯到期时间
+	private long lampExpireTime;
+
 	/**
 	 *  执行LAMP
 	 */
 	private void sendLamp(float x, float y, TechDto tech){
 		for(GameActor army : armys){
-			army.firing = false;
-            army.scaning = false;
+//			army.firing = false;
+//            army.scaning = false;
 			army.faceTo(x, y);
 		}
+        lampExpireTime = System.currentTimeMillis() + 5 * 1000; //固定5秒
 		gobattle = true;
 	}
 

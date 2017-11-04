@@ -37,8 +37,7 @@ public abstract class GameActor extends Actor {
 
 	boolean face = true;
 
-    public boolean scaning = true;
-	
+
 	
 	public void init(float x, float y, float width,
 			float height) {
@@ -90,9 +89,6 @@ public abstract class GameActor extends Actor {
 	}
 
 	public GameActor scan(Array<GameActor> actors) {
-        if(!scaning){
-            return null;
-        }
 		GameActor dest = null;
 		float min = 0;
 		for(int i = 0; i < actors.size; i++){
