@@ -714,11 +714,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         int Y = (int)height - screenY; //y top to down
-        if(Y > (width / 10) * 2 ){
-            System.out.println("########上");
+        if(Y < (width / 10) * 2 ){
             chooseArea(screenX, Y); //选择区域
         }else{
-            System.out.println("------下");
             executeArea(screenX, screenY); //执行区域
         }
 
@@ -732,12 +730,11 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         Integer armyType = hitKeepArmy(screenX, screenY);
         if(armyType != null){
             chooseArmyId = armyType;
-        }else{
-            Integer techType = hitKeepTech(screenX, screenY);
-            if(techType != null){
-                System.out.println( "选中类型： " + techType);
-                chooseTechId = techType;
-            }
+        }
+
+		Integer techType = hitKeepTech(screenX, screenY);
+		if(techType != null){
+			chooseTechId = techType;
         }
     }
 

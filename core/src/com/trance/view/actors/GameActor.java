@@ -58,7 +58,7 @@ public abstract class GameActor extends Actor {
 	public void byAttack(GameActor a) {
 		hp -= a.atk;
 		if (hp <= 0) {
-			dead();
+//			dead();
 		}
 	}
 	
