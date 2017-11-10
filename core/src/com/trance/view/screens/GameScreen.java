@@ -611,12 +611,10 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			block.scan(armys);
 		}
 
-        if(System.currentTimeMillis() > lampExpireTime) {
-            for(GameActor army : armys){
+        for (GameActor army : armys) {
                 army.scan(buildings);
-            }
-		}
-	}
+        }
+    }
 	
 
 	@Override
@@ -827,19 +825,16 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		gobattle = true;
 	}
 
-	// 信号灯到期时间
-	private long lampExpireTime;
 
 	/**
 	 *  执行LAMP
 	 */
 	private void sendLamp(float x, float y, TechDto tech){
 		for(GameActor army : armys){
-//			army.firing = false;
-//            army.scaning = false;
-			army.faceTo(x, y);
+            army.lampExpireTime = System.currentTimeMillis() + 30 * 1000; //固定5秒
+			army.moveTo(x, y);
+
 		}
-        lampExpireTime = System.currentTimeMillis() + 5 * 1000; //固定5秒
 		gobattle = true;
 	}
 

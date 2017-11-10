@@ -37,6 +37,7 @@ public abstract class GameActor extends Actor {
 
 	boolean face = true;
 
+    public long lampExpireTime;
 
 	
 	public void init(float x, float y, float width,
@@ -82,13 +83,26 @@ public abstract class GameActor extends Actor {
 		}
 	}
 
-	private float dst(float x, float y) {
+	public float moveToX;
+    public float moveToY;
+
+	public void moveTo(float destX, float destY){
+        faceTo(destX, destY);
+        moveToX = destX;
+        moveToY = destY;
+    }
+
+	public float dst(float x, float y) {
 		final float x_d = x - getX();
 		final float y_d = y - getY();
 		return (float)Math.sqrt(x_d * x_d + y_d * y_d);
 	}
 
 	public GameActor scan(Array<GameActor> actors) {
+        if(lampExpireTime > System.currentTimeMillis()){
+            return null;
+        }
+
 		GameActor dest = null;
 		float min = 0;
 		for(int i = 0; i < actors.size; i++){

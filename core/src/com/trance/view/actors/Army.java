@@ -137,6 +137,13 @@ public class Army extends GameActor {
 		float y = body.getPosition().y * WorldUtils.BOX_TO_WORLD - hh;
 		setPosition(x,y);
 		body.setLinearVelocity(vx * speed, vy * speed);
+
+        if(lampExpireTime > System.currentTimeMillis()) {
+            float d = dst(moveToX, moveToY);
+            if (d < this.getHeight()) {
+                lampExpireTime = 0;
+            }
+        }
 	}
 	
 	
