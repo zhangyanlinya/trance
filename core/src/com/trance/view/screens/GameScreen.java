@@ -831,7 +831,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	 */
 	private void sendLamp(float x, float y, TechDto tech){
 		for(GameActor army : armys){
-            army.lampExpireTime = System.currentTimeMillis() + 30 * 1000; //固定5秒
+            army.lampExpireTime = System.currentTimeMillis() + tech.getLevel() * 1000;
 			army.moveTo(x, y);
 
 		}
