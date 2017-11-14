@@ -99,10 +99,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private Image attack;
 	private Sprite toWorld;
 	private Image toChange;
-	private Image toTrain;
-	private Image toUpBuilding;
-	private Image toRankUp;
-	private Image toAttackInfo;
+	private Sprite toTrain;
+	private Sprite toUpBuilding;
+	private Sprite toRankUp;
+	private Sprite toAttackInfo;
 	private Sprite rename;
 
 	private Label label_world;
@@ -178,13 +178,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		toWorld = new Sprite(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
 		toWorld.setBounds(10, 0, side, side);
-//		toWorld.addListener(new ClickListener(){
-//
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				toWorld();
-//			}
-//		});
 
 		label_rename = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("rename"));
 		label_rename.setPosition(side * 1 + side/2, side, Align.center);
@@ -192,56 +185,25 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		listener = new RenameInputListener();
 		rename = new Sprite(ResUtil.getInstance().getControlTextureRegion(ControlType.RENAME));
 		rename.setBounds(side * 1, 0, side, side);
-//		rename.addListener(new ClickListener(){
-//
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
-//			}
-//		});
-
 
 		label_train = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("train"));
 		label_train.setPosition(side * 2 + side/2, side, Align.center);
 
-		toTrain = new Image(ResUtil.getInstance().getUi(UiType.TRAIN));
+		toTrain = new Sprite(ResUtil.getInstance().getUi(UiType.TRAIN));
 		toTrain.setBounds(side * 2, 0, side, side);
-		toTrain.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				train();
-			}
-		});
-
 
 		label_upgrade = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("upgrade"));
 		label_upgrade.setPosition(side * 3 + side/2, side, Align.center);
 
-		toUpBuilding = new Image(ResUtil.getInstance().getUi(UiType.UPBUILDING));
+		toUpBuilding = new Sprite(ResUtil.getInstance().getUi(UiType.UPBUILDING));
 		toUpBuilding.setBounds(side * 3, 0, side, side);
-		toUpBuilding.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				upBuilding();
-			}
-		});
-
 
 
 		label_ranking= FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("ranking"));
 		label_ranking.setPosition(side * 4 + side/2, side, Align.center);
 
-		toRankUp = new Image(ResUtil.getInstance().getUi(UiType.LEVEL));
+		toRankUp = new Sprite(ResUtil.getInstance().getUi(UiType.LEVEL));
 		toRankUp.setBounds(side * 4, 0, side, side);
-		toRankUp.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				rankUp();
-			}
-		});
 
 		label_change = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("change"));
 		label_change.setPosition(side * 5 + side/2, side, Align.center);
@@ -273,15 +235,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		label_info= FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("info"));
 		label_info.setPosition(side * 7 + side/2, side, Align.center);
 
-		toAttackInfo = new Image(ResUtil.getInstance().getUi(UiType.LEVEL));
+		toAttackInfo = new Sprite(ResUtil.getInstance().getUi(UiType.LEVEL));
 		toAttackInfo.setBounds(side * 7, 0, side, side);
-		toAttackInfo.addListener(new ClickListener(){
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				attackInfo();
-			}
-		});
 	}
 	
 	public void setPlayerDto(PlayerDto playerDto){
@@ -323,10 +278,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			refreshPlayerDtoData();
 			refreshLeftBuiding();
 //			stage.addActor(rename);
-			stage.addActor(toTrain);
-			stage.addActor(toUpBuilding);
-			stage.addActor(toRankUp);
-			stage.addActor(toAttackInfo);
+//			stage.addActor(toTrain);
+//			stage.addActor(toUpBuilding);
+//			stage.addActor(toRankUp);
+//			stage.addActor(toAttackInfo);
 
 
 			stage.addActor(label_rename);
@@ -508,6 +463,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		toWorld.draw(spriteBatch);
 		rename.draw(spriteBatch);
+        toTrain.draw(spriteBatch);
+        toUpBuilding.draw(spriteBatch);
+        toRankUp.draw(spriteBatch);
+        toAttackInfo.draw(spriteBatch);
 		spriteBatch.end();
 		
 		if(dialogArmyStage.isVisible()){
@@ -815,12 +774,27 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		int buttionId = (int)(screenX / side);
         ButtonType buttonType = ButtonType.valueOf(buttionId);
+        if(buttonType == null){
+            return;
+        }
 		switch (buttonType){//
             case WORLD:
                 toWorld();
                 break;
             case RENAME:
                 Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
+                break;
+            case TRAIN:
+                train();
+                break;
+            case UPGRADE:
+                upBuilding();
+                break;
+            case RANKING:
+                rankUp();
+                break;
+            case ATTACKINFO:
+                attackInfo();
                 break;
         }
 

@@ -8,8 +8,9 @@ public enum ButtonType {
     WORLD(0),
     RENAME(1),
     TRAIN(2),
-    RANKING(3),
-    UPGRADE(4),
+    UPGRADE(3),
+    RANKING(4),
+    ATTACKINFO(7),
 
     ;
     private int id;
@@ -23,6 +24,11 @@ public enum ButtonType {
     }
 
     public static ButtonType valueOf(int id){
-        return ButtonType.values()[id];
+       for(ButtonType type : ButtonType.values()){
+           if(type.getId() == id){
+               return type;
+           }
+       }
+       return null;
     }
 }

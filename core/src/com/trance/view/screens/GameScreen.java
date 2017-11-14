@@ -804,7 +804,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	 */
 	private void sendTechEffect(float x, float y) {
 		TechDto tech = Player.player.getTechs().get(chooseTechId);
-		if(tech == null || tech.getUseAmount() >= tech.getAmout()) {
+		if(tech == null || tech.getUseAmount() <= 0) {
 			return;
 		}
 		if(tech.getId() == 1){
