@@ -196,7 +196,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //
 //			@Override
 //			public void clicked(InputEvent event, float x, float y) {
-				Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
+//				Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
 //			}
 //		});
 

@@ -804,7 +804,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	 */
 	private void sendTechEffect(float x, float y) {
 		TechDto tech = Player.player.getTechs().get(chooseTechId);
-		if(tech == null ) {
+		if(tech == null || tech.getUseAmount() >= tech.getAmout()) {
 			return;
 		}
 		if(tech.getId() == 1){
@@ -830,11 +830,15 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	 *  执行LAMP
 	 */
 	private void sendLamp(float x, float y, TechDto tech){
+        Explode explode = Explode.pool.obtain();
+        explode.init(world, ExplodeType.valueOf(tech.getId()), x, y);
+        stage.addActor(explode);
 		for(GameActor army : armys){
             army.lampExpireTime = System.currentTimeMillis() + tech.getLevel() * 1000;
 			army.moveTo(x, y);
 
 		}
+        tech.setUseAmount(tech.getUseAmount() - 1);
 		gobattle = true;
 	}
 
