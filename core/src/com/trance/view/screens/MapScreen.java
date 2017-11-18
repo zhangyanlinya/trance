@@ -568,7 +568,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	public void setOperateStageDailog(boolean visible, float x, float y) {
 		if(visible){
-            dialogOperateStage.show();
+            dialogOperateStage.show(x, y);
 			inputMultiplexer.addProcessor(dialogOperateStage);
 			inputMultiplexer.removeProcessor(stage);
 //			inputMultiplexer.removeProcessor(this);
@@ -845,9 +845,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			default:
 				break;
 		}
-
-		// 弹出操作面板
-        toastOperator(building.type, x , y);
+        if(building.type > 0) {
+            // 弹出操作面板
+            toastOperator(building.type, x, y);
+        }else {
+            setOperateStageDailog(false, x, y);
+        }
 	}
 
 	private void toastOperator(int buidingType, float x, float y){

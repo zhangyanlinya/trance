@@ -16,6 +16,9 @@ import com.trance.view.utils.ResUtil;
 public class DialogOperateStage extends BaseStage {
 
     private boolean init;
+    private float x;
+    private float y;
+    private int buildingType;
 
     public DialogOperateStage(TranceGame tranceGame) {
         super(tranceGame);
@@ -24,6 +27,12 @@ public class DialogOperateStage extends BaseStage {
     private void init() {
 
         init = true;
+    }
+
+    public void show(float x, float y){
+        this.x = x;
+        this.y = y;
+        show();
     }
     
     public void show(){
@@ -36,13 +45,13 @@ public class DialogOperateStage extends BaseStage {
 
 		Image bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
         bgImage.getColor().a = 0.6f;
-	    bgImage.setWidth(100);
-	    bgImage.setHeight(50);
-	    bgImage.setPosition(getWidth()/2 - bgImage.getWidth()/2,  getHeight()/2 - bgImage.getHeight()/2);
+	    bgImage.setWidth(300);
+	    bgImage.setHeight(100);
+	    bgImage.setPosition(x - bgImage.getWidth()/2, y);
 	    addActor(bgImage);
 	      
 	    Image close = new Image(ResUtil.getInstance().getUi(UiType.CLOSE));
-	    close.setPosition(getWidth()/2 + bgImage.getWidth()/2,  getHeight()/2 + bgImage.getHeight()/2);
+	    close.setPosition(x + bgImage.getWidth()/2,  y + bgImage.getHeight());
 	    close.addListener(new ClickListener(){
 	
 			@Override
@@ -52,7 +61,13 @@ public class DialogOperateStage extends BaseStage {
 	    });
 	    addActor(close);
 
-    	
+        if(buildingType > 0){
+            initBuildingOperatorButton(buildingType);
+        }
+    }
+
+    // 初始化操作按钮
+    private void initBuildingOperatorButton(int buildingType){
 
     }
     
