@@ -52,6 +52,7 @@ import com.trance.view.controller.GestureController;
 import com.trance.view.dialog.DialogArmyStage;
 import com.trance.view.dialog.DialogAttackInfoStage;
 import com.trance.view.dialog.DialogBuildingStage;
+import com.trance.view.dialog.DialogOperateStage;
 import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
@@ -132,6 +133,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     public DialogBuildingStage dialogBuildingStage;
     public DialogRankUpStage dialogRankUpStage;
     public DialogAttackInfoStage dialogAttackInfoStage;
+    public DialogOperateStage dialogOperateStage;
 
 	private String msg;
 
@@ -168,6 +170,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		dialogBuildingStage = new DialogBuildingStage(tranceGame);
 		dialogRankUpStage = new DialogRankUpStage(tranceGame);
 		dialogAttackInfoStage = new DialogAttackInfoStage(tranceGame);
+        dialogOperateStage = new DialogOperateStage(tranceGame);
 
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
@@ -485,6 +488,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			dialogAttackInfoStage.act();
 			dialogAttackInfoStage.draw();
 		}
+		if(dialogOperateStage.isVisible()){
+            dialogOperateStage.act();
+            dialogOperateStage.draw();
+		}
 		super.render(delta);
 	}
 
@@ -556,6 +563,20 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			inputMultiplexer.addProcessor(stage);
 			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogAttackInfoStage);
+		}
+	}
+
+	public void setOperateStageDailog(boolean visible, float x, float y) {
+		if(visible){
+            dialogOperateStage.show();
+			inputMultiplexer.addProcessor(dialogOperateStage);
+			inputMultiplexer.removeProcessor(stage);
+//			inputMultiplexer.removeProcessor(this);
+		}else{
+            dialogOperateStage.hide();
+			inputMultiplexer.addProcessor(stage);
+//			inputMultiplexer.addProcessor(this);
+			inputMultiplexer.removeProcessor(dialogOperateStage);
 		}
 	}
 
@@ -824,7 +845,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			default:
 				break;
 		}
+
+		// 弹出操作面板
+        toastOperator(building.type, x , y);
 	}
+
+	private void toastOperator(int buidingType, float x, float y){
+        setOperateStageDailog(true, x ,y);
+    }
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
