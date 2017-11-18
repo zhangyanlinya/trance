@@ -44,7 +44,7 @@ public class DialogOperateStage extends BaseStage {
     	this.setVisible(true);
 
 		Image bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
-        bgImage.getColor().a = 0.6f;
+        bgImage.getColor().a = 0.3f;
 	    bgImage.setWidth(300);
 	    bgImage.setHeight(100);
 	    bgImage.setPosition(x - bgImage.getWidth()/2, y);
