@@ -569,14 +569,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	public void setOperateStageDailog(boolean visible, float x, float y) {
 		if(visible){
             dialogOperateStage.show(x, y);
-			inputMultiplexer.addProcessor(dialogOperateStage);
-			inputMultiplexer.removeProcessor(stage);
+//			inputMultiplexer.addProcessor(dialogOperateStage);
+//			inputMultiplexer.removeProcessor(stage);
 //			inputMultiplexer.removeProcessor(this);
 		}else{
             dialogOperateStage.hide();
-			inputMultiplexer.addProcessor(stage);
+//			inputMultiplexer.addProcessor(stage);
 //			inputMultiplexer.addProcessor(this);
-			inputMultiplexer.removeProcessor(dialogOperateStage);
+//			inputMultiplexer.removeProcessor(dialogOperateStage);
 		}
 	}
 
