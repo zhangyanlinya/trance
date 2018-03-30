@@ -37,11 +37,11 @@ public class BasedbService {
 			return;
 		}
 		
-		Map<String, FileHandle> filemap = new HashMap<String, FileHandle>();
+//		Map<String, FileHandle> filemap = new HashMap<String, FileHandle>();
 		for(FileHandle file : files){
 			String name = file.name();
 			String className = name.substring(0, name.lastIndexOf("."));
-			filemap.put(className, file);
+//			filemap.put(className, file);
 			
 			Class clazz = clazzes.get(className);
 			List<Basedb> list = (List<Basedb>) JSON.parseArray(new String(file.readBytes()), clazz);
