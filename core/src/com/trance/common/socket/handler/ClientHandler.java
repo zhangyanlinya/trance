@@ -53,6 +53,7 @@ public class ClientHandler extends IoHandlerAdapter {
 		
 		if (!(message instanceof Response)) {
 			logger.error("未能识别的响应消息类型！");
+            return;
 		}
 		
 		Response response = (Response) message;

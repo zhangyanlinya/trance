@@ -112,7 +112,7 @@ public class DialogOperateStage extends BaseStage {
         }
 
 
-        Texture texture = ResUtil.getInstance().getBuildingTexture(buildingType);
+        Texture texture = ResUtil.getInstance().getUi(UiType.LEVELUP);
         BuildingDto dto = Player.player.getBuildings().get(buildingType);
         BuildingImage image = new BuildingImage(texture,dto);
         image.setWidth(100);
@@ -212,9 +212,12 @@ public class DialogOperateStage extends BaseStage {
             sound.play();
         }
     }
-    
 
-	public void dispose(){
+    public void setBuildingType(int buildingType) {
+        this.buildingType = buildingType;
+    }
+
+    public void dispose(){
 		super.dispose();
 		if(init){
 			init = false;

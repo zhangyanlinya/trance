@@ -854,6 +854,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 
 	private void toastOperator(int buidingType, float x, float y){
+        dialogOperateStage.setBuildingType(buidingType);
         setOperateStageDailog(true, x ,y);
     }
 
