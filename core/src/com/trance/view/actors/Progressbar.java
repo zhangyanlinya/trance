@@ -33,7 +33,7 @@ public class Progressbar extends Actor {
         }
 
         //draw progress
-        float percent = (coolTime - leftTime)/ coolTime;
+        float percent = (coolTime - leftTime)/ (float)coolTime;
         renderer.setColor(Color.RED);
         renderer.begin(ShapeRenderer.ShapeType.Line);
        // renderer.rect(Gdx.graphics.getWidth() / 4 , 100, Gdx.graphics.getWidth() / 2, 40);
