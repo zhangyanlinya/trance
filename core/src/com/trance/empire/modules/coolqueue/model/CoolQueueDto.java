@@ -23,6 +23,11 @@ public class CoolQueueDto {
 	 * 冷却到期时间
 	 */
 	private long expireTime;
+
+    /**
+     * 冷却到期时间
+     */
+    private int coolTime;
 	
 
 	public int getId() {
@@ -48,5 +53,12 @@ public class CoolQueueDto {
 	public void setExpireTime(long expireTime) {
 		this.expireTime = expireTime;
 	}
-	
+
+    public int getCoolTime() {
+        return coolTime;
+    }
+
+    public void setCoolTime(int coolTime) {
+        this.coolTime = coolTime;
+    }
 }
