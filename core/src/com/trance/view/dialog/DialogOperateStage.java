@@ -4,8 +4,10 @@ package com.trance.view.dialog;
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -23,6 +25,7 @@ import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.BuildingImage;
+import com.trance.view.actors.Progressbar;
 import com.trance.view.actors.Timer;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
@@ -91,10 +94,11 @@ public class DialogOperateStage extends BaseStage {
         }
     }
 
-    private Timer timer;
+    private Progressbar timer;
 
-    private void showTimer(long expireTime){
-        timer = new Timer(expireTime);
+    private void showTimer(long expireTime, int coolTime){
+        timer = new Progressbar(expireTime,coolTime);
+
         timer.setPosition(getWidth()/2 - x/2 + 100,  getHeight()/2 + y/2 - 100);
         addActor(timer);
     }
@@ -107,7 +111,7 @@ public class DialogOperateStage extends BaseStage {
         }else{
             CoolQueueDto cool = Player.player.getCoolQueueByType(CoolQueueType.BUILDING.ordinal());
             if(cool != null){
-                showTimer(cool.getExpireTime());
+                showTimer(cool.getExpireTime(), cool.getCoolTime());
             }
         }
 
@@ -161,7 +165,7 @@ public class DialogOperateStage extends BaseStage {
                 CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
                 if(coolQueueDto != null){
                     Player.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
-                    showTimer(coolQueueDto.getExpireTime());
+                    showTimer(coolQueueDto.getExpireTime(), coolQueueDto.getCoolTime());
                 }
             }
 
