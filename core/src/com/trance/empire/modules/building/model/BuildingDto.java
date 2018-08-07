@@ -7,65 +7,82 @@ package com.trance.empire.modules.building.model;
  * @author zyl
  *
  */
-public class BuildingDto {
+public class BuildingDto{
 
-	/**
-	 * 建筑id {@link BuildingType}
-	 */
-	private int id;
-	
-	/**
-	 * 建筑等级
-	 */
-	private int level;
-	
-	/**
-	 * 数量
-	 */
-	private int amount;
-	
-	/**
-	 * 已建造数量
-	 */
-	private int buildAmount;
-	
-	public int getId() {
-		return id;
-	}
+        private int x;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+        private int y;
 
-	public int getLevel() {
-		return level;
-	}
+        /**
+         * 建筑id
+         */
+        private int id;
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
+        /**
+         * 建筑等级
+         */
+        private int level;
 
-	public int getAmount() {
-		return amount;
-	}
+        /**
+         * cd
+         */
+        private long cdtime;
 
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
+        /**
+         * 结束
+         */
+        private long etime;
 
-	public int getBuildAmount() {
-		return buildAmount;
-	}
 
-	public void setBuildAmount(int buildAmount) {
-		this.buildAmount = buildAmount;
-	}
-	
-	/**
-	 * 获得剩下未建造数量
-	 */
-	public int getLeftAmount(){
-		return amount - buildAmount;
-	}
-	
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+
+        public void setLevel(int level) {
+            this.level = level;
+        }
+
+        public long getCdtime() {
+            return cdtime;
+        }
+
+        public void setCdtime(long cdtime) {
+            this.cdtime = cdtime;
+        }
+
+        public long getEtime() {
+            return etime;
+        }
+
+        public void setEtime(long etime) {
+            this.etime = etime;
+        }
+
+        public String getKey(){
+            return x + "_" + y;
+        }
 }

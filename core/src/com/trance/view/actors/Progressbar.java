@@ -14,11 +14,11 @@ import com.trance.view.utils.TimeUtil;
 public class Progressbar extends Actor {
 
     private long expireTime;
-    private int coolTime;
+    private long coolTime;
     //画笔
     private ShapeRenderer renderer;
 
-    public Progressbar(long expireTime, int coolTime) {
+    public Progressbar(long expireTime, long coolTime) {
         this.expireTime = expireTime;
         this.coolTime = coolTime;
         renderer = new ShapeRenderer();

@@ -4,10 +4,8 @@ package com.trance.view.dialog;
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
@@ -18,6 +16,7 @@ import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
+import com.trance.empire.modules.building.model.WaitBuildingDto;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.coolqueue.model.CoolQueueType;
 import com.trance.empire.modules.player.model.Player;
@@ -26,7 +25,6 @@ import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.BuildingImage;
 import com.trance.view.actors.Progressbar;
-import com.trance.view.actors.Timer;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
 import com.trance.view.utils.MsgUtil;
@@ -35,6 +33,7 @@ import com.trance.view.utils.SocketUtil;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 
@@ -46,7 +45,7 @@ public class DialogOperateStage extends BaseStage {
     private boolean init;
     private float x;
     private float y;
-    private int buildingType;
+    private BuildingDto dto;
 
     public DialogOperateStage(TranceGame tranceGame) {
         super(tranceGame);
@@ -89,14 +88,14 @@ public class DialogOperateStage extends BaseStage {
 	    });
 	    addActor(close);
 
-        if(buildingType > 0){
-            initBuildingOperatorButton(buildingType);
-        }
+
+        initBuildingOperatorButton();
+
     }
 
     private Progressbar timer;
 
-    private void showTimer(long expireTime, int coolTime){
+    private void showTimer(long expireTime, long coolTime){
         timer = new Progressbar(expireTime,coolTime);
 
         timer.setPosition(getWidth()/2 - x/2 + 100,  getHeight()/2 + y/2 - 100);
@@ -104,7 +103,7 @@ public class DialogOperateStage extends BaseStage {
     }
 
     // 初始化操作按钮
-    private void initBuildingOperatorButton(final  int buildingType){
+    private void initBuildingOperatorButton(){
 
         if(timer != null && !timer.isFinish()){
             addActor(timer);
@@ -117,7 +116,6 @@ public class DialogOperateStage extends BaseStage {
 
 
         Texture texture = ResUtil.getInstance().getUi(UiType.LEVELUP);
-        BuildingDto dto = Player.player.getBuildings().get(buildingType);
         BuildingImage image = new BuildingImage(texture,dto);
         image.setWidth(100);
         image.setHeight(100);
@@ -132,15 +130,19 @@ public class DialogOperateStage extends BaseStage {
                 if(timer != null && !timer.isFinish()){
                     return;
                 }
-                updateBuilding(buildingType);
+                updateBuilding();
             }
         });
-        updateBuilding(buildingType);
+        updateBuilding();
     }
 
     @SuppressWarnings("unchecked")
-    private void updateBuilding(int buildingId){
-        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, buildingId),true);
+    private void updateBuilding(){
+        Map<String, Object> parms = new HashMap<String, Object>();
+        parms.put("x", dto.getX());
+        parms.put("y", dto.getY());
+
+        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, parms),true);
         if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
             return;
         }
@@ -169,34 +171,28 @@ public class DialogOperateStage extends BaseStage {
                 }
             }
 
-            ConcurrentMap<Integer, BuildingDto> buildings = Player.player.getBuildings();
+            ConcurrentMap<String, BuildingDto> buildings = Player.player.getBuildings();
             Object building = result.get("content");
             if(building != null){
                 BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
                 if(playerBuildingDto != null){
-                    BuildingDto pbd = buildings.get(playerBuildingDto.getId());
-                    if(pbd != null){
-                        pbd.setLevel(playerBuildingDto.getLevel());
-                        if(pbd.getId() != BuildingType.OFFICE){
-                            pbd.setAmount(playerBuildingDto.getLevel());
-                        }
-                    }
-                    this.getTranceGame().mapScreen.refreshLeftBuiding();
+                    buildings.put(playerBuildingDto.getKey(),playerBuildingDto);
+                    showTimer(playerBuildingDto.getEtime(), playerBuildingDto.getCdtime());
                 }
             }
 
             this.getTranceGame().mapScreen.refreshPlayerDtoData();
 
             //如果是主城升级的话  可能有新的建筑和部队
-            if(buildingId == BuildingType.OFFICE){
+            if(dto.getId() == BuildingType.OFFICE){
                 Object newBuildings  = result.get("newBuildingDtos");
                 if(newBuildings != null){
-                    List<BuildingDto> buildingDtos = JSON.parseArray(JSON.toJSON(newBuildings).toString(), BuildingDto.class);
-                    if(buildingDtos != null){
-                        for(BuildingDto buildingDto : buildingDtos){
-                            buildings.put(buildingDto.getId(), buildingDto);
+                    List<WaitBuildingDto> wbuildingDtos = JSON.parseArray(JSON.toJSON(newBuildings).toString(), WaitBuildingDto.class);
+                    if(wbuildingDtos != null){
+                        for(WaitBuildingDto wdto : wbuildingDtos){
+                            Player.player.addWaitBuilding(wdto);
                         }
-                        this.getTranceGame().mapScreen.refreshLeftBuiding();
+//                        this.getTranceGame().mapScreen.refreshLeftBuiding();
                     }
                 }
 
@@ -217,8 +213,8 @@ public class DialogOperateStage extends BaseStage {
         }
     }
 
-    public void setBuildingType(int buildingType) {
-        this.buildingType = buildingType;
+    public void setBuildingDto(BuildingDto dto) {
+        this.dto = dto;
     }
 
     public void dispose(){

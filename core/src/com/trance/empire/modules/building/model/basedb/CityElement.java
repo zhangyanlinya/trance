@@ -21,6 +21,11 @@ public class CityElement implements Basedb {
 	 */
 	private int openLevel;
 
+    /**
+     * 数量
+     */
+    private int amount;
+
 	public Integer getId() {
 		return id;
 	}
@@ -36,5 +41,12 @@ public class CityElement implements Basedb {
 	public void setOpenLevel(int openLevel) {
 		this.openLevel = openLevel;
 	}
-	
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 }

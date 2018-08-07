@@ -1,3 +1,4 @@
+/*
 package com.trance.view.dialog;
 
 
@@ -41,9 +42,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
+*/
 /**
  *
- */
+ *//*
+
 public class DialogBuildingStage extends BaseStage {
 
     private Image bgImage;
@@ -86,7 +89,7 @@ public class DialogBuildingStage extends BaseStage {
 	    });
 	    addActor(close);
     	
-    	ConcurrentMap<Integer, BuildingDto> building_map = Player.player.getBuildings();
+    	ConcurrentMap<String, BuildingDto> building_map = Player.player.getBuildings();
     	int i = 0;
     	float side = bgImage.getWidth() / 4;
     	for(final CityElement building : buildings){
@@ -174,7 +177,7 @@ public class DialogBuildingStage extends BaseStage {
 				}
 			}
 			
-			ConcurrentMap<Integer, BuildingDto> buildings = Player.player.getBuildings();
+			ConcurrentMap<String, BuildingDto> buildings = Player.player.getBuildings();
 			Object building = result.get("content");
 			if(building != null){
 				BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
@@ -222,9 +225,11 @@ public class DialogBuildingStage extends BaseStage {
 		}
 	}
 
-	/**
+	*/
+/**
 	 * 多少等级对应有多少数量(要与服务器对应起来)
-	 */
+	 *//*
+
 	private int levelToAmount(int level){
 		if(level < 4){
 			return level;
@@ -244,3 +249,4 @@ public class DialogBuildingStage extends BaseStage {
 		}
 	}
 }
+*/

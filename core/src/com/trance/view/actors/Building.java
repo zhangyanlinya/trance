@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
+import com.trance.empire.modules.building.model.WaitBuildingDto;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.RangeType;
 import com.trance.view.freefont.FreeBitmapFont;
@@ -42,7 +43,7 @@ public class Building extends GameActor {
 	public float restitution;
 	public static FreeBitmapFont font;
 	private BuildingDto dto;
-	private boolean detail;
+	private WaitBuildingDto wdto;
 	private boolean hasfire;
 
 	static {
@@ -147,10 +148,9 @@ public class Building extends GameActor {
 		this.dto = dto;
 	}
 
-	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, BuildingDto dto, boolean detail){
+	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, WaitBuildingDto wdto){
 		init(world, type, x, y, width, height, renderer);
-		this.dto = dto;
-		this.detail = detail;
+		this.wdto = wdto;
 	}
 
 	public void setIndex(int i,int j){
@@ -257,14 +257,21 @@ public class Building extends GameActor {
 				getScaleY(), getRotation());
 
 		}
+
+
 		if(dto != null){
-			if(detail){
-				font.draw(batch, "level  " + dto.getLevel(), getX(), getY());
-				font.draw(batch, "count  " + dto.getLeftAmount(), getX(), getY() - getHeight()/2);
-			}else{
-				font.draw(batch, "" + dto.getLevel(), getX() + hw/2 , getY() + getHeight());
-			}
+            long now = System.currentTimeMillis();
+            long leftTime = dto.getEtime() - now;
+            if(leftTime < 0){
+                leftTime = 0;
+            }
+
+			font.draw(batch,  dto.getLevel() +"|" + leftTime , getX() + hw/2 , getY() + getHeight());
 		}
+
+		if(wdto != null){
+            font.draw(batch, "count  " + wdto.getAmount(), getX(), getY() - getHeight()/2);
+        }
 
 		if(renderer != null){
 			batch.end();
@@ -304,9 +311,12 @@ public class Building extends GameActor {
 		}
 
 	}
-	
-	
-	@Override
+
+    public BuildingDto getDto() {
+        return dto;
+    }
+
+    @Override
 	public void dead() {
 		alive = false;
 		remove();

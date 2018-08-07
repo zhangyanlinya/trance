@@ -5,14 +5,21 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.trance.android.font.AndroidFreeFont;
 import com.trance.android.util.GetDeviceId;
 import com.trance.empire.modules.player.model.Player;
@@ -34,12 +41,12 @@ public class AndroidLauncher extends AndroidApplication {
 	private boolean isInit;
 
 	// Admob Google test banner
-//	private static final String AD_UNITID ="ca-app-pub-3940256099942544/6300978111";
+	//private static final String AD_UNITID ="ca-app-pub-3940256099942544/6300978111";
 
 	//Admob 横屏广告ID(自己的)
-	//private static final String AD_UNITID ="ca-app-pub-5713066340300541/1056902518";
+	private static final String AD_UNITID ="ca-app-pub-5713066340300541/1056902518";
 
-	//private static AdView adView;
+	private static AdView adView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +82,9 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useCompass = false;		  //禁用罗盘
 //        config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
 		AndroidFreeFont.Strat();//初始化文本
-		initialize(tranceGame,config);
-		//showAD(gameView);
+
+        View gameView = initializeForView(tranceGame,config);
+		showAD(gameView);
 
 		init();
 	}
@@ -84,7 +92,7 @@ public class AndroidLauncher extends AndroidApplication {
 	/**
 	 * 显示Admob banner
 	 */
-/*	private void showAD(final View gameView){
+	private void showAD(final View gameView){
 		// Create the layout
 		RelativeLayout layout = new RelativeLayout(this);
 
@@ -114,19 +122,24 @@ public class AndroidLauncher extends AndroidApplication {
 				adView.setVisibility(View.GONE);
 				adView.setVisibility(View.VISIBLE);
 			}
-		});
-	}*/
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                Log.e("trance", "加载admob AD 失败！！！！" + i);
+            }
+        });
+	}
 
 	@Override
 	protected void onPause() {
-		//adView.pause();
+		adView.pause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//adView.resume();
+		adView.resume();
 	}
 
 
@@ -149,13 +162,13 @@ public class AndroidLauncher extends AndroidApplication {
 		isInit = true;
 	}
 
-	static class MyHandler extends Handler{
+	private static class MyHandler extends Handler{
 
 		private WeakReference<Context> reference;
 		private ProgressDialog dialog;
 
 		public MyHandler(Context context, ProgressDialog dialog){
-			this.reference = new WeakReference<Context>(context);
+			this.reference = new WeakReference<>(context);
 			this.dialog = dialog;
 		}
 
@@ -167,7 +180,7 @@ public class AndroidLauncher extends AndroidApplication {
 					break;
 				case 2:
 					dialog.dismiss();
-					//adView.setVisibility(View.GONE);
+					adView.setVisibility(View.GONE);
 					break;
 				default:
 					Toast.makeText(reference.get(), msg.obj+"",
@@ -217,7 +230,7 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		//adView.destroy();
+		adView.destroy();
 		tranceGame.dispose();
 		SocketUtil.destroy();
 		Gdx.app.exit();

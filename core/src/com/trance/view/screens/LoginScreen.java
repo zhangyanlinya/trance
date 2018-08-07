@@ -27,6 +27,7 @@ import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
+import com.trance.empire.modules.building.model.WaitBuildingDto;
 import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.player.handler.PlayerCmd;
@@ -234,22 +235,17 @@ public class LoginScreen extends BaseScreen {
 		}
 
 		Object bobj = result.get("buildings");
-		if(bobj == null){//defalut;
-			Collection<CityElement> citys = BasedbService.listAll(CityElement.class);
-			for(CityElement city : citys){
-				if(city.getOpenLevel()  == 1){
-					BuildingDto dto = new BuildingDto();
-					dto.setId(city.getId());
-					dto.setAmount(1);
-					dto.setLevel(1);
-					dto.setBuildAmount(1);
-					playerDto.addBuilding(dto);
-				}
-			}
-		}else{
+		if(bobj != null){
 			List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
 			for(BuildingDto dto : buildings){
 				playerDto.addBuilding(dto);
+			}
+		}
+		Object wbobj = result.get("waitBuildings");
+		if(wbobj != null){
+			List<WaitBuildingDto> wbuildings = JSON.parseArray(wbobj.toString(), WaitBuildingDto.class);
+			for(WaitBuildingDto dto : wbuildings){
+				playerDto.addWaitBuilding(dto);
 			}
 		}
 

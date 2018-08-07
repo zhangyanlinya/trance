@@ -36,6 +36,7 @@ import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
+import com.trance.empire.modules.building.model.WaitBuildingDto;
 import com.trance.empire.modules.mapdata.handler.MapDataCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
@@ -51,7 +52,6 @@ import com.trance.view.constant.UiType;
 import com.trance.view.controller.GestureController;
 import com.trance.view.dialog.DialogArmyStage;
 import com.trance.view.dialog.DialogAttackInfoStage;
-import com.trance.view.dialog.DialogBuildingStage;
 import com.trance.view.dialog.DialogOperateStage;
 import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.freefont.FreeBitmapFont;
@@ -130,7 +130,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	
 	private InputMultiplexer inputMultiplexer;
     public DialogArmyStage dialogArmyStage;
-    public DialogBuildingStage dialogBuildingStage;
     public DialogRankUpStage dialogRankUpStage;
     public DialogAttackInfoStage dialogAttackInfoStage;
     public DialogOperateStage dialogOperateStage;
@@ -167,7 +166,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		shapeRenderer = new ShapeRenderer();
 		
 		dialogArmyStage = new DialogArmyStage(tranceGame);
-		dialogBuildingStage = new DialogBuildingStage(tranceGame);
 		dialogRankUpStage = new DialogRankUpStage(tranceGame);
 		dialogAttackInfoStage = new DialogAttackInfoStage(tranceGame);
         dialogOperateStage = new DialogOperateStage(tranceGame);
@@ -430,9 +428,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		setArmyDailog(true);
 	}
 	
-	private void upBuilding(){
-		setBuildingDailog(true);
-	}
+//	private void upBuilding(){
+//		setBuildingDailog(true);
+//	}
 	private void attackInfo(){
 		setAttackInfoDailog(true);
 	}
@@ -475,10 +473,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(dialogArmyStage.isVisible()){
 			dialogArmyStage.act();
 			dialogArmyStage.draw();
-		}
-		if(dialogBuildingStage.isVisible()){
-			dialogBuildingStage.act();
-			dialogBuildingStage.draw();
 		}
 		if(dialogRankUpStage.isVisible()){
 			dialogRankUpStage.act();
@@ -538,19 +532,19 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 	}
 	
-	public void setBuildingDailog(boolean visible) {
-		if(visible){
-			dialogBuildingStage.show();
-			inputMultiplexer.addProcessor(dialogBuildingStage);
-			inputMultiplexer.removeProcessor(stage);
-			inputMultiplexer.removeProcessor(this);
-		}else{
-			dialogBuildingStage.hide();
-			inputMultiplexer.addProcessor(stage);
-			inputMultiplexer.addProcessor(this);
-			inputMultiplexer.removeProcessor(dialogBuildingStage);
-		}
-	}
+//	public void setBuildingDailog(boolean visible) {
+//		if(visible){
+//			dialogBuildingStage.show();
+//			inputMultiplexer.addProcessor(dialogBuildingStage);
+//			inputMultiplexer.removeProcessor(stage);
+//			inputMultiplexer.removeProcessor(this);
+//		}else{
+//			dialogBuildingStage.hide();
+//			inputMultiplexer.addProcessor(stage);
+//			inputMultiplexer.addProcessor(this);
+//			inputMultiplexer.removeProcessor(dialogBuildingStage);
+//		}
+//	}
 
 	public void setAttackInfoDailog(boolean visible) {
 		if(visible){
@@ -722,9 +716,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 		}
 	
-		for(Entry<Integer, BuildingDto> e : Player.player.getBuildings().entrySet()){
-			BuildingDto dto = e.getValue();
-			if(dto.getLeftAmount() <= 0){
+		for(Entry<Integer, WaitBuildingDto> e : Player.player.getWaitBuildings().entrySet()){
+            WaitBuildingDto wdto = e.getValue();
+			if(wdto.getAmount() <= 0){
 				continue;
 			}
 			Building buiding = Building.buildingPool.obtain();
@@ -732,7 +726,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			float x = rate * side + length;
 			int rate2 = i/5 + 1;
 			float y = control_height - (length * 2 + rate2 * length * 2 );
-			buiding.init(null,dto.getId(), x, y, length,length,null, dto, true);
+			buiding.init(null, wdto.getId(), x, y, length,length, null, wdto);
 			stage.addActor(buiding);
 			i++;
 		}
@@ -770,9 +764,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 
 		if(actor.getY() <= control_height - length){//增加
-			BuildingDto dto = playerDto.getBuildings().get(b.type);
+			WaitBuildingDto dto = playerDto.getWaitBuildings().get(b.type);
 //			updateBuilding(dto);
-			if(dto.getLeftAmount() <= 0){//不够建造物
+			if(dto.getAmount() <= 0){//不够建造物
 				return false;
 			}
 		}
@@ -809,7 +803,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 train();
                 break;
             case UPGRADE:
-                upBuilding();
+//                upBuilding();
                 break;
             case RANKING:
                 rankUp();
@@ -818,7 +812,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 attackInfo();
                 break;
         }
-
 	}
 
 	//各种点击事件
@@ -847,14 +840,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
         if(building.type > 0) {
             // 弹出操作面板
-            toastOperator(building.type, x, y);
+            toastOperator(building.getDto(), x, y);
         }else {
             setOperateStageDailog(false, x, y);
         }
 	}
 
-	private void toastOperator(int buidingType, float x, float y){
-        dialogOperateStage.setBuildingType(buidingType);
+	private void toastOperator(BuildingDto dto, float x, float y){
+        dialogOperateStage.setBuildingDto(dto);
         setOperateStageDailog(true, x ,y);
     }
 
@@ -893,21 +886,21 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			b.remove();
 			Building.buildingPool.free(b);
 			
-			BuildingDto dto = playerDto.getBuildings().get(oldType);
-			if(dto == null || dto.getLeftAmount() <= 0){
+			WaitBuildingDto wdto = playerDto.getWaitBuildings().get(oldType);
+			if(wdto == null || wdto.getAmount() <= 0){
 				a.setPosition(oldx, oldy);
 				a = null;
 				return false;
 			}
-			dto.setBuildAmount(dto.getBuildAmount() + 1);
+
 			//增加
 			a.setPosition(b.getX(), b.getY());
 			a.setIndex(b.i, b.j);
 			playerDto.getMap()[b.i][b.j] = oldType; 
 			
-			if(dto.getLeftAmount() > 0){
+			if(wdto.getAmount() > 0){
 				Building block = Building.buildingPool.obtain();
-				block.init(null,oldType, oldx, oldy, length, length, null, dto);
+				block.init(null,oldType, oldx, oldy, length, length, null, wdto);
 				stage.addActor(block);
 			}
 			
@@ -1043,9 +1036,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		if(dialogArmyStage != null){
 			dialogArmyStage.dispose();
-		}
-		if(dialogBuildingStage != null){
-			dialogBuildingStage.dispose();
 		}
 		if(Building.font != null){
 			Building.font.dispose();
