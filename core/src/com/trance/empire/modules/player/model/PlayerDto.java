@@ -198,7 +198,7 @@ public class PlayerDto {
         buildings.put(getKey(dto.getX(), dto.getY()), dto);
     }
 
-    public String getKey(int x, int y) {
+    public static String getKey(int x, int y) {
         return x + "_" + y;
     }
 

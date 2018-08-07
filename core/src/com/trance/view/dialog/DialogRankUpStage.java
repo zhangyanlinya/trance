@@ -139,19 +139,7 @@ public class DialogRankUpStage extends BaseStage {
 					}
 
 					Object bobj = result.get("buildings");
-					if(bobj == null){//defalut;
-						Collection<CityElement> citys = BasedbService.listAll(CityElement.class);
-						for(CityElement city : citys){
-							if(city.getOpenLevel()  == 1){
-								BuildingDto bto = new BuildingDto();
-								bto.setId(city.getId());
-								bto.setAmount(1);
-								bto.setLevel(1);
-								bto.setBuildAmount(1);
-								dto.addBuilding(bto);
-							}
-						}
-					}else{
+					if(bobj != null){
 						List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
 						for(BuildingDto bto : buildings){
 							dto.addBuilding(bto);

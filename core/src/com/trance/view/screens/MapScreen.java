@@ -696,7 +696,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				
 				Building block = Building.buildingPool.obtain();
 				block.setIndex(i, j);
-				BuildingDto dto = playerDto.getBuildings().get(type);
+				BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
 				block.init(null,type, x, y, length,length, null, dto);
 				stage.addActor(block);
 			}

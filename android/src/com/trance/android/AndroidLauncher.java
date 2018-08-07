@@ -202,8 +202,6 @@ public class AndroidLauncher extends AndroidApplication {
 					public void run() {
 						if(tranceGame.mapScreen.dialogArmyStage.isVisible()){
 							tranceGame.mapScreen.setArmyDailog(false);
-						}else if(tranceGame.mapScreen.dialogBuildingStage.isVisible()){
-							tranceGame.mapScreen.setBuildingDailog(false);
 						}else if(tranceGame.mapScreen.dialogAttackInfoStage.isVisible()){
 							tranceGame.mapScreen.setAttackInfoDailog(false);
 						}else if(tranceGame.mapScreen.dialogRankUpStage.isVisible()){
