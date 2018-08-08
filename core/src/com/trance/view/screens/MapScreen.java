@@ -68,6 +68,7 @@ import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 
+import java.io.ObjectStreamException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -581,7 +582,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	 * harvist
 	 * @param buildingId
 	 */
-	private void harvist(int buildingId){
+	private void harvist(BuildingDto dto){
+        int buildingId = dto.getId();
 		if(buildingId != BuildingType.HOUSE && buildingId != BuildingType.BARRACKS){
 			return;
 		}
@@ -599,7 +601,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return;
 		}
 
-		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, buildingId),true);
+		Map<String,Object> params = new HashMap<String,Object>();
+        params.put("x", dto.getX());
+        params.put("y", dto.getY());
+		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, params),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
@@ -832,7 +837,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			case BuildingType.HOUSE:
 			case BuildingType.BARRACKS:
 				if(isEdit()){
-					harvist(building.type);
+					harvist(building.getDto());
 				}
 				break;
 			default:
