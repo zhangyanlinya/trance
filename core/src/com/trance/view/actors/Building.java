@@ -45,6 +45,7 @@ public class Building extends GameActor {
 	private BuildingDto dto;
 	private WaitBuildingDto wdto;
 	private boolean hasfire;
+    private int inScreenType; // 0-map 1-game
 
 	static {
 		if(font == null){
@@ -260,20 +261,19 @@ public class Building extends GameActor {
 
 
 		if(dto != null){
-            long now = System.currentTimeMillis();
-            long leftTime = dto.getEtime() - now;
-            if(leftTime < 0){
-                leftTime = 0;
+			font.draw(batch,  dto.getLevel() + "" , getX() + hw/2 , getY() + getHeight());
+            float current = dto.getEtime() - System.currentTimeMillis();
+            if(current > 0){
+                current = dto.getCdtime() - current;
+                drawProgress(batch, renderer, current, dto.getCdtime());
             }
-
-			font.draw(batch,  dto.getLevel() +"|" + leftTime , getX() + hw/2 , getY() + getHeight());
 		}
 
 		if(wdto != null){
             font.draw(batch, "count  " + wdto.getAmount(), getX(), getY() - getHeight()/2);
         }
 
-		if(renderer != null){
+		if(inScreenType == 1){
 			batch.end();
 			renderer.setColor(Color.GREEN);
 			renderer.begin(ShapeType.Line);
@@ -312,8 +312,38 @@ public class Building extends GameActor {
 
 	}
 
+	private void drawProgress(Batch batch, ShapeRenderer renderer,  float current, float max){
+        batch.end();
+        renderer.setColor(Color.GREEN);
+        renderer.begin(ShapeType.Line);
+        renderer.rect(getX(), getY() + getHeight(), getWidth(), 5);
+        renderer.end();
+        float percent = current / max;
+        if(percent < 0.2){
+            renderer.setColor(Color.RED);
+        }else if(percent < 0.5){
+            renderer.setColor(Color.YELLOW);
+        }else{
+            renderer.setColor(Color.BLUE);
+        }
+        renderer.begin(ShapeType.Filled);
+
+        renderer.rect(getX() + 1, getY() + getHeight() + 1, percent
+                * (getWidth() - 2), 4);
+        renderer.end();
+        batch.begin();
+    }
+
     public BuildingDto getDto() {
         return dto;
+    }
+
+    public int getInScreenType() {
+        return inScreenType;
+    }
+
+    public void setInScreenType(int inScreenType) {
+        this.inScreenType = inScreenType;
     }
 
     @Override

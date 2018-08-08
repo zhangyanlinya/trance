@@ -138,6 +138,9 @@ public class DialogOperateStage extends BaseStage {
 
     @SuppressWarnings("unchecked")
     private void updateBuilding(){
+        if(dto == null){
+            return;
+        }
         Map<String, Object> parms = new HashMap<String, Object>();
         parms.put("x", dto.getX());
         parms.put("y", dto.getY());

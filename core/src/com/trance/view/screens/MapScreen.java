@@ -583,6 +583,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	 * @param buildingId
 	 */
 	private void harvist(BuildingDto dto){
+        if(dto == null){
+            return;
+        }
         int buildingId = dto.getId();
 		if(buildingId != BuildingType.HOUSE && buildingId != BuildingType.BARRACKS){
 			return;
@@ -702,7 +705,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				Building block = Building.buildingPool.obtain();
 				block.setIndex(i, j);
 				BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
-				block.init(null,type, x, y, length,length, null, dto);
+				block.init(null,type, x, y, length,length, shapeRenderer, dto);
 				stage.addActor(block);
 			}
 		}
