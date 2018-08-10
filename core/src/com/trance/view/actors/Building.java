@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
@@ -274,25 +276,7 @@ public class Building extends GameActor {
         }
 
 		if(inScreenType == 1){
-			batch.end();
-			renderer.setColor(Color.GREEN);
-			renderer.begin(ShapeType.Line);
-			renderer.rect(getX(), getY() + getHeight(), getWidth(), 5);
-			renderer.end();
-			float percent = hp / maxhp;
-			if(percent < 0.2){
-				renderer.setColor(Color.RED);
-			}else if(percent < 0.5){
-				renderer.setColor(Color.YELLOW);
-			}else{
-				renderer.setColor(Color.BLUE);
-			}
-			renderer.begin(ShapeType.Filled);
-			
-			renderer.rect(getX() + 1, getY() + getHeight() + 1, percent
-					* (getWidth() - 2), 4);
-			renderer.end();
-			batch.begin();
+            drawProgress(batch, renderer, hp, maxhp);
 		}
 		
 		if(!MapData.gamerunning){

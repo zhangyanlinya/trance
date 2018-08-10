@@ -17,14 +17,11 @@ import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.building.model.WaitBuildingDto;
-import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
-import com.trance.empire.modules.coolqueue.model.CoolQueueType;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.BuildingImage;
-import com.trance.view.actors.Progressbar;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
 import com.trance.view.utils.MsgUtil;
@@ -93,26 +90,26 @@ public class DialogOperateStage extends BaseStage {
 
     }
 
-    private Progressbar timer;
+//    private Progressbar timer;
 
-    private void showTimer(long expireTime, long coolTime){
-        timer = new Progressbar(expireTime,coolTime);
-
-        timer.setPosition(getWidth()/2 - x/2 + 100,  getHeight()/2 + y/2 - 100);
-        addActor(timer);
-    }
+//    private void showTimer(long expireTime, long coolTime){
+//        timer = new Progressbar(expireTime,coolTime);
+//
+//        timer.setPosition(getWidth()/2 - x/2 + 100,  getHeight()/2 + y/2 - 100);
+//        addActor(timer);
+//    }
 
     // 初始化操作按钮
     private void initBuildingOperatorButton(){
 
-        if(timer != null && !timer.isFinish()){
-            addActor(timer);
-        }else{
-            CoolQueueDto cool = Player.player.getCoolQueueByType(CoolQueueType.BUILDING.ordinal());
-            if(cool != null){
-                showTimer(cool.getExpireTime(), cool.getCoolTime());
-            }
-        }
+//        if(timer != null && !timer.isFinish()){
+//            addActor(timer);
+//        }else{
+//            CoolQueueDto cool = Player.player.getCoolQueueByType(CoolQueueType.BUILDING.ordinal());
+//            if(cool != null){
+//                showTimer(cool.getExpireTime(), cool.getCoolTime());
+//            }
+//        }
 
 
         Texture texture = ResUtil.getInstance().getUi(UiType.LEVELUP);
@@ -127,13 +124,13 @@ public class DialogOperateStage extends BaseStage {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(timer != null && !timer.isFinish()){
-                    return;
-                }
+//                if(timer != null && !timer.isFinish()){
+//                    return;
+//                }
                 updateBuilding();
             }
         });
-        updateBuilding();
+//        updateBuilding();
     }
 
     @SuppressWarnings("unchecked")
@@ -165,14 +162,14 @@ public class DialogOperateStage extends BaseStage {
                 RewardService.executeRewards(valueResultSet);
             }
 
-            Object coolQueue = result.get("coolQueueDto");
-            if(coolQueue != null){
-                CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
-                if(coolQueueDto != null){
-                    Player.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
-                    showTimer(coolQueueDto.getExpireTime(), coolQueueDto.getCoolTime());
-                }
-            }
+//            Object coolQueue = result.get("coolQueueDto");
+//            if(coolQueue != null){
+//                CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
+//                if(coolQueueDto != null){
+//                    Player.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
+//                    showTimer(coolQueueDto.getExpireTime(), coolQueueDto.getCoolTime());
+//                }
+//            }
 
             ConcurrentMap<String, BuildingDto> buildings = Player.player.getBuildings();
             Object building = result.get("content");
@@ -180,7 +177,7 @@ public class DialogOperateStage extends BaseStage {
                 BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
                 if(playerBuildingDto != null){
                     buildings.put(playerBuildingDto.getKey(),playerBuildingDto);
-                    showTimer(playerBuildingDto.getEtime(), playerBuildingDto.getCdtime());
+//                    showTimer(playerBuildingDto.getEtime(), playerBuildingDto.getCdtime());
                 }
             }
 

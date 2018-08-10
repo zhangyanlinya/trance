@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -57,6 +58,7 @@ import com.trance.view.dialog.DialogRankUpStage;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
+import com.trance.view.model.Gird;
 import com.trance.view.model.RangeInfo;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.screens.type.ButtonType;
@@ -68,7 +70,6 @@ import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 
-import java.io.ObjectStreamException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -667,9 +668,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 		int[][] map = playerDto.getMap();
 		for (int i = 0; i < map.length; i++) {
-			float n = map.length - 1 - i;
+			int n = map.length - 1 - i;
 			for (int j = 0; j < map[i].length; j++) {
-				final int type = map[i][j];
+//				final int type = map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				if(i == 0 ){
@@ -701,17 +702,53 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}
-				
-				Building block = Building.buildingPool.obtain();
-				block.setIndex(i, j);
-				BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
-				block.init(null,type, x, y, length,length, shapeRenderer, dto);
-				stage.addActor(block);
+
+//				if(type > 0) {
+//                    Building block = Building.buildingPool.obtain();
+//                    block.setIndex(i, j);
+//                    BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
+//                    block.init(null, type, x, y, length, length, shapeRenderer, dto);
+//                    stage.addActor(block);
+//                }
 			}
 		}
+
+		// add building
+        for(BuildingDto dto : playerDto.getBuildings().values()) {
+            int i = dto.getX();
+            int j = dto.getY();
+            Building block = Building.buildingPool.obtain();
+            int n = map.length - 1 - i;
+            float px = menu_width + j * length;
+            float py = control_height + n * length;
+
+            block.setIndex(i, j);
+            block.init(null, dto.getId(), px, py, length, length, shapeRenderer, dto);
+            stage.addActor(block);
+        }
 	}
-	
-	public void refreshLeftBuiding() {
+
+    private Gird calculateIndex(float x, float y) {
+        int i = ARR_HEIGHT_SIZE - 1 - (int) ((y - control_height) / length);
+        int j = (int) ((x - menu_width )/ length);
+
+
+        if(i >= 0  && j >= 0 && i < ARR_HEIGHT_SIZE && j < ARR_WIDTH_SIZE ){
+            int id = 0;
+            BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
+            if(dto != null){
+                id = dto.getId();
+            }
+
+            float n = ARR_HEIGHT_SIZE - 1 - i;
+            float cx = menu_width + j * length;
+            float cy = control_height + n * length;
+            return new Gird(id, i, j, cx, cy);
+        }
+        return null;
+    }
+
+    public void refreshLeftBuiding() {
 		float side = width/10;
 		int i = 0;
 		Array<Actor> actors = stage.getActors();
@@ -739,68 +776,20 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			i++;
 		}
 	}
-	
-	private Building a ;
-	private float oldx;
-	private float oldy;
-	private int oldi;
-	private int oldj;
-	private int oldType;
-	
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		tochTaskButton(screenX, screenY,pointer, button);
-		Vector3 vector3 = new Vector3(screenX, screenY, 0);
-		camera.unproject(vector3); // 坐标转化  
-		float x = vector3.x;
-		float y = vector3.y;
-		
-		if(y < 0){
-			return false;
-		}
-		
-		Actor actor = stage.hit(x, y, true);
-		if(actor == null || !(actor instanceof Building)){
-			return false;
-		}
-		
-		Building b = (Building) actor;
-		handleBuildingOnClick(b , x, y);
 
-		if(!isEdit()){
-			return false;
-		}
-
-		if(actor.getY() <= control_height - length){//增加
-			WaitBuildingDto dto = playerDto.getWaitBuildings().get(b.type);
-//			updateBuilding(dto);
-			if(dto.getAmount() <= 0){//不够建造物
-				return false;
-			}
-		}
-		
-		a = b;
-		oldx = b.getX();
-		oldy = b.getY();
-		oldi = b.i;
-		oldj = b.j;
-		oldType = b.type;
-		return false;
-	}
-
-	private void tochTaskButton(int screenX, int screenY, int pointer, int button){
-		float side = width/8;
+    private void tochTaskButton(int screenX, int screenY, int pointer, int button){
+        float side = width/8;
         float y =  height - screenY;
-		if(y > side){
-			return;
-		}
+        if(y > side){
+            return;
+        }
 
-		int buttionId = (int)(screenX / side);
+        int buttionId = (int)(screenX / side);
         ButtonType buttonType = ButtonType.valueOf(buttionId);
         if(buttonType == null){
             return;
         }
-		switch (buttonType){//
+        switch (buttonType){//
             case WORLD:
                 toWorld();
                 break;
@@ -820,44 +809,96 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 attackInfo();
                 break;
         }
-	}
+    }
 
-	//各种点击事件
-	private void handleBuildingOnClick(Building building, float x, float y){
-		switch (building.type){
-			case BuildingType.OFFICE:
-				break;
-			case BuildingType.CANNON:
-			case BuildingType.ROCKET:
-			case BuildingType.FLAME:
-			case BuildingType.GUN:
-			case BuildingType.TOWER:
-			case BuildingType.MORTAR:
-				RangeInfo e = new RangeInfo(x,y,building.range);
-				rangeQueue.offer(e);
-				break;
+    //各种点击事件
+    private void handleBuildingOnClick(Building building, float x, float y){
+        switch (building.type){
+            case BuildingType.OFFICE:
+                break;
+            case BuildingType.CANNON:
+            case BuildingType.ROCKET:
+            case BuildingType.FLAME:
+            case BuildingType.GUN:
+            case BuildingType.TOWER:
+            case BuildingType.MORTAR:
+                RangeInfo e = new RangeInfo(x,y,building.range);
+                rangeQueue.offer(e);
+                break;
 
-			case BuildingType.HOUSE:
-			case BuildingType.BARRACKS:
-				if(isEdit()){
-					harvist(building.getDto());
-				}
-				break;
-			default:
-				break;
-		}
+            case BuildingType.HOUSE:
+            case BuildingType.BARRACKS:
+                if(isEdit()){
+                    harvist(building.getDto());
+                }
+                break;
+            default:
+                break;
+        }
         if(building.type > 0) {
             // 弹出操作面板
             toastOperator(building.getDto(), x, y);
         }else {
             setOperateStageDailog(false, x, y);
         }
-	}
+    }
 
-	private void toastOperator(BuildingDto dto, float x, float y){
+    private void toastOperator(BuildingDto dto, float x, float y){
         dialogOperateStage.setBuildingDto(dto);
         setOperateStageDailog(true, x ,y);
     }
+
+	private Building a ;
+	private float oldx;
+	private float oldy;
+	private int oldi;
+	private int oldj;
+	private int oldType;
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if(!isEdit()){
+            return false;
+        }
+
+		tochTaskButton(screenX, screenY,pointer, button);
+		Vector3 vector3 = new Vector3(screenX, screenY, 0);
+		camera.unproject(vector3); // 坐标转化  
+		float x = vector3.x;
+		float y = vector3.y;
+		
+		if(y < 0){
+			return false;
+		}
+		
+		Actor actor = stage.hit(x, y, true);
+		if(actor == null || !(actor instanceof Building)){
+			return false;
+		}
+
+		Building b = (Building) actor;
+		handleBuildingOnClick(b , x, y);
+
+		if(actor.getY() <= control_height - length){//增加
+			WaitBuildingDto wdto = playerDto.getWaitBuildings().get(b.type);
+            if(wdto != null) {
+                if (wdto.getAmount() <= 0) {//不够建造物
+                    return false;
+                }
+            }
+		}
+
+        a = b;
+        oldx = b.getX();
+        oldy = b.getY();
+        oldi = b.i;
+        oldj = b.j;
+        oldType = b.type;
+
+		return false;
+	}
+
+
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -871,40 +912,40 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		if(y < 0){
 			a.setPosition(oldx, oldy);
-			a = null;
+//			a = null;
 			return false;
 		}
 		
-		Building b = compute(x,y);
-		if(b == null){//移除
-//			System.out.println("b = null");
+		Gird gird = calculateIndex(x,y);
+		if(gird == null){//移除
+			System.out.println("gird = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
-			a = null;
+//			a = null;
 			return false;
 		}
-		
+
 		if(oldy <= control_height - length){//增加
 //			System.out.println("开始增加...");
-			if(b.type != 0){
+			if(gird.id != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
-				a = null;
+//				a = null;
 				return false;
 			}
-			
-			b.remove();
-			Building.buildingPool.free(b);
+//
+//			b.remove();
+//			Building.buildingPool.free(b);
 			
 			WaitBuildingDto wdto = playerDto.getWaitBuildings().get(oldType);
 			if(wdto == null || wdto.getAmount() <= 0){
 				a.setPosition(oldx, oldy);
-				a = null;
+//				a = null;
 				return false;
 			}
 
 			//增加
-			a.setPosition(b.getX(), b.getY());
-			a.setIndex(b.i, b.j);
-			playerDto.getMap()[b.i][b.j] = oldType; 
+			a.setPosition(gird.x, gird.y);
+			a.setIndex(gird.i, gird.j);
+			playerDto.getMap()[gird.i][gird.j] = oldType;
 			
 			if(wdto.getAmount() > 0){
 				Building block = Building.buildingPool.obtain();
@@ -913,41 +954,48 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 			
 			StringBuilder to = new StringBuilder();
-			to.append(b.i).append("|").append(b.j).append("|").append(oldType);
+			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);
 			saveMaptoServer(null,to.toString());
-			a = null;
+//			a = null;
 			return false;
 		}
 		
-		if(oldType == b.type){
-			a.setPosition(oldx, oldy);
-			a = null;
-			return false; //类型一样不用上传
-		}
+//		if(oldType == b.type){
+//			a.setPosition(oldx, oldy);
+//			a = null;
+//			return false; //类型一样不用上传
+//		}
 		
 		////替换
-		a.setPosition(b.getX(), b.getY());
-		a.setIndex(b.i, b.j);
-		playerDto.getMap()[b.i][b.j] = oldType; 
-		
-		b.setPosition(oldx, oldy);
-		b.setIndex(oldi, oldj);
-		playerDto.getMap()[oldi][oldj] = b.type;
+
+		a.setPosition(gird.x, gird.y);
+		a.setIndex(gird.i, gird.j);
+		playerDto.getMap()[gird.i][gird.j] = oldType;
+
+        int targetType = 0;
+        Building b = compute(x, y);
+        if(b != null){
+            b.setPosition(oldx, oldy);
+            b.setIndex(oldi, oldj);
+            targetType = b.type;
+        }
+        playerDto.getMap()[oldi][oldj] = targetType;
+
 		
 //		System.out.println(oldType  +" 与 " + b.type +" 进行了交换~ ");
 		
 		StringBuilder from = new StringBuilder();
 		from.append(oldi).append("|").append(oldj).append("|").append(oldType);
 		StringBuilder to = new StringBuilder();
-		to.append(a.i).append("|").append(a.j).append("|").append(b.type);
+		to.append(a.i).append("|").append(a.j).append("|").append(targetType);
 		saveMaptoServer(from.toString(),to.toString());
-		a = null;
+//		a = null;
 		return false;
 	}
-	
-	
+
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+        setOperateStageDailog(false, 0 ,0);
 		if(a != null){
 			Vector3 vector3 = new Vector3(screenX, screenY, 0);
 			camera.unproject(vector3); // 坐标转化  
