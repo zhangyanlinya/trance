@@ -854,9 +854,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private int oldi;
 	private int oldj;
 	private int oldType;
+    private boolean isNew;
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        isNew = false;
         if(!isEdit()){
             return false;
         }
@@ -894,6 +896,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         oldi = b.i;
         oldj = b.j;
         oldType = b.type;
+        isNew =true;
 
 		return false;
 	}
@@ -902,7 +905,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(a == null){
+		if(a == null || !isNew){
 			return false;
 		}
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);
@@ -912,7 +915,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		if(y < 0){
 			a.setPosition(oldx, oldy);
-//			a = null;
 			return false;
 		}
 		
@@ -920,7 +922,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(gird == null){//移除
 			System.out.println("gird = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
-//			a = null;
 			return false;
 		}
 
@@ -928,17 +929,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //			System.out.println("开始增加...");
 			if(gird.id != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
-//				a = null;
 				return false;
 			}
-//
-//			b.remove();
-//			Building.buildingPool.free(b);
-			
+
 			WaitBuildingDto wdto = playerDto.getWaitBuildings().get(oldType);
 			if(wdto == null || wdto.getAmount() <= 0){
 				a.setPosition(oldx, oldy);
-//				a = null;
 				return false;
 			}
 
@@ -956,7 +952,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			StringBuilder to = new StringBuilder();
 			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);
 			saveMaptoServer(null,to.toString());
-//			a = null;
 			return false;
 		}
 		
@@ -989,14 +984,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		StringBuilder to = new StringBuilder();
 		to.append(a.i).append("|").append(a.j).append("|").append(targetType);
 		saveMaptoServer(from.toString(),to.toString());
-//		a = null;
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
         setOperateStageDailog(false, 0 ,0);
-		if(a != null){
+		if(a != null&& isNew){
 			Vector3 vector3 = new Vector3(screenX, screenY, 0);
 			camera.unproject(vector3); // 坐标转化  
 			float x = vector3.x;
