@@ -90,28 +90,9 @@ public class DialogOperateStage extends BaseStage {
 
     }
 
-//    private Progressbar timer;
-
-//    private void showTimer(long expireTime, long coolTime){
-//        timer = new Progressbar(expireTime,coolTime);
-//
-//        timer.setPosition(getWidth()/2 - x/2 + 100,  getHeight()/2 + y/2 - 100);
-//        addActor(timer);
-//    }
 
     // 初始化操作按钮
     private void initBuildingOperatorButton(){
-
-//        if(timer != null && !timer.isFinish()){
-//            addActor(timer);
-//        }else{
-//            CoolQueueDto cool = Player.player.getCoolQueueByType(CoolQueueType.BUILDING.ordinal());
-//            if(cool != null){
-//                showTimer(cool.getExpireTime(), cool.getCoolTime());
-//            }
-//        }
-
-
         Texture texture = ResUtil.getInstance().getUi(UiType.LEVELUP);
         BuildingImage image = new BuildingImage(texture,dto);
         image.setWidth(100);
@@ -124,13 +105,9 @@ public class DialogOperateStage extends BaseStage {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                if(timer != null && !timer.isFinish()){
-//                    return;
-//                }
                 updateBuilding();
             }
         });
-//        updateBuilding();
     }
 
     @SuppressWarnings("unchecked")
@@ -162,22 +139,12 @@ public class DialogOperateStage extends BaseStage {
                 RewardService.executeRewards(valueResultSet);
             }
 
-//            Object coolQueue = result.get("coolQueueDto");
-//            if(coolQueue != null){
-//                CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(coolQueue).toString(), CoolQueueDto.class);
-//                if(coolQueueDto != null){
-//                    Player.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
-//                    showTimer(coolQueueDto.getExpireTime(), coolQueueDto.getCoolTime());
-//                }
-//            }
-
             ConcurrentMap<String, BuildingDto> buildings = Player.player.getBuildings();
             Object building = result.get("content");
             if(building != null){
                 BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
                 if(playerBuildingDto != null){
                     buildings.put(playerBuildingDto.getKey(),playerBuildingDto);
-//                    showTimer(playerBuildingDto.getEtime(), playerBuildingDto.getCdtime());
                 }
             }
 

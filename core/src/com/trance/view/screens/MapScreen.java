@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -565,14 +564,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	public void setOperateStageDailog(boolean visible, float x, float y) {
 		if(visible){
             dialogOperateStage.show(x, y);
-//			inputMultiplexer.addProcessor(dialogOperateStage);
-//			inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
+			inputMultiplexer.addProcessor(dialogOperateStage);
+			inputMultiplexer.removeProcessor(stage);
 		}else{
             dialogOperateStage.hide();
-//			inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-//			inputMultiplexer.removeProcessor(dialogOperateStage);
+			inputMultiplexer.addProcessor(stage);
+			inputMultiplexer.removeProcessor(dialogOperateStage);
 		}
 	}
 
@@ -581,7 +578,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	/**
 	 * harvist
-	 * @param buildingId
 	 */
 	private void harvist(BuildingDto dto){
         if(dto == null){
