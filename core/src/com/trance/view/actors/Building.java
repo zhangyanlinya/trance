@@ -34,8 +34,6 @@ public class Building extends GameActor {
 	public final static Pool<Building> buildingPool = new BuildingPool();
 	private Body body;
 	public int type;
-	public int i;
-	public int j;
 	private TextureRegion textureRegion;
   	private ShapeRenderer renderer;
 	private long fireDelay = 2000;
@@ -155,10 +153,11 @@ public class Building extends GameActor {
 		init(world, type, x, y, width, height, renderer);
 		this.wdto = wdto;
 	}
-
+//
 	public void setIndex(int i,int j){
-		this.i = i;
-		this.j = j;
+        if(dto == null) return;
+		this.dto.setX(i);
+		this.dto.setY(j);
 	}
 	
 	
@@ -264,9 +263,10 @@ public class Building extends GameActor {
 
 		if(dto != null){
 			font.draw(batch,  dto.getLevel() + "" , getX() + hw/2 , getY() + getHeight());
-            float current = dto.getEtime() - System.currentTimeMillis();
+            float current = dto.getEtime() -  System.currentTimeMillis() ;
             if(current > 0){
                 current = dto.getCdtime() - current;
+                if(current > 0)
                 drawProgress(batch, renderer, current, dto.getCdtime());
             }
 		}

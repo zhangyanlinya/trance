@@ -144,7 +144,12 @@ public class DialogOperateStage extends BaseStage {
             if(building != null){
                 BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
                 if(playerBuildingDto != null){
-                    buildings.put(playerBuildingDto.getKey(),playerBuildingDto);
+                   String key = playerBuildingDto.getKey();
+                    BuildingDto dto = buildings.get(key);
+                    if(dto != null){
+                        dto.setCdtime(playerBuildingDto.getCdtime());
+                        dto.setEtime(playerBuildingDto.getEtime());
+                    }
                 }
             }
 

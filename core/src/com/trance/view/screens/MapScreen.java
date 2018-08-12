@@ -510,11 +510,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			dialogRankUpStage.show();
 			inputMultiplexer.addProcessor(dialogRankUpStage);
 			inputMultiplexer.removeProcessor(stage);
-			inputMultiplexer.removeProcessor(this);
+//			inputMultiplexer.removeProcessor(this);
 		}else{
 			dialogRankUpStage.hide();
 			inputMultiplexer.addProcessor(stage);
-			inputMultiplexer.addProcessor(this);
+//			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogRankUpStage);
 		}
 	}
@@ -524,11 +524,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			dialogArmyStage.show();
 			inputMultiplexer.addProcessor(dialogArmyStage);
 			inputMultiplexer.removeProcessor(stage);
-			inputMultiplexer.removeProcessor(this);
+//			inputMultiplexer.removeProcessor(this);
 		}else{
 			dialogArmyStage.hide();
 			inputMultiplexer.addProcessor(stage);
-			inputMultiplexer.addProcessor(this);
+//			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogArmyStage);
 		}
 	}
@@ -552,11 +552,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			dialogAttackInfoStage.show();
 			inputMultiplexer.addProcessor(dialogAttackInfoStage);
 			inputMultiplexer.removeProcessor(stage);
-			inputMultiplexer.removeProcessor(this);
+//			inputMultiplexer.removeProcessor(this);
 		}else{
 			dialogAttackInfoStage.hide();
 			inputMultiplexer.addProcessor(stage);
-			inputMultiplexer.addProcessor(this);
+//			inputMultiplexer.addProcessor(this);
 			inputMultiplexer.removeProcessor(dialogAttackInfoStage);
 		}
 	}
@@ -835,7 +835,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             // 弹出操作面板
             toastOperator(building.getDto(), x, y);
         }else {
-            setOperateStageDailog(false, x, y);
+//            setOperateStageDailog(false, x, y);
         }
     }
 
@@ -875,6 +875,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 
 		Building b = (Building) actor;
+        if(b.getDto() == null){
+            return false;
+        }
+
 		handleBuildingOnClick(b , x, y);
 
 		if(actor.getY() <= control_height - length){//增加
@@ -889,8 +893,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         a = b;
         oldx = b.getX();
         oldy = b.getY();
-        oldi = b.i;
-        oldj = b.j;
+        oldi = b.getDto().getX();
+        oldj = b.getDto().getY();
         oldType = b.type;
         isNew =true;
 
@@ -951,11 +955,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return false;
 		}
 		
-//		if(oldType == b.type){
-//			a.setPosition(oldx, oldy);
-//			a = null;
-//			return false; //类型一样不用上传
-//		}
+		if(gird.i == oldi && gird.j == oldj){ //没有移动
+			a.setPosition(oldx, oldy);
+			return false;
+		}
 		
 		////替换
 
@@ -978,7 +981,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		StringBuilder from = new StringBuilder();
 		from.append(oldi).append("|").append(oldj).append("|").append(oldType);
 		StringBuilder to = new StringBuilder();
-		to.append(a.i).append("|").append(a.j).append("|").append(targetType);
+		to.append(gird.i).append("|").append(gird.j).append("|").append(targetType);
 		saveMaptoServer(from.toString(),to.toString());
 		return false;
 	}
