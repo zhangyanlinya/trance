@@ -698,14 +698,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}
-
-//				if(type > 0) {
-//                    Building block = Building.buildingPool.obtain();
-//                    block.setIndex(i, j);
-//                    BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
-//                    block.init(null, type, x, y, length, length, shapeRenderer, dto);
-//                    stage.addActor(block);
-//                }
 			}
 		}
 
@@ -835,7 +827,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             // 弹出操作面板
             toastOperator(building.getDto(), x, y);
         }else {
-//            setOperateStageDailog(false, x, y);
+            setOperateStageDailog(false, x, y);
         }
     }
 
@@ -988,7 +980,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-        setOperateStageDailog(false, 0 ,0);
+//        setOperateStageDailog(false, 0 ,0);
 		if(a != null&& isNew){
 			Vector3 vector3 = new Vector3(screenX, screenY, 0);
 			camera.unproject(vector3); // 坐标转化  

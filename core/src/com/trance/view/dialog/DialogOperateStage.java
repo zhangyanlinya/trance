@@ -49,59 +49,56 @@ public class DialogOperateStage extends BaseStage {
     }
 
     private void init() {
-
         init = true;
     }
 
-    public void show(float x, float y){
+    public void show(float x, float y) {
         this.x = x;
         this.y = y;
         show();
     }
-    
-    public void show(){
-    	if(!init){
-    		init();
-    	}
 
-    	this.clear();
-    	this.setVisible(true);
+    public void show() {
+        if (!init) {
+            init();
+        }
 
-		Image bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
+        this.clear();
+        this.setVisible(true);
+
+        Image bgImage = new Image(ResUtil.getInstance().getUi(UiType.BLANK));
         bgImage.getColor().a = 0.3f;
-	    bgImage.setWidth(300);
-	    bgImage.setHeight(100);
-	    bgImage.setPosition(x - bgImage.getWidth()/2, y);
-	    addActor(bgImage);
-	      
-	    Image close = new Image(ResUtil.getInstance().getUi(UiType.CLOSE));
-	    close.setPosition(x + bgImage.getWidth()/2,  y + bgImage.getHeight());
-	    close.addListener(new ClickListener(){
-	
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-					getTranceGame().mapScreen.setOperateStageDailog(false, x, y);
-			}
-	    });
-	    addActor(close);
+        bgImage.setWidth(300);
+        bgImage.setHeight(100);
+        bgImage.setPosition(x - bgImage.getWidth() / 2, y);
+        addActor(bgImage);
 
+        Image close = new Image(ResUtil.getInstance().getUi(UiType.CLOSE));
+        close.setPosition(x + bgImage.getWidth() / 2, y + bgImage.getHeight());
+        close.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                getTranceGame().mapScreen.setOperateStageDailog(false, x, y);
+            }
+        });
+        addActor(close);
 
         initBuildingOperatorButton();
 
     }
 
-
     // 初始化操作按钮
-    private void initBuildingOperatorButton(){
+    private void initBuildingOperatorButton() {
         Texture texture = ResUtil.getInstance().getUi(UiType.LEVELUP);
-        BuildingImage image = new BuildingImage(texture,dto);
+        BuildingImage image = new BuildingImage(texture, dto);
         image.setWidth(100);
         image.setHeight(100);
 
-        image.setPosition(x,y);
+        image.setPosition(x, y);
         addActor(image);
 
-        image.addListener(new ClickListener(){
+        image.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -111,57 +108,53 @@ public class DialogOperateStage extends BaseStage {
     }
 
     @SuppressWarnings("unchecked")
-    private void updateBuilding(){
-        if(dto == null){
+    private void updateBuilding() {
+        if (dto == null) {
             return;
         }
         Map<String, Object> parms = new HashMap<String, Object>();
         parms.put("x", dto.getX());
         parms.put("y", dto.getY());
 
-        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, parms),true);
-        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, parms), true);
+        if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
             return;
         }
 
         byte[] bytes = response.getValueBytes();
         String text = new String(bytes);
-        HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
-        if(result != null){
+        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+        if (result != null) {
             int code = Integer.valueOf(String.valueOf(result.get("result")));
-            if(code != Result.SUCCESS){
-                MsgUtil.getInstance().showMsg(Module.BUILDING,code);
-                return ;
+            if (code != Result.SUCCESS) {
+                MsgUtil.getInstance().showMsg(Module.BUILDING, code);
+                return;
             }
             Object valueResult = result.get("valueResultSet");
-            if(valueResult != null){
+            if (valueResult != null) {
                 ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
                 RewardService.executeRewards(valueResultSet);
             }
 
             ConcurrentMap<String, BuildingDto> buildings = Player.player.getBuildings();
             Object building = result.get("content");
-            if(building != null){
+            if (building != null) {
                 BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
-                if(playerBuildingDto != null){
-                   String key = playerBuildingDto.getKey();
-                    BuildingDto dto = buildings.get(key);
-                    if(dto != null){
-                        dto.setCdtime(playerBuildingDto.getCdtime());
-                        dto.setEtime(playerBuildingDto.getEtime());
-                    }
+                if (playerBuildingDto != null) {
+                    buildings.put(playerBuildingDto.getKey(), playerBuildingDto);
+//                    showTimer(playerBuildingDto.getEtime(), playerBuildingDto.getCdtime());
                 }
             }
 
             this.getTranceGame().mapScreen.refreshPlayerDtoData();
 
             //如果是主城升级的话  可能有新的建筑和部队
-            if(dto.getId() == BuildingType.OFFICE){
-                Object newBuildings  = result.get("newBuildingDtos");
-                if(newBuildings != null){
+            if (dto.getId() == BuildingType.OFFICE) {
+                Object newBuildings = result.get("newBuildingDtos");
+                if (newBuildings != null) {
                     List<WaitBuildingDto> wbuildingDtos = JSON.parseArray(JSON.toJSON(newBuildings).toString(), WaitBuildingDto.class);
-                    if(wbuildingDtos != null){
-                        for(WaitBuildingDto wdto : wbuildingDtos){
+                    if (wbuildingDtos != null) {
+                        for (WaitBuildingDto wdto : wbuildingDtos) {
                             Player.player.addWaitBuilding(wdto);
                         }
 //                        this.getTranceGame().mapScreen.refreshLeftBuiding();
@@ -169,10 +162,10 @@ public class DialogOperateStage extends BaseStage {
                 }
 
                 Object newArmys = result.get("newArmyDtos");
-                if(newArmys != null){
+                if (newArmys != null) {
                     List<ArmyDto> armyDtos = JSON.parseArray(JSON.toJSON(newArmys).toString(), ArmyDto.class);
-                    if(armyDtos != null){
-                        for(ArmyDto armyDto : armyDtos){
+                    if (armyDtos != null) {
+                        for (ArmyDto armyDto : armyDtos) {
                             Player.player.addAmry(armyDto);
                         }
 //						 dialogArmyStage.refresh();
@@ -189,11 +182,11 @@ public class DialogOperateStage extends BaseStage {
         this.dto = dto;
     }
 
-    public void dispose(){
-		super.dispose();
-		if(init){
-			init = false;
-		}
-	}
+    public void dispose() {
+        super.dispose();
+        if (init) {
+            init = false;
+        }
+    }
 
 }
