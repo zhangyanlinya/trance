@@ -453,22 +453,22 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		renderRange(delta);
 
 		spriteBatch.begin();
+
+        toWorld.draw(spriteBatch);
 		if(playerDto.isMyself()){
 			font.draw(spriteBatch,msg,length,control_height -length * 2);
-		}
-		if(playerDto.isMyself()){
-			font.draw(spriteBatch, Player.player.getPlayerName(),length,height - length);
-			font.draw(spriteBatch, Player.player.getExperience()+"/"+levelExp ,length,height - length * 2);
+            font.draw(spriteBatch, Player.player.getPlayerName(),length,height - length);
+            font.draw(spriteBatch, Player.player.getExperience()+"/"+levelExp ,length,height - length * 2);
+
+            rename.draw(spriteBatch);
+            toTrain.draw(spriteBatch);
+            toUpBuilding.draw(spriteBatch);
+            toRankUp.draw(spriteBatch);
+            toAttackInfo.draw(spriteBatch);
 		}else{
 			font.draw(spriteBatch, playerDto.getPlayerName(),length,height - length);
 		}
 
-		toWorld.draw(spriteBatch);
-		rename.draw(spriteBatch);
-        toTrain.draw(spriteBatch);
-        toUpBuilding.draw(spriteBatch);
-        toRankUp.draw(spriteBatch);
-        toAttackInfo.draw(spriteBatch);
 		spriteBatch.end();
 		
 		if(dialogArmyStage.isVisible()){
