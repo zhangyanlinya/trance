@@ -827,7 +827,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             // 弹出操作面板
             toastOperator(building.getDto(), x, y);
         }else {
-            setOperateStageDailog(false, x, y);
+//            setOperateStageDailog(false, x, y);
         }
     }
 
@@ -907,6 +907,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		if(y < 0){
 			a.setPosition(oldx, oldy);
+            a.setTouchable(Touchable.enabled);//比较后就可以点了
 			return false;
 		}
 		
@@ -914,6 +915,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(gird == null){//移除
 			System.out.println("gird = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
+            a.setTouchable(Touchable.enabled);//比较后就可以点了
 			return false;
 		}
 
@@ -921,12 +923,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //			System.out.println("开始增加...");
 			if(gird.id != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
+                a.setTouchable(Touchable.enabled);//比较后就可以点了
 				return false;
 			}
 
 			WaitBuildingDto wdto = playerDto.getWaitBuildings().get(oldType);
 			if(wdto == null || wdto.getAmount() <= 0){
 				a.setPosition(oldx, oldy);
+                a.setTouchable(Touchable.enabled);//比较后就可以点了
 				return false;
 			}
 
@@ -944,11 +948,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			StringBuilder to = new StringBuilder();
 			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);
 			saveMaptoServer(null,to.toString());
+            a.setTouchable(Touchable.enabled);//比较后就可以点了
 			return false;
 		}
 		
 		if(gird.i == oldi && gird.j == oldj){ //没有移动
 			a.setPosition(oldx, oldy);
+            a.setTouchable(Touchable.enabled);//比较后就可以点了
 			return false;
 		}
 		
@@ -975,12 +981,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		StringBuilder to = new StringBuilder();
 		to.append(gird.i).append("|").append(gird.j).append("|").append(targetType);
 		saveMaptoServer(from.toString(),to.toString());
+        a.setTouchable(Touchable.enabled);//比较后就可以点了
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-//        setOperateStageDailog(false, 0 ,0);
 		if(a != null&& isNew){
 			Vector3 vector3 = new Vector3(screenX, screenY, 0);
 			camera.unproject(vector3); // 坐标转化  
@@ -994,6 +1000,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			a.setTouchable(Touchable.disabled);//不让点中先
 			a.setPosition(x, y);
 		}
+        setOperateStageDailog(false, 0 ,0);
 		return false;
 	}
 	
@@ -1004,7 +1011,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	 */
 	private Building compute(float x, float y) {
 		Actor at = stage.hit(x, y, true);
-		a.setTouchable(Touchable.enabled);//比较后就可以点了
 		if(at == null){
 			return null;
 		}

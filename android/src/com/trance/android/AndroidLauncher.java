@@ -41,10 +41,10 @@ public class AndroidLauncher extends AndroidApplication {
 	private boolean isInit;
 
 	// Admob Google test banner
-	//private static final String AD_UNITID ="ca-app-pub-3940256099942544/6300978111";
+	private static final String AD_UNITID ="ca-app-pub-3940256099942544/6300978111";
 
 	//Admob 横屏广告ID(自己的)
-	private static final String AD_UNITID ="ca-app-pub-5713066340300541/1056902518";
+//	private static final String AD_UNITID ="ca-app-pub-5713066340300541/1056902518";
 
 	private static AdView adView;
 

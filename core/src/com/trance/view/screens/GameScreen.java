@@ -48,7 +48,6 @@ import com.trance.empire.modules.army.model.ArmyVo;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
-import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
@@ -133,8 +132,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	 * 一局所用总时间
 	 */
 	private final static int TOTAL_TIME = 2 * 60;
-	private Action[] sAction;
-	
+
 	/**
 	 * 当前时间
 	 */
@@ -397,7 +395,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     }
 	
 	private void initClock() {
-		sAction = new Action[TOTAL_TIME];// 一共执行120次
+        Action[] sAction = new Action[TOTAL_TIME];// 一共执行120次
 		// 使用action实现定时器
 		for (int i = 0; i < sAction.length; i++) {
 			Action delayedAction = Actions.run(new Runnable() {
@@ -454,7 +452,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		for (int i = 0; i < map.length; i++) {
 			float n = map.length - 1 - i;
 			for (int j = 0; j < map[i].length; j++) {
-				int type = map[i][j];
+//				int type = map[i][j];
 				float x = menu_width + j * length;
 				float y = control_height + n * length;
 				
@@ -488,20 +486,34 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 					stage.addActor(grass);
 				}
 				
-				if (type > 0){
-					Building block = Building.buildingPool.obtain();
-					if(type >= BuildingType.CANNON){
-						connons.add(block);
-					}
-
-					BuildingDto dto = playerDto.getBuildings().get(type);
-					block.init(world,type, x, y, length,length,shapeRenderer,dto);
-                    block.setInScreenType(1);
-					buildings.add(block);
-					stage.addActor(block);
-				}
+//				if (type > 0){
+//					Building block = Building.buildingPool.obtain();
+//					if(type >= BuildingType.CANNON){
+//						connons.add(block);
+//					}
+//
+//					BuildingDto dto = playerDto.getBuildings().get(type);
+//					block.init(world,type, x, y, length,length,shapeRenderer,dto);
+//                    block.setInScreenType(1);
+//					buildings.add(block);
+//					stage.addActor(block);
+//				}
 			}
 		}
+
+        // add building
+        for(BuildingDto dto : playerDto.getBuildings().values()) {
+            int i = dto.getX();
+            int j = dto.getY();
+            Building block = Building.buildingPool.obtain();
+            int n = map.length - 1 - i;
+            float px = menu_width + j * length;
+            float py = control_height + n * length;
+
+            block.setIndex(i, j);
+            block.init(world, dto.getId(), px, py, length, length, shapeRenderer, dto);
+            stage.addActor(block);
+        }
 	}
 	
 	private void renderKeeps(Batch batch){
