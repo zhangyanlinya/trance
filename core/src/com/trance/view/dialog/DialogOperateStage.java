@@ -28,6 +28,7 @@ import com.trance.view.dialog.base.BaseStage;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
+import com.trance.view.utils.TimeUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -111,7 +112,7 @@ public class DialogOperateStage extends BaseStage {
     // 是否有正在升级的建筑
     private boolean hasUpdatingBuilding() {
         for (BuildingDto dto : Player.player.getBuildings().values()) {
-            if (dto.getEtime() > System.currentTimeMillis()) {
+            if (dto.getEtime() > TimeUtil.getServerTime()) {
                 return true;
             }
         }
