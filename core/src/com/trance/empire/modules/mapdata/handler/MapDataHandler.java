@@ -79,14 +79,14 @@ public class MapDataHandler extends HandlerSupport {
 
                         if (fdto != null) {
                             fdto.setX(tx);
-                            fdto.setX(ty);
+                            fdto.setY(ty);
                             String key = fdto.getKey();
                             buildings.put(key, fdto);
                         }
 
                         if (tdto != null) {
                             tdto.setX(fx);
-                            tdto.setX(fy);
+                            tdto.setY(fy);
                             String key = tdto.getKey();
                             buildings.put(key, tdto);
                         }
