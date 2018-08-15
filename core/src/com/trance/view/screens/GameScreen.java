@@ -48,6 +48,7 @@ import com.trance.empire.modules.army.model.ArmyVo;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
+import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
@@ -512,6 +513,13 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
             block.setIndex(i, j);
             block.init(world, dto.getId(), px, py, length, length, shapeRenderer, dto);
+            block.setInScreenType(1);
+
+            if (dto.getId() >= BuildingType.CANNON) {
+                connons.add(block);
+            }
+
+            buildings.add(block);
             stage.addActor(block);
         }
 	}
