@@ -95,7 +95,7 @@ public class DialogOperateStage extends BaseStage {
         image.setWidth(100);
         image.setHeight(100);
 
-        image.setPosition(x, y);
+        image.setPosition(x - 100, y);
         addActor(image);
 
         image.addListener(new ClickListener() {
@@ -141,8 +141,11 @@ public class DialogOperateStage extends BaseStage {
             if (building != null) {
                 BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
                 if (playerBuildingDto != null) {
-                    buildings.put(playerBuildingDto.getKey(), playerBuildingDto);
-//                    showTimer(playerBuildingDto.getEtime(), playerBuildingDto.getCdtime());
+                    BuildingDto dto = buildings.get(playerBuildingDto.getKey());
+                    if(dto != null){
+                        dto.setCdtime(playerBuildingDto.getCdtime());
+                        dto.setEtime(playerBuildingDto.getEtime());
+                    }
                 }
             }
 
