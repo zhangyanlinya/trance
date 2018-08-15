@@ -847,11 +847,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         isNew = false;
+		tochTaskButton(screenX, screenY,pointer, button);
+
         if(!isEdit()){
             return false;
         }
 
-		tochTaskButton(screenX, screenY,pointer, button);
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
@@ -860,7 +861,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(y < 0){
 			return false;
 		}
-		
+
 		Actor actor = stage.hit(x, y, true);
 		if(actor == null || !(actor instanceof Building)){
 			return false;
