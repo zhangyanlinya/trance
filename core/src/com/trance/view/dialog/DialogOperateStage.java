@@ -18,6 +18,7 @@ import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.building.model.WaitBuildingDto;
 import com.trance.empire.modules.player.model.Player;
+import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.view.TranceGame;
@@ -107,11 +108,27 @@ public class DialogOperateStage extends BaseStage {
         });
     }
 
+    // 是否有正在升级的建筑
+    private boolean hasUpdatingBuilding() {
+        for (BuildingDto dto : Player.player.getBuildings().values()) {
+            if (dto.getEtime() > System.currentTimeMillis()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     private void updateBuilding() {
         if (dto == null) {
             return;
         }
+
+        if (hasUpdatingBuilding()) {
+            MsgUtil.getInstance().showMsg(Module.BUILDING, -10004);
+            return;
+        }
+
         Map<String, Object> parms = new HashMap<String, Object>();
         parms.put("x", dto.getX());
         parms.put("y", dto.getY());
