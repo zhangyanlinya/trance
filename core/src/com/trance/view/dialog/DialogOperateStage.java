@@ -187,14 +187,23 @@ public class DialogOperateStage extends BaseStage {
                 }
 
                 // waitBuildings
+                boolean isfresh = false;
                 Collection<CityElement> list = BasedbService.listAll(CityElement.class);
                 for(CityElement  element : list){
                     if(element.getOpenLevel() == dto.getLevel()){
-                        WaitBuildingDto wdto = new WaitBuildingDto();
-                        wdto.setId(element.getId());
-                        wdto.setAmount(element.getAmount());
-                        Player.player.addWaitBuilding(wdto);
+                        int hasBuildNum = Player.player.getHasBuildingSize(element.getId());
+                        int leftNum = element.getAmount() - hasBuildNum;
+                        if(leftNum > 0) {
+                            WaitBuildingDto wdto = new WaitBuildingDto();
+                            wdto.setId(element.getId());
+                            wdto.setAmount(leftNum);
+                            Player.player.addWaitBuilding(wdto);
+                            isfresh = true;
+                        }
                     }
+                }
+                if(isfresh){
+                    this.getTranceGame().mapScreen.refreshLeftBuiding();
                 }
             }
 

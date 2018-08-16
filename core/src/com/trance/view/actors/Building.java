@@ -322,6 +322,10 @@ public class Building extends GameActor {
         return dto;
     }
 
+    public void setDto(BuildingDto dto) {
+        this.dto = dto;
+    }
+
     public WaitBuildingDto getWdto() {
         return wdto;
     }

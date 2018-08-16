@@ -876,11 +876,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             handleBuildingOnClick(b, x, y);
         }
 
-        if (b.getWdto() != null) {
-            if (b.getWdto().getAmount() <= 0) {//不够建造物
-                return false;
-            }
-        }
+//        if (b.getWdto() != null) {
+//            if (b.getWdto().getAmount() <= 0) {//不够建造物
+//                return false;
+//            }
+//        }
 
         a = b;
         oldx = b.getX();
@@ -944,12 +944,21 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			a.setIndex(gird.i, gird.j);
 			playerDto.getMap()[gird.i][gird.j] = oldType;
 
+            BuildingDto dto = new BuildingDto();
+            dto.setId(oldType);
+            dto.setX(gird.i);
+            dto.setY(gird.j);
+            dto.setLevel(1);
+            a.setDto(dto);
+
             wdto.setAmount(wdto.getAmount() - 1);
 			if(wdto.getAmount() > 0){
 				Building block = Building.buildingPool.obtain();
 				block.init(null,oldType, oldx, oldy, length, length, null, wdto);
 				stage.addActor(block);
 			}
+
+//            refreshLeftBuiding();
 
 			StringBuilder to = new StringBuilder();
 			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);

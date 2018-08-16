@@ -297,7 +297,10 @@ public class PlayerDto {
         Collection<CityElement> list = BasedbService.listAll(CityElement.class);
         for(CityElement element : list){
             if(element.getOpenLevel() <= officeLvl){
-                int hasBuildNum = hasMap.get(element.getId());
+                Integer hasBuildNum = hasMap.get(element.getId());
+                if(hasBuildNum == null){
+                    continue;
+                }
                 int leftNum = element.getAmount() - hasBuildNum;
                 if(leftNum> 0){
                     WaitBuildingDto wdto = new WaitBuildingDto();
@@ -328,5 +331,15 @@ public class PlayerDto {
             }
         }
         return 0;
+    }
+
+    public int getHasBuildingSize(int id){
+        int sum = 0;
+        for(BuildingDto dto : buildings.values()){
+            if(dto.getId() == id){
+                sum++;
+            }
+        }
+        return sum;
     }
 }
