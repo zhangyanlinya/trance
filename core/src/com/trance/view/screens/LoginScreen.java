@@ -241,13 +241,8 @@ public class LoginScreen extends BaseScreen {
 				playerDto.addBuilding(dto);
 			}
 		}
-		Object wbobj = result.get("waitBuildings");
-		if(wbobj != null){
-			List<WaitBuildingDto> wbuildings = JSON.parseArray(wbobj.toString(), WaitBuildingDto.class);
-			for(WaitBuildingDto dto : wbuildings){
-				playerDto.addWaitBuilding(dto);
-			}
-		}
+
+        playerDto.refreshWaitBudiing();
 
 		//Tech
 		Object tobj = result.get("techs");

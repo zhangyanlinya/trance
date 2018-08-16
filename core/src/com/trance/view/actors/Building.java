@@ -322,6 +322,10 @@ public class Building extends GameActor {
         return dto;
     }
 
+    public WaitBuildingDto getWdto() {
+        return wdto;
+    }
+
     public int getInScreenType() {
         return inScreenType;
     }

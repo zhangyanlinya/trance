@@ -1,12 +1,20 @@
 package com.trance.empire.modules.player.model;
 
+import com.trance.common.basedb.Basedb;
+import com.trance.common.basedb.BasedbService;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
+import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.building.model.WaitBuildingDto;
+import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.fitting.model.FittingDto;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -280,5 +288,45 @@ public class PlayerDto {
 
     public void addFitting(FittingDto dto) {
         fittings.put(dto.getId(), dto);
+    }
+
+    public void refreshWaitBudiing(){
+        int officeLvl = getOfficeLevel();
+        waitBuildings.clear();
+        Map<Integer, Integer> hasMap = getHasBuildingSize();
+        Collection<CityElement> list = BasedbService.listAll(CityElement.class);
+        for(CityElement element : list){
+            if(element.getOpenLevel() <= officeLvl){
+                int hasBuildNum = hasMap.get(element.getId());
+                int leftNum = element.getAmount() - hasBuildNum;
+                if(leftNum> 0){
+                    WaitBuildingDto wdto = new WaitBuildingDto();
+                    wdto.setAmount(leftNum);
+                    waitBuildings.put(element.getId(), wdto);
+                }
+            }
+        }
+    }
+
+    private Map<Integer, Integer> getHasBuildingSize(){
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(BuildingDto dto : buildings.values()){
+           Integer count = map.get(dto.getId());
+            if(count == null){
+                count = 0;
+            }
+            count += 1;
+            map.put(dto.getId(), count);
+        }
+        return  map;
+    }
+
+    private int getOfficeLevel(){
+        for(BuildingDto dto : buildings.values()){
+            if(dto.getId() == BuildingType.OFFICE){
+                return  dto.getLevel();
+            }
+        }
+        return 0;
     }
 }

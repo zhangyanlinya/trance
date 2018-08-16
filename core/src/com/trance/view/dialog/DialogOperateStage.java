@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -17,6 +18,7 @@ import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.building.model.WaitBuildingDto;
+import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.reward.result.ValueResultSet;
@@ -30,6 +32,7 @@ import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,6 +166,7 @@ public class DialogOperateStage extends BaseStage {
                     if(dto != null){
                         dto.setCdtime(playerBuildingDto.getCdtime());
                         dto.setEtime(playerBuildingDto.getEtime());
+                        dto.setLevel(playerBuildingDto.getLevel());
                     }
                 }
             }
@@ -171,17 +175,6 @@ public class DialogOperateStage extends BaseStage {
 
             //如果是主城升级的话  可能有新的建筑和部队
             if (dto.getId() == BuildingType.OFFICE) {
-                Object newBuildings = result.get("newBuildingDtos");
-                if (newBuildings != null) {
-                    List<WaitBuildingDto> wbuildingDtos = JSON.parseArray(JSON.toJSON(newBuildings).toString(), WaitBuildingDto.class);
-                    if (wbuildingDtos != null) {
-                        for (WaitBuildingDto wdto : wbuildingDtos) {
-                            Player.player.addWaitBuilding(wdto);
-                        }
-//                        this.getTranceGame().mapScreen.refreshLeftBuiding();
-                    }
-                }
-
                 Object newArmys = result.get("newArmyDtos");
                 if (newArmys != null) {
                     List<ArmyDto> armyDtos = JSON.parseArray(JSON.toJSON(newArmys).toString(), ArmyDto.class);
@@ -190,6 +183,17 @@ public class DialogOperateStage extends BaseStage {
                             Player.player.addAmry(armyDto);
                         }
 //						 dialogArmyStage.refresh();
+                    }
+                }
+
+                // waitBuildings
+                Collection<CityElement> list = BasedbService.listAll(CityElement.class);
+                for(CityElement  element : list){
+                    if(element.getOpenLevel() == dto.getLevel()){
+                        WaitBuildingDto wdto = new WaitBuildingDto();
+                        wdto.setId(element.getId());
+                        wdto.setAmount(element.getAmount());
+                        Player.player.addWaitBuilding(wdto);
                     }
                 }
             }

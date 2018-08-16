@@ -868,26 +868,30 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 
 		Building b = (Building) actor;
-        if(b.getDto() == null){
+        if(b.getDto() == null && b.getWdto() == null){
             return false;
         }
 
-		handleBuildingOnClick(b , x, y);
+        if(b.getDto() != null) {
+            handleBuildingOnClick(b, x, y);
+        }
 
-		if(actor.getY() <= control_height - length){//增加
-			WaitBuildingDto wdto = playerDto.getWaitBuildings().get(b.type);
-            if(wdto != null) {
-                if (wdto.getAmount() <= 0) {//不够建造物
-                    return false;
-                }
+        if (b.getWdto() != null) {
+            if (b.getWdto().getAmount() <= 0) {//不够建造物
+                return false;
             }
-		}
+        }
 
         a = b;
         oldx = b.getX();
         oldy = b.getY();
-        oldi = b.getDto().getX();
-        oldj = b.getDto().getY();
+        if(b.getDto() != null) {
+            oldi = b.getDto().getX();
+            oldj = b.getDto().getY();
+        }else {
+            oldi = -1;
+            oldj = -1;
+        }
         oldType = b.type;
         isNew =true;
 
@@ -939,25 +943,28 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			a.setPosition(gird.x, gird.y);
 			a.setIndex(gird.i, gird.j);
 			playerDto.getMap()[gird.i][gird.j] = oldType;
-			
+
+            wdto.setAmount(wdto.getAmount() - 1);
 			if(wdto.getAmount() > 0){
 				Building block = Building.buildingPool.obtain();
 				block.init(null,oldType, oldx, oldy, length, length, null, wdto);
 				stage.addActor(block);
 			}
-			
+
 			StringBuilder to = new StringBuilder();
 			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);
 			saveMaptoServer(null,to.toString());
             a.setTouchable(Touchable.enabled);//比较后就可以点了
+
 			return false;
 		}
-		
-		if(gird.i == oldi && gird.j == oldj){ //没有移动
-			a.setPosition(oldx, oldy);
-            a.setTouchable(Touchable.enabled);//比较后就可以点了
-			return false;
-		}
+		if(oldi > 0) {
+            if (gird.i == oldi && gird.j == oldj) { //没有移动
+                a.setPosition(oldx, oldy);
+                a.setTouchable(Touchable.enabled);//比较后就可以点了
+                return false;
+            }
+        }
 		
 		////替换
 
@@ -968,6 +975,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         int targetType = 0;
         Building b = compute(x, y);
         if(b != null){
+            if(oldi == -1){
+                a.setPosition(oldx, oldy);
+                a.setTouchable(Touchable.enabled);//比较后就可以点了
+                return false;
+            }
+
             b.setPosition(oldx, oldy);
             b.setIndex(oldi, oldj);
             targetType = b.type;
