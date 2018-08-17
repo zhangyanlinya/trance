@@ -702,18 +702,22 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		// add building
         for(BuildingDto dto : playerDto.getBuildings().values()) {
-            int i = dto.getX();
-            int j = dto.getY();
-            Building block = Building.buildingPool.obtain();
-            int n = map.length - 1 - i;
-            float px = menu_width + j * length;
-            float py = control_height + n * length;
-
-            block.setIndex(i, j);
-            block.init(null, dto.getId(), px, py, length, length, shapeRenderer, dto);
-            stage.addActor(block);
+            addBuildingActor(dto);
         }
 	}
+
+	private void addBuildingActor( BuildingDto dto){
+        int i = dto.getX();
+        int j = dto.getY();
+        Building block = Building.buildingPool.obtain();
+        int n = ARR_HEIGHT_SIZE - 1 - i;
+        float px = menu_width + j * length;
+        float py = control_height + n * length;
+
+        block.setIndex(i, j);
+        block.init(null, dto.getId(), px, py, length, length, shapeRenderer, dto);
+        stage.addActor(block);
+    }
 
     private Gird calculateIndex(float x, float y) {
         int i = ARR_HEIGHT_SIZE - 1 - (int) ((y - control_height) / length);
