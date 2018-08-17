@@ -17,10 +17,8 @@ import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
-import com.trance.empire.modules.building.model.WaitBuildingDto;
 import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.player.model.Player;
-import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.view.TranceGame;
@@ -187,23 +185,16 @@ public class DialogOperateStage extends BaseStage {
                 }
 
                 // waitBuildings
-                boolean isfresh = false;
                 Collection<CityElement> list = BasedbService.listAll(CityElement.class);
                 for(CityElement  element : list){
                     if(element.getOpenLevel() == dto.getLevel()){
                         int hasBuildNum = Player.player.getHasBuildingSize(element.getId());
                         int leftNum = element.getAmount() - hasBuildNum;
                         if(leftNum > 0) {
-                            WaitBuildingDto wdto = new WaitBuildingDto();
-                            wdto.setId(element.getId());
-                            wdto.setAmount(leftNum);
-                            Player.player.addWaitBuilding(wdto);
-                            isfresh = true;
+                            this.getTranceGame().mapScreen.refreshLeftBuiding();
+                            break;
                         }
                     }
-                }
-                if(isfresh){
-                    this.getTranceGame().mapScreen.refreshLeftBuiding();
                 }
             }
 

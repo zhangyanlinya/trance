@@ -1,19 +1,13 @@
 package com.trance.empire.modules.player.model;
 
-import com.trance.common.basedb.Basedb;
-import com.trance.common.basedb.BasedbService;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
-import com.trance.empire.modules.building.model.WaitBuildingDto;
-import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.fitting.model.FittingDto;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -91,7 +85,6 @@ public class PlayerDto {
     private final ConcurrentMap<Integer, ArmyDto> armys = new ConcurrentHashMap<Integer, ArmyDto>();
 
     private final ConcurrentMap<String, BuildingDto> buildings = new ConcurrentHashMap<String, BuildingDto>();
-    private final ConcurrentMap<Integer, WaitBuildingDto> waitBuildings = new ConcurrentHashMap<Integer, WaitBuildingDto>();
 
     private final ConcurrentMap<Integer, CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer, CoolQueueDto>();
 
@@ -210,14 +203,6 @@ public class PlayerDto {
         return x + "_" + y;
     }
 
-    public ConcurrentMap<Integer, WaitBuildingDto> getWaitBuildings() {
-        return waitBuildings;
-    }
-
-    public void addWaitBuilding(WaitBuildingDto dto) {
-        waitBuildings.put(dto.getId(), dto);
-    }
-
     public ConcurrentMap<Integer, CoolQueueDto> getCoolQueues() {
         return coolQueues;
     }
@@ -290,28 +275,25 @@ public class PlayerDto {
         fittings.put(dto.getId(), dto);
     }
 
-    public void refreshWaitBudiing(){
-        int officeLvl = getOfficeLevel();
-        waitBuildings.clear();
-        Map<Integer, Integer> hasMap = getHasBuildingSize();
-        Collection<CityElement> list = BasedbService.listAll(CityElement.class);
-        for(CityElement element : list){
-            if(element.getOpenLevel() <= officeLvl){
-                Integer hasBuildNum = hasMap.get(element.getId());
-                if(hasBuildNum == null){
-                    continue;
-                }
-                int leftNum = element.getAmount() - hasBuildNum;
-                if(leftNum> 0){
-                    WaitBuildingDto wdto = new WaitBuildingDto();
-                    wdto.setAmount(leftNum);
-                    waitBuildings.put(element.getId(), wdto);
-                }
-            }
-        }
-    }
+//    public void refreshWaitBudiing(){
+//        int officeLvl = getOfficeLevel();
+//        Map<Integer, Integer> hasMap = getHasBuildingSize();
+//        Collection<CityElement> list = BasedbService.listAll(CityElement.class);
+//        for(CityElement element : list){
+//            if(element.getOpenLevel() <= officeLvl){
+//                Integer hasBuildNum = hasMap.get(element.getId());
+//                if(hasBuildNum == null){
+//                    continue;
+//                }
+//                int leftNum = element.getAmount() - hasBuildNum;
+//                if(leftNum> 0){
+//                    //TODO
+//                }
+//            }
+//        }
+//    }
 
-    private Map<Integer, Integer> getHasBuildingSize(){
+    public Map<Integer, Integer> getHasBuildingSize(){
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         for(BuildingDto dto : buildings.values()){
            Integer count = map.get(dto.getId());
@@ -324,7 +306,7 @@ public class PlayerDto {
         return  map;
     }
 
-    private int getOfficeLevel(){
+    public int getOfficeLevel(){
         for(BuildingDto dto : buildings.values()){
             if(dto.getId() == BuildingType.OFFICE){
                 return  dto.getLevel();

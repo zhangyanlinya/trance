@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,6 +25,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -36,7 +36,7 @@ import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
-import com.trance.empire.modules.building.model.WaitBuildingDto;
+import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.mapdata.handler.MapDataCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
@@ -49,7 +49,6 @@ import com.trance.view.actors.MapImage;
 import com.trance.view.actors.ResImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
-import com.trance.view.controller.GestureController;
 import com.trance.view.dialog.DialogArmyStage;
 import com.trance.view.dialog.DialogAttackInfoStage;
 import com.trance.view.dialog.DialogOperateStage;
@@ -69,9 +68,9 @@ import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -121,8 +120,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private PlayerDto playerDto;
 	private OrthographicCamera camera;
 	private Image bg;
-	private GestureController controller;
-	private GestureDetector gestureHandler;
+//	private GestureController controller;
+//	private GestureDetector gestureHandler;
 
 	private Stage stage;
 	private FreeBitmapFont font;
@@ -303,17 +302,17 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //		toWorld.draw(spriteBatch);
 		stage.addActor(label_world);
 
-		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+//		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		camera.position.set(width/2, height/2, 0);
-		controller.setCanPan(false);
+//		controller.setCanPan(false);
 
 		inputMultiplexer = new InputMultiplexer();
-		gestureHandler = new GestureDetector(controller);
+//		gestureHandler = new GestureDetector(controller);
 		initInputProcessor();
 	}
 
 	private void initInputProcessor(){
-		inputMultiplexer.addProcessor(gestureHandler);
+//		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -749,21 +748,47 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 		}
 	
-		for(Entry<Integer, WaitBuildingDto> e : Player.player.getWaitBuildings().entrySet()){
-            WaitBuildingDto wdto = e.getValue();
-			if(wdto.getAmount() <= 0){
-				continue;
-			}
-			Building buiding = Building.buildingPool.obtain();
-			int rate  = i % 5;
-			float x = rate * side + length;
-			int rate2 = i/5 + 1;
-			float y = control_height - (length * 2 + rate2 * length * 2 );
-			buiding.init(null, wdto.getId(), x, y, length,length, null, wdto);
-			stage.addActor(buiding);
-			i++;
-		}
+//		for(Entry<Integer, WaitBuildingDto> e : Player.player.getWaitBuildings().entrySet()){
+//            WaitBuildingDto wdto = e.getValue();
+//			if(wdto.getAmount() <= 0){
+//				continue;
+//			}
+//			Building buiding = Building.buildingPool.obtain();
+//			int rate  = i % 5;
+//			float x = rate * side + length;
+//			int rate2 = i/5 + 1;
+//			float y = control_height - (length * 2 + rate2 * length * 2 );
+////			buiding.init(null, wdto.getId(), x, y, length,length, null, wdto);
+//			stage.addActor(buiding);
+//			i++;
+//		}
+
+        int officeLvl = playerDto.getOfficeLevel();
+        Map<Integer, Integer> hasMap = playerDto.getHasBuildingSize();
+        Collection<CityElement> list = BasedbService.listAll(CityElement.class);
+        for(CityElement element : list){
+            if(element.getOpenLevel() <= officeLvl){
+                Integer hasBuildNum = hasMap.get(element.getId());
+                if(hasBuildNum == null){
+                    continue;
+                }
+                int leftNum = element.getAmount() - hasBuildNum;
+                if(leftNum> 0){
+                    Building buiding = Building.buildingPool.obtain();
+                    int rate  = i % 5;
+                    float x = rate * side + length;
+                    int rate2 = i/5 + 1;
+                    float y = control_height - (length * 2 + rate2 * length * 2 );
+                    buiding.init(null, element.getId(), x, y, length,length, null, leftNum);
+                    stage.addActor(buiding);
+                    i++;
+                }
+            }
+        }
 	}
+
+
+
 
     private void tochTaskButton(int screenX, int screenY, int pointer, int button){
         float side = width/8;
@@ -868,7 +893,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 
 		Building b = (Building) actor;
-        if(b.getDto() == null && b.getWdto() == null){
+        if(b.getDto() == null && b.getLeftNum() == 0){
             return false;
         }
 
@@ -932,8 +957,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				return false;
 			}
 
-			WaitBuildingDto wdto = playerDto.getWaitBuildings().get(oldType);
-			if(wdto == null || wdto.getAmount() <= 0){
+			if(a.getLeftNum() <= 0){
 				a.setPosition(oldx, oldy);
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
 				return false;
@@ -950,15 +974,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             dto.setY(gird.j);
             dto.setLevel(1);
             a.setDto(dto);
+            playerDto.addBuilding(dto);
 
-            wdto.setAmount(wdto.getAmount() - 1);
-			if(wdto.getAmount() > 0){
+            a.setLeftNum(a.getLeftNum() - 1);
+			if(a.getLeftNum() > 0){
 				Building block = Building.buildingPool.obtain();
-				block.init(null,oldType, oldx, oldy, length, length, null, wdto);
+				block.init(null,oldType, oldx, oldy, length, length, null, a.getLeftNum());
 				stage.addActor(block);
 			}
-
-//            refreshLeftBuiding();
 
 			StringBuilder to = new StringBuilder();
 			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);

@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -27,8 +26,6 @@ import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
-import com.trance.empire.modules.building.model.WaitBuildingDto;
-import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
@@ -46,7 +43,6 @@ import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,7 +238,7 @@ public class LoginScreen extends BaseScreen {
 			}
 		}
 
-        playerDto.refreshWaitBudiing();
+//        playerDto.refreshWaitBudiing();
 
 		//Tech
 		Object tobj = result.get("techs");

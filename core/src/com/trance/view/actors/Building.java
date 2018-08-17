@@ -5,14 +5,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
-import com.trance.empire.modules.building.model.WaitBuildingDto;
 import com.trance.view.constant.BulletType;
 import com.trance.view.constant.RangeType;
 import com.trance.view.freefont.FreeBitmapFont;
@@ -43,7 +40,7 @@ public class Building extends GameActor {
 	public float restitution;
 	public static FreeBitmapFont font;
 	private BuildingDto dto;
-	private WaitBuildingDto wdto;
+	private int leftNum;
 	private boolean hasfire;
     private int inScreenType; // 0-map 1-game
 
@@ -149,9 +146,9 @@ public class Building extends GameActor {
 		this.dto = dto;
 	}
 
-	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, WaitBuildingDto wdto){
+	public void init(World world, int type, float x , float y, float width, float height, ShapeRenderer renderer, int leftNum){
 		init(world, type, x, y, width, height, renderer);
-		this.wdto = wdto;
+		this.leftNum = leftNum;
 	}
 //
 	public void setIndex(int i,int j){
@@ -271,8 +268,8 @@ public class Building extends GameActor {
             }
 		}
 
-		if(wdto != null){
-            font.draw(batch, "count  " + wdto.getAmount(), getX(), getY() - getHeight()/2);
+		if(leftNum > 0){
+            font.draw(batch, "count  " + leftNum, getX(), getY() - getHeight()/2);
         }
 
 		if(inScreenType == 1){
@@ -326,8 +323,12 @@ public class Building extends GameActor {
         this.dto = dto;
     }
 
-    public WaitBuildingDto getWdto() {
-        return wdto;
+    public int getLeftNum() {
+        return leftNum;
+    }
+
+    public void setLeftNum(int leftNum) {
+        this.leftNum = leftNum;
     }
 
     public int getInScreenType() {
