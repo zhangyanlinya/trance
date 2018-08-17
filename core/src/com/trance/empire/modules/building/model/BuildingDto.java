@@ -21,7 +21,7 @@ public class BuildingDto{
         /**
          * 建筑等级
          */
-        private int level;
+        private int level = 1;
 
         /**
          * cd

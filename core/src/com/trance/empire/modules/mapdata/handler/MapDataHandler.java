@@ -91,14 +91,14 @@ public class MapDataHandler extends HandlerSupport {
                             buildings.put(key, tdto);
                         }
 
-                    } else { //新增
-                        Object newVoObj = result.get("newVo");
-                        if (newVoObj != null) {
-                            BuildingDto ndto = JSON.parseObject(JSON.toJSON(newVoObj).toString(),BuildingDto.class);
-                            if(ndto != null){
-                                Player.player.getBuildings().put(ndto.getKey(), ndto);
-                            }
-                        }
+                    } else { //新增 // not TODO
+//                        Object newVoObj = result.get("newVo");
+//                        if (newVoObj != null) {
+//                            BuildingDto ndto = JSON.parseObject(JSON.toJSON(newVoObj).toString(),BuildingDto.class);
+//                            if(ndto != null){
+//                                Player.player.getBuildings().put(ndto.getKey(), ndto);
+//                            }
+//                        }
                     }
                 }
             }

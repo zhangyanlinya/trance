@@ -751,21 +751,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				}
 			}
 		}
-	
-//		for(Entry<Integer, WaitBuildingDto> e : Player.player.getWaitBuildings().entrySet()){
-//            WaitBuildingDto wdto = e.getValue();
-//			if(wdto.getAmount() <= 0){
-//				continue;
-//			}
-//			Building buiding = Building.buildingPool.obtain();
-//			int rate  = i % 5;
-//			float x = rate * side + length;
-//			int rate2 = i/5 + 1;
-//			float y = control_height - (length * 2 + rate2 * length * 2 );
-////			buiding.init(null, wdto.getId(), x, y, length,length, null, wdto);
-//			stage.addActor(buiding);
-//			i++;
-//		}
 
         int officeLvl = playerDto.getOfficeLevel();
         Map<Integer, Integer> hasMap = playerDto.getHasBuildingSize();
@@ -790,9 +775,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             }
         }
 	}
-
-
-
 
     private void tochTaskButton(int screenX, int screenY, int pointer, int button){
         float side = width/8;
@@ -928,7 +910,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 
 
-
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if(a == null || !isNew){
@@ -976,16 +957,18 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             dto.setId(oldType);
             dto.setX(gird.i);
             dto.setY(gird.j);
-            dto.setLevel(1);
+
             a.setDto(dto);
             playerDto.addBuilding(dto);
 
-            a.setLeftNum(a.getLeftNum() - 1);
-			if(a.getLeftNum() > 0){
+            int leftNum = a.getLeftNum() - 1;
+			if(leftNum > 0){
 				Building block = Building.buildingPool.obtain();
-				block.init(null,oldType, oldx, oldy, length, length, null, a.getLeftNum());
+				block.init(null,oldType, oldx, oldy, length, length, null, leftNum);
 				stage.addActor(block);
 			}
+
+            a.setLeftNum(0);
 
 			StringBuilder to = new StringBuilder();
 			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);
