@@ -238,7 +238,7 @@ public class LoginScreen extends BaseScreen {
 			}
 		}
 
-//        playerDto.refreshWaitBudiing();
+//        playerDto.refreshWaitBudiing()
 
 		//Tech
 		Object tobj = result.get("techs");
