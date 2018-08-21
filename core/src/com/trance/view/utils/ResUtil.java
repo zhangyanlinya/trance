@@ -136,7 +136,7 @@ public class ResUtil extends AssetManager {
 
 
 	private void loadBuilding(){
-		for(int i = 1; i < 10; i++){
+		for(int i = 1; i < 12; i++){
 			load("building/" + i +".png", Texture.class);
 		}
 	}

@@ -65,6 +65,9 @@ public class Building extends GameActor {
 		this.renderer = renderer;
 		this.alive = true;
 		this.camp = 1;
+        if(type > 9){
+            this.camp = 0;
+        }
 		this.type = type;
 		this.linearDamping = 2;
 		this.density = 10f;//密度
@@ -122,7 +125,12 @@ public class Building extends GameActor {
 		case BuildingType.MORTAR:
 			face = false;
 			break;
-		
+		case BuildingType.TREE:
+			face = false;
+			break;
+		case BuildingType.GRASS:
+			face = false;
+			break;
 		}
 		
 		if(dto != null){

@@ -43,4 +43,14 @@ public interface BuildingType {
 	 * 迫击炮
 	 */
 	int MORTAR = 9;
+
+	/**
+	 *
+	 */
+	int TREE = 10;
+
+	/**
+	 *
+	 */
+	int GRASS = 11;
 }
