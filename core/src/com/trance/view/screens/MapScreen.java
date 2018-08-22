@@ -759,7 +759,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             if(element.getOpenLevel() <= officeLvl){
                 Integer hasBuildNum = hasMap.get(element.getId());
                 if(hasBuildNum == null){
-                    continue;
+                    hasBuildNum = 0;
                 }
                 int leftNum = element.getAmount() - hasBuildNum;
                 if(leftNum> 0){
