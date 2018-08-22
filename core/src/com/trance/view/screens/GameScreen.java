@@ -486,19 +486,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 					grass.setPosition(x + length, y);
 					stage.addActor(grass);
 				}
-				
-//				if (type > 0){
-//					Building block = Building.buildingPool.obtain();
-//					if(type >= BuildingType.CANNON){
-//						connons.add(block);
-//					}
-//
-//					BuildingDto dto = playerDto.getBuildings().get(type);
-//					block.init(world,type, x, y, length,length,shapeRenderer,dto);
-//                    block.setInScreenType(1);
-//					buildings.add(block);
-//					stage.addActor(block);
-//				}
+
 			}
 		}
 
@@ -515,7 +503,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
             block.init(world, dto.getId(), px, py, length, length, shapeRenderer, dto);
             block.setInScreenType(1);
 
-            if (dto.getId() >= BuildingType.CANNON) {
+            if (dto.getId() >= BuildingType.CANNON && dto.getId() <= BuildingType.MORTAR) {
                 connons.add(block);
             }
 

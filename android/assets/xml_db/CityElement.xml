@@ -24,4 +24,10 @@
     "amount": "6"},
     {"id":"9",
     "openLevel":"60",
+    "amount": "4"},
+    {"id":"10",
+    "openLevel":"1",
+    "amount": "6"},
+    {"id":"11",
+    "openLevel":"2",
     "amount": "4"}]
