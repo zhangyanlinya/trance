@@ -10,9 +10,9 @@ public class ArmyDto {
 	private int amout;
 	private int addAmount;
 	private long expireTime;
-	private TextureRegion region;
-	private boolean go;
-	private Rectangle rect;
+	private transient TextureRegion region;
+	private transient boolean go;
+	private transient Rectangle rect;
 
 	
 	public int getId() {
