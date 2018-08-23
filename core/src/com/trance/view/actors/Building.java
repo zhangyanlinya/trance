@@ -134,8 +134,8 @@ public class Building extends GameActor {
 		}
 		
 		if(dto != null){
-			atk *= dto.getLevel();
-		    hp *= dto.getLevel();
+			atk *= dto.getLvl();
+		    hp *= dto.getLvl();
 		}
 		hp *= 10;
 		this.maxhp = hp;
@@ -267,7 +267,7 @@ public class Building extends GameActor {
 
 
 		if(dto != null){
-			font.draw(batch,  dto.getLevel() + "" , getX() + hw/2 , getY() + getHeight());
+			font.draw(batch,  dto.getLvl() + "" , getX() + hw/2 , getY() + getHeight());
             float current = dto.getEtime() -  System.currentTimeMillis() ;
             if(current > 0){
                 current = dto.getCdtime() - current;

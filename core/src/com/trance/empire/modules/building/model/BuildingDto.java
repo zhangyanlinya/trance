@@ -9,80 +9,86 @@ package com.trance.empire.modules.building.model;
  */
 public class BuildingDto{
 
-        private int x;
 
-        private int y;
+    // 配置表id
+    private int mid;
 
-        /**
-         * 建筑id
-         */
-        private int id;
+    private int x;
 
-        /**
-         * 建筑等级
-         */
-        private int level = 1;
+    private int y;
 
-        /**
-         * cd
-         */
-        private long cdtime;
+    private int lvl = 1;
 
-        /**
-         * 结束
-         */
-        private long etime;
+    private long htime;
 
+    // cd
+    private long cdtime;
 
-        public int getX() {
-            return x;
-        }
+    // 到期时间
+    private long etime;
 
-        public void setX(int x) {
-            this.x = x;
-        }
+    public String getKey(){
+        return x + "_" + y;
+    }
 
-        public int getY() {
-            return y;
-        }
+    public int getMid() {
+        return mid;
+    }
 
-        public void setY(int y) {
-            this.y = y;
-        }
+    public void setMid(int mid) {
+        this.mid = mid;
+    }
 
-        public int getId() {
-            return id;
-        }
+    public int getX() {
+        return x;
+    }
 
-        public void setId(int id) {
-            this.id = id;
-        }
+    public void setX(int x) {
+        this.x = x;
+    }
 
-        public int getLevel() {
-            return level;
-        }
+    public int getY() {
+        return y;
+    }
 
-        public void setLevel(int level) {
-            this.level = level;
-        }
+    public void setY(int y) {
+        this.y = y;
+    }
 
-        public long getCdtime() {
-            return cdtime;
-        }
+    public int getLvl() {
+        return lvl;
+    }
 
-        public void setCdtime(long cdtime) {
-            this.cdtime = cdtime;
-        }
+    public void setLvl(int lvl) {
+        this.lvl = lvl;
+    }
 
-        public long getEtime() {
-            return etime;
-        }
+    public long getCdtime() {
+        return cdtime;
+    }
 
-        public void setEtime(long etime) {
-            this.etime = etime;
-        }
+    public void setCdtime(long cdtime) {
+        this.cdtime = cdtime;
+    }
 
-        public String getKey(){
-            return x + "_" + y;
-        }
+    public long getEtime() {
+        return etime;
+    }
+
+    public void setEtime(long etime) {
+        this.etime = etime;
+    }
+
+    public long getHtime() {
+        return htime;
+    }
+
+    public void setHtime(long htime) {
+        this.htime = htime;
+    }
+
+    @Override
+    public String toString() {
+        return "[mid=" + mid + ", x=" + x + ", y=" + y + "]";
+    }
 }

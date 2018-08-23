@@ -296,20 +296,20 @@ public class PlayerDto {
     public Map<Integer, Integer> getHasBuildingSize(){
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         for(BuildingDto dto : buildings.values()){
-           Integer count = map.get(dto.getId());
+           Integer count = map.get(dto.getMid());
             if(count == null){
                 count = 0;
             }
             count += 1;
-            map.put(dto.getId(), count);
+            map.put(dto.getMid(), count);
         }
         return  map;
     }
 
     public int getOfficeLevel(){
         for(BuildingDto dto : buildings.values()){
-            if(dto.getId() == BuildingType.OFFICE){
-                return  dto.getLevel();
+            if(dto.getMid() == BuildingType.OFFICE){
+                return  dto.getLvl();
             }
         }
         return 0;
@@ -318,7 +318,7 @@ public class PlayerDto {
     public int getHasBuildingSize(int id){
         int sum = 0;
         for(BuildingDto dto : buildings.values()){
-            if(dto.getId() == id){
+            if(dto.getMid() == id){
                 sum++;
             }
         }

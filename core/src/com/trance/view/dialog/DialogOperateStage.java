@@ -164,7 +164,7 @@ public class DialogOperateStage extends BaseStage {
                     if(dto != null){
                         dto.setCdtime(playerBuildingDto.getCdtime());
                         dto.setEtime(playerBuildingDto.getEtime());
-                        dto.setLevel(playerBuildingDto.getLevel());
+                        dto.setLvl(playerBuildingDto.getLvl());
                     }
                 }
             }
@@ -172,7 +172,7 @@ public class DialogOperateStage extends BaseStage {
             this.getTranceGame().mapScreen.refreshPlayerDtoData();
 
             //如果是主城升级的话  可能有新的建筑和部队
-            if (dto.getId() == BuildingType.OFFICE) {
+            if (dto.getMid() == BuildingType.OFFICE) {
                 Object newArmys = result.get("newArmyDtos");
                 if (newArmys != null) {
                     List<ArmyDto> armyDtos = JSON.parseArray(JSON.toJSON(newArmys).toString(), ArmyDto.class);
@@ -187,7 +187,7 @@ public class DialogOperateStage extends BaseStage {
                 // waitBuildings
                 Collection<CityElement> list = BasedbService.listAll(CityElement.class);
                 for(CityElement  element : list){
-                    if(element.getOpenLevel() == dto.getLevel()){
+                    if(element.getOpenLevel() == dto.getLvl()){
                         int hasBuildNum = Player.player.getHasBuildingSize(element.getId());
                         int leftNum = element.getAmount() - hasBuildNum;
                         if(leftNum > 0) {

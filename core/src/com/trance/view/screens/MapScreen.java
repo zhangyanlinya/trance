@@ -582,7 +582,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         if(dto == null){
             return;
         }
-        int buildingId = dto.getId();
+        int buildingId = dto.getMid();
 		if(buildingId != BuildingType.HOUSE && buildingId != BuildingType.BARRACKS){
 			return;
 		}
@@ -715,7 +715,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         float py = control_height + n * length;
 
         block.setIndex(i, j);
-        block.init(null, dto.getId(), px, py, length, length, shapeRenderer, dto);
+        block.init(null, dto.getMid(), px, py, length, length, shapeRenderer, dto);
         stage.addActor(block);
     }
 
@@ -728,7 +728,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             int id = 0;
             BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
             if(dto != null){
-                id = dto.getId();
+                id = dto.getMid();
             }
 
             float n = ARR_HEIGHT_SIZE - 1 - i;
@@ -954,7 +954,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			playerDto.getMap()[gird.i][gird.j] = oldType;
 
             BuildingDto dto = new BuildingDto();
-            dto.setId(oldType);
+            dto.setMid(oldType);
             dto.setX(gird.i);
             dto.setY(gird.j);
 

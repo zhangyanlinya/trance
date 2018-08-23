@@ -500,10 +500,10 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
             float py = control_height + n * length;
 
             block.setIndex(i, j);
-            block.init(world, dto.getId(), px, py, length, length, shapeRenderer, dto);
+            block.init(world, dto.getMid(), px, py, length, length, shapeRenderer, dto);
             block.setInScreenType(1);
 
-            if (dto.getId() >= BuildingType.CANNON && dto.getId() <= BuildingType.MORTAR) {
+            if (dto.getMid() >= BuildingType.CANNON && dto.getMid() <= BuildingType.MORTAR) {
                 connons.add(block);
             }
 
