@@ -55,10 +55,10 @@ public class AttackInfoDto implements Comparable<AttackInfoDto>{
     @Override
     public int compareTo(AttackInfoDto other) {
         if(time > other.time){
-            return 1;
+            return -1;
         }
         if(time < other.time){
-            return -1;
+            return 1;
         }
         return 0;
     }
