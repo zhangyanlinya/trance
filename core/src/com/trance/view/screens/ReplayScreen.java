@@ -758,7 +758,13 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
      *  执行科技效果
      */
     private boolean sendTechEffect(float x, float y) {
-        TechDto tech = report.getTechs().get(chooseTechId);
+        TechDto tech = null;
+        for (TechDto t : report.getTechs()) {
+            if (t.getId() == chooseTechId) {
+                tech = t;
+                break;
+            }
+        }
         if(tech == null || tech.getUseAmount() <= 0) {
             return false;
         }
