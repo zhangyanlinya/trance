@@ -143,6 +143,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	
 	private static boolean finishBattle;
 
+    private long startTime;
+
 	private InputMultiplexer inputMultiplexer;
 	private GestureDetector gestureHandler;
 
@@ -174,6 +176,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		gestureHandler = new GestureDetector(controller);
 		initInputProcessor();
+
+        startTime = System.currentTimeMillis();
 	}
 
 	private void initInputProcessor(){
@@ -543,7 +547,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 	}
 
-
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -555,7 +558,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		//debug---
 //		debugRenderer.render(world, camera.combined);
 		//debug---
-		
+
 		scan();
 		stage.draw();
 		stage.act(delta);
@@ -725,7 +728,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        boolean validClick = false; //是否有效点击
+        boolean validClick; //是否有效点击
         int Y = (int)height - screenY; //y top to down
         if(Y < (width / 10) * 2 ){
             validClick = chooseArea(screenX, Y); //选择区域
@@ -734,7 +737,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         }
         if(validClick){
             Click click = new Click();
-            click.setT(currTime);
+            click.setT((int)(System.currentTimeMillis() - startTime));
             click.setX(screenX);
             click.setY(screenY);
             clicks.add(click);

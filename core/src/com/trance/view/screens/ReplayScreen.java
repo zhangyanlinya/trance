@@ -66,7 +66,6 @@ import com.trance.view.utils.WorldUtils;
 import java.util.List;
 
 
-
 public class ReplayScreen extends BaseScreen implements ContactListener,InputProcessor{
 
     private Window window;
@@ -156,6 +155,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
         gestureHandler = new GestureDetector(controller);
 //        initInputProcessor();
+        initClickDelay();
     }
 
     private void initInputProcessor(){
@@ -331,7 +331,6 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
 
                 @Override
                 public void run() {
-                    clickAction(currTime);
                     currTime--;
                     if(currTime <= 0){
                         MapData.gamerunning = false;
@@ -345,12 +344,24 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         stage.addAction(Actions.sequence(sAction));
     }
 
-    private void clickAction(int time){
-        for(Click click : report.getClicks()){
-            if(click.getT() == time){
-                touchDown(click.getX(), click.getY(), 0 , 0);
-            }
+    private void initClickDelay() {
+        Action[] sAction = new Action[report.getClicks().size()];// 一共执行120次
+        // 使用action实现定时器
+        for (int i = 0; i < sAction.length; i++) {
+            final Click click = report.getClicks().get(i);
+            Action delayedAction = Actions.run(new Runnable() {
+
+                @Override
+                public void run() {
+                    touchDown(click.getX(), click.getY(), 0, 0);
+                }
+            });
+            // 延迟1s后执行delayedAction
+            float delay = click.getT() / 1000f;
+            Action action = Actions.delay(delay, delayedAction);
+            sAction[i] = action;
         }
+        stage.addAction(Actions.sequence(sAction));
     }
 
     //
