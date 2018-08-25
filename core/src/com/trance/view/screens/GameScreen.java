@@ -737,6 +737,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
             click.setT(currTime);
             click.setX(screenX);
             click.setY(screenY);
+            clicks.add(click);
         }
 
         return  false;

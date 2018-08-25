@@ -1,6 +1,6 @@
 package com.trance.empire.modules.battle.model;
 
-public class AttackInfoDto {
+public class AttackInfoDto implements Comparable<AttackInfoDto>{
 
     private long playerId;
 
@@ -50,6 +50,16 @@ public class AttackInfoDto {
 	public void setRewards(String rewards) {
 		this.rewards = rewards;
 	}
-	
-	
+
+
+    @Override
+    public int compareTo(AttackInfoDto other) {
+        if(time > other.time){
+            return 1;
+        }
+        if(time < other.time){
+            return -1;
+        }
+        return 0;
+    }
 }

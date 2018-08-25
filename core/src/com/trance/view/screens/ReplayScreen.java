@@ -36,16 +36,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.trance.common.socket.model.Request;
-import com.trance.empire.config.Module;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ArmyType;
 import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
-import com.trance.empire.modules.player.handler.PlayerCmd;
-import com.trance.empire.modules.player.model.Player;
-import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.replay.entity.Report;
 import com.trance.empire.modules.replay.model.Click;
 import com.trance.view.TranceGame;
@@ -66,14 +61,9 @@ import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
-import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.WorldUtils;
 
-import org.omg.PortableServer.LIFESPAN_POLICY_ID;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 
@@ -165,13 +155,13 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         inputMultiplexer = new InputMultiplexer();
         GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
         gestureHandler = new GestureDetector(controller);
-        initInputProcessor();
+//        initInputProcessor();
     }
 
     private void initInputProcessor(){
         inputMultiplexer.addProcessor(gestureHandler);
-        inputMultiplexer.addProcessor(stage);
-        inputMultiplexer.addProcessor(this);
+//        inputMultiplexer.addProcessor(stage);
+//        inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
@@ -246,7 +236,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         }
 
         int j = 0;
-        for(TechDto techDto : Player.player.getTechs().values()){
+        for(TechDto techDto : report.getTechs()){
             if(chooseTechId == 0){
                 chooseTechId = techDto.getId();
             }
@@ -702,7 +692,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
 //				&& y > control_height - length * 2  && y < height + length * 2){//四面可以进攻
 //
 //			if(chooseTechId > 0) {
-//				TechDto tech = Player.player.getTechs().get(chooseTechId);
+//				TechDto tech = report.getTechs().get(chooseTechId);
 //				if(tech != null && tech.getUseAmount() > 0) {
 //					sendExplode(x, y, tech);
 //				}
@@ -722,8 +712,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         if(actor != null){
             return false;
         }
-        Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-        for(ArmyDto army : myArmys.values()){
+        for(ArmyDto army : report.getArmys()){
             if(army.isGo() || army.getAmout() == 0){
                 continue;
             }
@@ -743,7 +732,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         }
 
         //for the next choose type;
-        for(ArmyDto army : myArmys.values()){
+        for(ArmyDto army : report.getArmys()){
             if(army.isGo() || army.getAmout() == 0){
                 continue;
             }
@@ -758,7 +747,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
      *  执行科技效果
      */
     private boolean sendTechEffect(float x, float y) {
-        TechDto tech = Player.player.getTechs().get(chooseTechId);
+        TechDto tech = report.getTechs().get(chooseTechId);
         if(tech == null || tech.getUseAmount() <= 0) {
             return false;
         }

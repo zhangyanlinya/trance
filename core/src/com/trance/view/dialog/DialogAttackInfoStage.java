@@ -11,6 +11,7 @@ import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
+import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.battle.model.AttackInfoDto;
 import com.trance.empire.modules.building.model.BuildingDto;
@@ -32,6 +33,7 @@ import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -92,6 +94,8 @@ public class DialogAttackInfoStage extends BaseStage {
 	    if(attackInfos == null){
 	    	return;
 	    }
+
+        Collections.sort(attackInfos);
 	    
     	int i = 1;
     	float side = bgImage.getHeight() / MAX_RANKING;
@@ -157,6 +161,21 @@ public class DialogAttackInfoStage extends BaseStage {
 
 
         Report report =  JSON.parseObject(o.toString(), Report.class);
+
+        //TEST
+        TechDto techDto = new TechDto();
+        techDto.setId(1);
+        techDto.setAmout(3);
+        techDto.setLevel(1);
+        report.getTechs().add(techDto);
+
+        TechDto lampDto = new TechDto();
+        lampDto.setId(2);
+        lampDto.setAmout(3);
+        lampDto.setLevel(5);
+        report.getTechs().add(lampDto);
+
+
         ReplayScreen.report = report;
 
         tranceGame.setScreen(tranceGame.replayScreen);

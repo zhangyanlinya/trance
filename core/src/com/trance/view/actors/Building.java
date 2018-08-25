@@ -271,7 +271,7 @@ public class Building extends GameActor {
             float current = dto.getEtime() -  System.currentTimeMillis() ;
             if(current > 0){
                 current = dto.getCdtime() - current;
-                if(current > 0)
+                if(current > 0 && renderer != null)
                 drawProgress(batch, renderer, current, dto.getCdtime());
             }
 		}
@@ -280,7 +280,7 @@ public class Building extends GameActor {
             font.draw(batch, "count  " + leftNum, getX(), getY() - getHeight()/2);
         }
 
-		if(inScreenType == 1){
+		if(inScreenType == 1 && renderer != null){
             drawProgress(batch, renderer, hp, maxhp);
 		}
 		
