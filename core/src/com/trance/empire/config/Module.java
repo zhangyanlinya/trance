@@ -62,7 +62,11 @@ public interface Module {
 	 * daily reward
 	 */
 	int DAILY_REWARD = 9;
-	
+
+    /**
+     * replay
+     */
+    int REPLAY = 10;
 
 	/**
 	 * 通用模块

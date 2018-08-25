@@ -12,8 +12,8 @@ public class TechDto {
     private int level;
     private int amout;
     private int useAmount;
-    private TextureRegion region;
-    private Rectangle rect;
+    private transient TextureRegion region;
+    private transient Rectangle rect;
 
 
     public int getId() {

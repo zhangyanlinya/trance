@@ -40,6 +40,8 @@ import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.mapdata.handler.MapDataCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
+import com.trance.empire.modules.replay.entity.Report;
+import com.trance.empire.modules.replay.handler.ReplayCmd;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.empire.modules.world.handler.WorldCmd;
@@ -423,7 +425,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			sound.play();
 		}
 	}
-	
+
 	private void train(){
 		setArmyDailog(true);
 	}

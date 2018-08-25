@@ -1,6 +1,7 @@
 package com.trance.empire.modules.replay.entity;
 
 import com.trance.empire.modules.army.model.ArmyDto;
+import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.replay.model.Click;
 
@@ -28,6 +29,8 @@ public class Report {
 	private Map<String, BuildingDto> buildings = new HashMap<String, BuildingDto>();
 	
 	private List<ArmyDto> armys = new ArrayList<ArmyDto>();
+
+    private List<TechDto> techs = new ArrayList<TechDto>();
 
 	private List<Click> clicks = new ArrayList<Click>();
 	
@@ -118,4 +121,12 @@ public class Report {
 	public void setArmys(List<ArmyDto> armys) {
 		this.armys = armys;
 	}
+
+    public List<TechDto> getTechs() {
+        return techs;
+    }
+
+    public void setTechs(List<TechDto> techs) {
+        this.techs = techs;
+    }
 }

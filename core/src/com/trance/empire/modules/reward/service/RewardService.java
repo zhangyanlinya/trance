@@ -29,29 +29,29 @@ public class RewardService {
 			case GOLD:
 				long gold = player.getGold();
 				player.setGold(gold + count);
-				sb.append(MsgUtil.getInstance().getLocalMsg("gold") + " : ");
+				sb.append(MsgUtil.getInstance().getLocalMsg("gold")).append(" : ");
 				break;
 			case SILVER:
 				long silver = player.getSilver();
 				player.setSilver(silver + count);
-				sb.append(MsgUtil.getInstance().getLocalMsg("silver") + ": ");
+				sb.append(MsgUtil.getInstance().getLocalMsg("silver")).append(": ");
 				break;
 			case FOODS:
 				long foods = player.getFoods();
 				player.setFoods(foods + count);
-				sb.append(MsgUtil.getInstance().getLocalMsg("foods") + " : ");
+				sb.append(MsgUtil.getInstance().getLocalMsg("foods")).append(" : ");
 				break;
 			case PLAYER_EXP:
 				long experience = player.getExperience();
 				player.setExperience(experience + count);
-				sb.append(MsgUtil.getInstance().getLocalMsg("experience") + " : ");
+				sb.append(MsgUtil.getInstance().getLocalMsg("experience")).append(" : ");
 			default:
 				break;
 			}
 			if(count > 0){
 				sb.append("+");
 			}
-			sb.append(count + " ");
+			sb.append(count).append(" ");
 		}
 		
 		MsgUtil.getInstance().showMsg(sb.toString());
@@ -61,7 +61,7 @@ public class RewardService {
 
 	public static String getRewardMsg(String rewardString){
 		if(rewardString == null || rewardString.equals("")){
-			return null;
+			return "0";
 		}
 		StringBuilder sb = new StringBuilder("");
 		List<SimpleReward> results = JSON.parseArray(rewardString, SimpleReward.class);
@@ -70,23 +70,23 @@ public class RewardService {
 			RewardType type = reward.getType();
 			switch(type){
 				case GOLD:
-					sb.append(MsgUtil.getInstance().getLocalMsg("gold") + " : ");
+					sb.append(MsgUtil.getInstance().getLocalMsg("gold")).append(" : ");
 					break;
 				case SILVER:
-					sb.append(MsgUtil.getInstance().getLocalMsg("silver") + ": ");
+					sb.append(MsgUtil.getInstance().getLocalMsg("silver")).append(": ");
 					break;
 				case FOODS:
-					sb.append(MsgUtil.getInstance().getLocalMsg("foods") + " : ");
+					sb.append(MsgUtil.getInstance().getLocalMsg("foods")).append(" : ");
 					break;
 				case PLAYER_EXP:
-					sb.append(MsgUtil.getInstance().getLocalMsg("experience") + " : ");
+					sb.append(MsgUtil.getInstance().getLocalMsg("experience")).append(" : ");
 				default:
 					break;
 			}
 			if(count > 0){
 				sb.append("+");
 			}
-			sb.append(count + " ");
+			sb.append(count).append(" ");
 		}
 		return sb.toString();
 	}

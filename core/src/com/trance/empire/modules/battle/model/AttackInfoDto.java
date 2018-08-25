@@ -1,6 +1,9 @@
 package com.trance.empire.modules.battle.model;
 
 public class AttackInfoDto {
+
+    private long playerId;
+
 	/**
 	 * 攻击者id
 	 */
@@ -16,7 +19,15 @@ public class AttackInfoDto {
 	 */
 	private String rewards;
 
-	public String getPlayerName() {
+    public long getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(long playerId) {
+        this.playerId = playerId;
+    }
+
+    public String getPlayerName() {
 		return playerName;
 	}
 

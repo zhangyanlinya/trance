@@ -5,7 +5,7 @@ import com.trance.view.TranceGame;
 
 public abstract class BaseStage extends Stage {
 	
-	private TranceGame tranceGame;
+	protected TranceGame tranceGame;
 	
 	private boolean visible;
 	

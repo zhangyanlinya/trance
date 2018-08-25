@@ -7,6 +7,7 @@ import com.trance.event.BsuEvent;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.screens.LoginScreen;
 import com.trance.view.screens.MapScreen;
+import com.trance.view.screens.ReplayScreen;
 import com.trance.view.screens.WorldScreen;
 import com.trance.view.screens.base.BaseScreen;
 import com.trance.view.utils.FontUtil;
@@ -19,6 +20,7 @@ public class TranceGame extends Game {
 	public WorldScreen worldScreen;//
 	public MapScreen mapScreen;    //
 	public GameScreen gameScreen;  //
+	public ReplayScreen replayScreen;  //
 	private String lang;
 
 	private BsuEvent event;
@@ -41,6 +43,7 @@ public class TranceGame extends Game {
 		worldScreen = new WorldScreen(this);
 		mapScreen = new MapScreen(this);
 		gameScreen = new GameScreen(this);
+        replayScreen = new ReplayScreen(this);
 		this.setScreen(loginScreen);
 	}
 
@@ -63,6 +66,7 @@ public class TranceGame extends Game {
 		worldScreen.dispose();
 		mapScreen.dispose();
 		gameScreen.dispose();
+        replayScreen.dispose();
 		ResUtil.getInstance().dispose();
 		super.dispose();
 		FontUtil.dispose();
