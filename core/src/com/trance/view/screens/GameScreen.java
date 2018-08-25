@@ -52,6 +52,7 @@ import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
+import com.trance.empire.modules.replay.model.Click;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.view.TranceGame;
@@ -144,6 +145,8 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 	private InputMultiplexer inputMultiplexer;
 	private GestureDetector gestureHandler;
+
+    private static List<Click> clicks = new ArrayList<Click>();
 	
 	public GameScreen(TranceGame tranceGame) {
 		super(tranceGame);
@@ -166,6 +169,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		initWorld();
 		initMap();
 		initArmy();
+        clicks.clear();
 		inputMultiplexer = new InputMultiplexer();
 		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		gestureHandler = new GestureDetector(controller);
@@ -309,6 +313,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		params.put("y", playerDto.getY());
 		params.put("state", win ? 0 : 1);
 		params.put("sign", "");//TODO
+		params.put("clicks", clicks);
 		Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, params);
 		Response response = SocketUtil.send(request, true);
 		if(response == null){
@@ -720,11 +725,18 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        boolean validClick = false; //是否有效点击
         int Y = (int)height - screenY; //y top to down
         if(Y < (width / 10) * 2 ){
-            chooseArea(screenX, Y); //选择区域
+            validClick = chooseArea(screenX, Y); //选择区域
         }else{
-            executeArea(screenX, screenY); //执行区域
+            validClick = executeArea(screenX, screenY); //执行区域
+        }
+        if(validClick){
+            Click click = new Click();
+            click.setT(currTime);
+            click.setX(screenX);
+            click.setY(screenY);
         }
 
         return  false;
@@ -733,22 +745,28 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     /**
      * 选择区域事件
      */
-	private void chooseArea(int screenX, int screenY) {
+	private boolean chooseArea(int screenX, int screenY) {
+        boolean validClick = false; //是否有效点击
         Integer armyType = hitKeepArmy(screenX, screenY);
         if(armyType != null){
             chooseArmyId = armyType;
+            validClick = true;
         }
 
 		Integer techType = hitKeepTech(screenX, screenY);
 		if(techType != null){
 			chooseTechId = techType;
+            validClick = true;
         }
+
+        return validClick;
     }
 
     /**
      * 执行区域事件
      */
-	private void executeArea(int screenX, int screenY) {
+	private boolean executeArea(int screenX, int screenY) {
+        boolean validClick = false; //是否有效点击
         Vector3 vector3 = new Vector3(screenX, screenY, 0);
         camera.unproject(vector3); // coordinate convert
         float x = vector3.x;
@@ -767,15 +785,15 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
         if(y > control_height - length * 2 || x <  length * 4 || x > width -length * 4 ){ // 只有下面一个区域可能进攻
             if (chooseTechId > 0) {
-                sendTechEffect(x, y);
+                validClick = sendTechEffect(x, y);
             }
-            return;
+            return validClick;
         }
 
 
         Actor actor = stage.hit(x, y, true);
         if(actor != null){
-            return;
+            return validClick;
         }
         Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
         for(ArmyDto army : myArmys.values()){
@@ -795,7 +813,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
             army.setGo(true);
             gobattle = true;
-
+            validClick = true;
         }
 
         //for the next choose type;
@@ -806,21 +824,27 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
             chooseArmyId = army.getId();
             break;
         }
+
+        return  validClick;
     }
 
 	/**
 	 *  执行科技效果
 	 */
-	private void sendTechEffect(float x, float y) {
+	private boolean sendTechEffect(float x, float y) {
 		TechDto tech = Player.player.getTechs().get(chooseTechId);
 		if(tech == null || tech.getUseAmount() <= 0) {
-			return;
+			return false;
 		}
+
 		if(tech.getId() == 1){
 			sendExplode(x, y, tech);
+            return true;
 		}else if( tech.getId() ==  2){
             sendLamp(x, y, tech);
+            return true;
 		}
+		return false;
 	}
 
 	/**
