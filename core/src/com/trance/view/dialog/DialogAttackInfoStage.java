@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
@@ -36,6 +37,7 @@ import com.trance.view.utils.TimeUtil;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
 
 /**
@@ -46,6 +48,8 @@ public class DialogAttackInfoStage extends BaseStage {
 	private List<AttackInfoDto> attackInfos;
 	private static final int MAX_RANKING = 10;
     private boolean init;
+    private final ConcurrentMap<String, Report> report_map = new ConcurrentLinkedHashMap.Builder<String, Report>()
+            .maximumWeightedCapacity(20).build();
 
     public DialogAttackInfoStage(TranceGame tranceGame) {
         super(tranceGame);
@@ -137,30 +141,34 @@ public class DialogAttackInfoStage extends BaseStage {
 	}
 
     private void watchReplay(String reportId){
-        Request request = Request.valueOf(Module.REPLAY, ReplayCmd.GET_PLAYER_REPLAY, reportId);
-        Response response = SocketUtil.send(request, true);
-        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-            return;
+        Report report = report_map.get(reportId);
+        if(report == null) {
+
+            Request request = Request.valueOf(Module.REPLAY, ReplayCmd.GET_PLAYER_REPLAY, reportId);
+            Response response = SocketUtil.send(request, true);
+            if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
+                return;
+            }
+
+            byte[] bytes = response.getValueBytes();
+            String text = new String(bytes);
+            @SuppressWarnings("unchecked")
+            HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+            Object codeObject = result.get("result");
+            int code = Integer.valueOf(String.valueOf(codeObject));
+            if (code != Result.SUCCESS) {
+                MsgUtil.getInstance().showMsg(Module.REPLAY, code);
+                return;
+            }
+
+            Object o = result.get("content");
+            if (o == null) {
+                return;
+            }
+
+            report = JSON.parseObject(o.toString(), Report.class);
+            report_map.put(reportId, report);
         }
-
-        byte[] bytes = response.getValueBytes();
-        String text = new String(bytes);
-        @SuppressWarnings("unchecked")
-        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-        Object codeObject = result.get("result");
-        int code = Integer.valueOf(String.valueOf(codeObject));
-        if(code != Result.SUCCESS){
-            MsgUtil.getInstance().showMsg(Module.REPLAY, code);
-            return;
-        }
-
-        Object o = result.get("content");
-        if(o == null){
-            return;
-        }
-
-
-        Report report =  JSON.parseObject(o.toString(), Report.class);
 
         //TEST
         TechDto techDto = new TechDto();
