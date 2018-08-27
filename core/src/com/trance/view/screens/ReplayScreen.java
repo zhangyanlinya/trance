@@ -345,8 +345,9 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     }
 
     private void initClickDelay() {
-        Action[] sAction = new Action[report.getClicks().size()];// 一共执行120次
-        // 使用action实现定时器
+        Action[] sAction = new Action[report.getClicks().size()];
+        // 使用action实现
+        float pre = 0;
         for (int i = 0; i < sAction.length; i++) {
             final Click click = report.getClicks().get(i);
             Action delayedAction = Actions.run(new Runnable() {
@@ -356,8 +357,9 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
                     touchDown(click.getX(), click.getY(), 0, 0);
                 }
             });
-            // 延迟1s后执行delayedAction
-            float delay = click.getT() / 1000f;
+            // 延迟后执行delayedAction
+            float delay = click.getT() / 1000f - pre;
+            pre += delay;
             Action action = Actions.delay(delay, delayedAction);
             sAction[i] = action;
         }
