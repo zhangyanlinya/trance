@@ -146,7 +146,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     private long startTime;
 
 	private InputMultiplexer inputMultiplexer;
-	private GestureDetector gestureHandler;
+//	private GestureDetector gestureHandler;
 
     private static List<Click> clicks = new ArrayList<Click>();
 	
@@ -173,15 +173,15 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		initArmy();
         clicks.clear();
 		inputMultiplexer = new InputMultiplexer();
-		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
-		gestureHandler = new GestureDetector(controller);
+//		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+//		gestureHandler = new GestureDetector(controller);
 		initInputProcessor();
 
         startTime = System.currentTimeMillis();
 	}
 
 	private void initInputProcessor(){
-		inputMultiplexer.addProcessor(gestureHandler);
+//		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
