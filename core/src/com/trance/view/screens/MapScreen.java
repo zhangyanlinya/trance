@@ -72,6 +72,7 @@ import com.trance.view.utils.SocketUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -419,6 +420,15 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				map = JSON.parseObject(mobj.toString(), int[][].class);
 			}
 			playerDto.setMap(map);
+
+            Object bobj = result.get("buildings");
+            if(bobj != null){
+                List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+                for(BuildingDto dto : buildings){
+                    playerDto.addBuilding(dto);
+                }
+            }
+
 			FontUtil.getFont().appendText(playerDto.getPlayerName());
 			show();
 			Sound sound = ResUtil.getInstance().getSound(8);
