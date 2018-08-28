@@ -22,9 +22,10 @@ public class RankImage extends Image {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if(playerDto != null){
+            font.draw(batch, playerDto.getLevel()+"" ,this.getX() - getWidth()/2, this.getY() + getHeight()/2);
 			String name = playerDto.getPlayerName() + "           ";
 			font.draw(batch, name ,this.getX() + getWidth(),this.getY() + getHeight()/2);
-			font.draw(batch, playerDto.getLevel()+"" ,this.getX() + getWidth() * 2 + getWidth()/2, this.getY() + getHeight()/2);
+
 		}
 	}
 	
