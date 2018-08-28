@@ -3,20 +3,20 @@ package com.trance.empire.modules.building.handler;
 
 /**
  * 主城建筑模块
- * 
+ *
  * @author Along
  *
  */
 public interface BuildingCmd {
 
 	final String MODULE_NAME = "BUILDING";
-	
+
 	/**
 	 * 返回主城开放的建筑
  	 * @return {@link List<PlayerBuildingDto>}
 	 */
 	int GET_BUILDINGS = 1;
-	
+
 	/**
 	 * 建筑升级
 	 * @param buildingId 建筑id
@@ -29,10 +29,15 @@ public interface BuildingCmd {
 	 * 				}
 	 */
 	int UPGRADE_BUILDING_LEVEL = 2;
-	
+
 	/**
 	 * 收割
 	 */
 	int HARVIST = 3;
-	
+
+    /**
+     * 使用金币建筑升级
+     */
+    int UPGRADE_BUILDING_LEVEL_BY_GOLD = 4;
+
 }

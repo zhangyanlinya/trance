@@ -105,9 +105,29 @@ public class DialogOperateStage extends BaseStage {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                updateBuilding();
+                updateBuilding(false);
             }
         });
+
+
+        // gold
+        Texture textureGold = ResUtil.getInstance().getUi(UiType.GOLD);
+        BuildingImage imageGold = new BuildingImage(textureGold, dto);
+        imageGold.setWidth(100);
+        imageGold.setHeight(100);
+
+        imageGold.setPosition(x, y);
+        addActor(imageGold);
+
+        imageGold.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                updateBuilding(true);
+            }
+        });
+
+
     }
 
     // 是否有正在升级的建筑
@@ -121,12 +141,19 @@ public class DialogOperateStage extends BaseStage {
     }
 
     @SuppressWarnings("unchecked")
-    private void updateBuilding() {
+    private void updateBuilding(boolean byGold) {
         if (dto == null) {
             return;
         }
 
-        if (hasUpdatingBuilding()) {
+        if(byGold){
+            if(Player.player.getGold() < dto.getLvl() * 10){
+                MsgUtil.getInstance().showMsg(Module.BUILDING, -8);
+                return;
+            }
+        }
+
+        if (!byGold && hasUpdatingBuilding()) {
             MsgUtil.getInstance().showMsg(Module.BUILDING, -10004);
             return;
         }
@@ -135,7 +162,11 @@ public class DialogOperateStage extends BaseStage {
         parms.put("x", dto.getX());
         parms.put("y", dto.getY());
 
-        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, parms), true);
+        int cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL;
+        if (byGold) {
+            cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL_BY_GOLD;
+        }
+        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, cmd, parms), true);
         if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
             return;
         }
