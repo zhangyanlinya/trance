@@ -171,6 +171,7 @@ public class DialogAttackInfoStage extends BaseStage {
         }
 
         //TEST
+        report.getTechs().clear();
         TechDto techDto = new TechDto();
         techDto.setId(1);
         techDto.setAmout(3);

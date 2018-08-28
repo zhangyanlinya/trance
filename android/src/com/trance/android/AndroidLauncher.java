@@ -27,6 +27,7 @@ import com.trance.event.BsuEvent;
 import com.trance.view.TranceGame;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.screens.LoginScreen;
+import com.trance.view.screens.ReplayScreen;
 import com.trance.view.screens.WorldScreen;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.SocketUtil;
@@ -158,7 +159,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId();
 		Player.userName =  getDeviceId.getUniquePsuedoID();
-		Player.userName =  "test62";
+//		Player.userName =  "test62";
 
 		isInit = true;
 	}
@@ -207,7 +208,10 @@ public class AndroidLauncher extends AndroidApplication {
 							tranceGame.mapScreen.setAttackInfoDailog(false);
 						}else if(tranceGame.mapScreen.dialogRankUpStage.isVisible()){
 							tranceGame.mapScreen.setRankUpDailog(false);
-						}else{
+						}else if(tranceGame.getScreen().getClass() == ReplayScreen.class){
+                            tranceGame.getScreen().dispose();
+                            tranceGame.setScreen(tranceGame.mapScreen);
+                        }else{
 							tranceGame.setScreen(tranceGame.worldScreen);
 							GameScreen.finishBattle(false);
 						}
