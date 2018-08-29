@@ -98,7 +98,7 @@ public class DialogOperateStage extends BaseStage {
         image.setWidth(100);
         image.setHeight(100);
 
-        image.setPosition(x - 100, y);
+        image.setPosition(x - 150, y);
         addActor(image);
 
         image.addListener(new ClickListener() {
@@ -116,7 +116,7 @@ public class DialogOperateStage extends BaseStage {
         imageGold.setWidth(100);
         imageGold.setHeight(100);
 
-        imageGold.setPosition(x, y);
+        imageGold.setPosition(x + 50, y);
         addActor(imageGold);
 
         imageGold.addListener(new ClickListener() {
@@ -149,6 +149,9 @@ public class DialogOperateStage extends BaseStage {
         if(byGold){
             if(Player.player.getGold() < dto.getLvl() * 10){
                 MsgUtil.getInstance().showMsg(Module.BUILDING, -8);
+                return;
+            }
+            if(dto.getEtime() < TimeUtil.getServerTime()){
                 return;
             }
         }
