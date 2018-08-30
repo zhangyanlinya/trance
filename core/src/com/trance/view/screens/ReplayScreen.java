@@ -154,12 +154,12 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         inputMultiplexer = new InputMultiplexer();
         GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
         gestureHandler = new GestureDetector(controller);
-//        initInputProcessor();
+        initInputProcessor();
         initClickDelay();
     }
 
     private void initInputProcessor(){
-        inputMultiplexer.addProcessor(gestureHandler);
+//        inputMultiplexer.addProcessor(gestureHandler);
 //        inputMultiplexer.addProcessor(stage);
 //        inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
