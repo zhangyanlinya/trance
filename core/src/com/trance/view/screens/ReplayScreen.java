@@ -128,7 +128,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     private static boolean finishBattle;
 
     private InputMultiplexer inputMultiplexer;
-    private GestureDetector gestureHandler;
+//    private GestureDetector gestureHandler;
 
     public ReplayScreen(TranceGame tranceGame) {
         super(tranceGame);
@@ -152,8 +152,8 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         initMap();
         initArmy();
         inputMultiplexer = new InputMultiplexer();
-        GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
-        gestureHandler = new GestureDetector(controller);
+//        GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+//        gestureHandler = new GestureDetector(controller);
         initInputProcessor();
         initClickDelay();
     }
