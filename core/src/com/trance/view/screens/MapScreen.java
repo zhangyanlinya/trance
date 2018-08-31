@@ -1033,6 +1033,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		if(a != null&& isNew){
+            float dst = a.dst(oldx, oldy);
+            if(dst > a.getWidth()/2){
+                setOperateStageDailog(false, 0 ,0);
+            }
 			Vector3 vector3 = new Vector3(screenX, screenY, 0);
 			camera.unproject(vector3); // 坐标转化  
 			float x = vector3.x;
@@ -1045,7 +1049,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			a.setTouchable(Touchable.disabled);//不让点中先
 			a.setPosition(x, y);
 		}
-        setOperateStageDailog(false, 0 ,0);
+
 		return false;
 	}
 	
