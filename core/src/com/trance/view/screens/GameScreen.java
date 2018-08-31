@@ -298,9 +298,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		
 		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
 		for(ArmyDto dto : myArmys.values()){//原来的
-			if(dto.isGo()){
-				dto.setAmout(0);
-			}
+//			if(dto.isGo()){
+//				dto.setAmout(0);
+//			}
 			dto.setGo(false);
 		}
 		for(GameActor actor : armys){
@@ -801,7 +801,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
         Actor actor = stage.hit(x, y, true);
         if(actor != null){
-            return validClick;
+            return false;
         }
         Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
         for(ArmyDto army : myArmys.values()){
@@ -818,7 +818,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
                 block.init(world, ArmyType.valueOf(army.getId()), x,  y, length,length,shapeRenderer);
                 armys.add(block);
             }
-
+            army.setAmout(0);
             army.setGo(true);
             gobattle = true;
             validClick = true;
