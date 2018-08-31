@@ -258,23 +258,6 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         Sound sound = ResUtil.getInstance().getSound(5);
         sound.play();
 
-        List<ArmyDto> myArmys = report.getArmys();
-        for(ArmyDto dto : myArmys){//原来的
-            if(dto.isGo()){
-                dto.setAmout(0);
-            }
-            dto.setGo(false);
-        }
-        for(GameActor actor : armys){
-            Army army = (Army)actor;
-            int type = army.armyType.id;
-            for(ArmyDto dto : myArmys){
-                if(dto.getId() == type){
-                    dto.setAmout(dto.getAmout() + 1);
-                    break;
-                }
-            }
-        }
         finishBattle = true;
     }
 
@@ -746,7 +729,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
                 block.init(world, ArmyType.valueOf(army.getId()), x,  y, length,length,shapeRenderer);
                 armys.add(block);
             }
-
+            army.setAmout(0);
             army.setGo(true);
             gobattle = true;
         }
