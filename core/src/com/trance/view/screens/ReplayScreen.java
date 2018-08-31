@@ -57,6 +57,7 @@ import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.particle.ParticleService;
 import com.trance.view.screens.base.BaseScreen;
+import com.trance.view.screens.type.BattleFinishType;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
@@ -248,7 +249,8 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         }
     }
 
-    public static void finishBattle(boolean win){
+    public static void finishBattle(BattleFinishType finishType){
+        MapData.gamerunning = false;
         if(finishBattle || !gobattle){
             return;
         }
@@ -266,9 +268,11 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         for(GameActor actor : armys){
             Army army = (Army)actor;
             int type = army.armyType.id;
-            ArmyDto a = myArmys.get(type);
-            if(a != null){
-                a.setAmout(a.getAmout() + 1);
+            for(ArmyDto dto : myArmys){
+                if(dto.getId() == type){
+                    dto.setAmout(dto.getAmout() + 1);
+                    break;
+                }
             }
         }
         finishBattle = true;
@@ -354,7 +358,11 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
 
                 @Override
                 public void run() {
-                    touchDown(click.getX(), click.getY(), 0, 0);
+                    if(click.getX() == 0 && click.getY() == 0){ // 表示结束了
+                        finishBattle(BattleFinishType.CANCEL);
+                    }else {
+                        touchDown(click.getX(), click.getY(), 0, 0);
+                    }
                 }
             });
             // 延迟后执行delayedAction
@@ -543,8 +551,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
                     }
                 }
             }
-            MapData.gamerunning = false;
-            finishBattle(false);
+            finishBattle(BattleFinishType.LOSE);
         }else{//监听是否有要派出
             for(GameActor ga :armys){
                 Army a = (Army) ga;

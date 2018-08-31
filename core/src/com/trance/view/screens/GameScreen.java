@@ -69,6 +69,7 @@ import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.particle.ParticleService;
 import com.trance.view.screens.base.BaseScreen;
+import com.trance.view.screens.type.BattleFinishType;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
@@ -143,7 +144,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 	
 	private static boolean finishBattle;
 
-    private long startTime;
+    private static long startTime;
 
 	private InputMultiplexer inputMultiplexer;
 //	private GestureDetector gestureHandler;
@@ -281,7 +282,13 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		}
 	}
 	
-	public static void finishBattle(boolean win){
+	public static void finishBattle(BattleFinishType finishType){
+        MapData.gamerunning = false;
+        if( finishType == BattleFinishType.CANCEL) {
+            Click click = new Click();
+            click.setT((int) (System.currentTimeMillis() - startTime));
+            clicks.add(click);
+        }
 		if(finishBattle || !gobattle){
 			return;
 		}
@@ -310,24 +317,23 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		for(ArmyDto armyDto : myArmys.values()){
 			vos.add(ArmyVo.valueOf(armyDto));
 		}
-		
+
+        finishBattle = true;
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("armys", vos);
 		params.put("x", playerDto.getX());
 		params.put("y", playerDto.getY());
-		params.put("state", win ? 0 : 1);
+		params.put("state", finishType == BattleFinishType.WIN ? 0 : 1);
 		params.put("sign", "");//TODO
 		params.put("clicks", clicks);
 		Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, params);
 		Response response = SocketUtil.send(request, true);
 		if(response == null){
-			finishBattle = true;
 			return;
 		}
 		
 		ResponseStatus status = response.getStatus();
 		if (status != ResponseStatus.SUCCESS) {
-			finishBattle = true;
 			return;
 		}
 		
@@ -339,7 +345,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		int code = Integer.valueOf(String.valueOf(codeObject));
 		if(code != Result.SUCCESS){
 			MsgUtil.getInstance().showMsg(Module.BATTLE, code);
-			finishBattle = true;
 			return;
 		}
 		
@@ -348,9 +353,9 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
 			RewardService.executeRewards(valueResultSet);
 		}
-		finishBattle = true;
+
 		//refresh world
-		if(win){
+		if(finishType == BattleFinishType.WIN){
 			WorldScreen.remove(playerDto.getX(), playerDto.getY());
 		}
 	}
@@ -414,7 +419,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 				public void run() {
 					currTime--;
 					if(currTime <= 0){
-						MapData.gamerunning = false;
+                        finishBattle(BattleFinishType.TIMEOUT);
 					}
 				}
 			});
@@ -603,8 +608,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 					}
 				}
 			}
-			MapData.gamerunning = false;
-			finishBattle(false);
+			finishBattle(BattleFinishType.LOSE);
 		}else{//监听是否有要派出
 			for(GameActor ga :armys){
 				Army a = (Army) ga;

@@ -17,6 +17,7 @@ import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.pools.BuildingPool;
 import com.trance.view.screens.GameScreen;
+import com.trance.view.screens.type.BattleFinishType;
 import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.WorldUtils;
@@ -355,8 +356,7 @@ public class Building extends GameActor {
 		GameScreen.buildings.removeValue(this, true);
 		
 		if(type == BuildingType.OFFICE){
-			MapData.gamerunning = false;
-			GameScreen.finishBattle(true);
+			GameScreen.finishBattle(BattleFinishType.WIN);
 		}
 	}
 
