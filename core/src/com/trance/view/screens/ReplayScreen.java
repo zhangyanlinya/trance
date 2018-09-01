@@ -390,8 +390,6 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
             stage.addActor(grass);
         }
 
-
-
         for (int i = 0; i < map.length; i++) {
             float n = map.length - 1 - i;
             for (int j = 0; j < map[i].length; j++) {
