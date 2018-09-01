@@ -225,6 +225,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
             if(dto.getAmout() == 0){
                 continue;
             }
+            dto.setGo(false);
 
             if(chooseArmyId == 0) {
                 chooseArmyId = dto.getId();

@@ -258,6 +258,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 			if(dto.getAmout() == 0){
 				continue;
 			}
+			dto.setGo(false);
 
 			if(chooseArmyId == 0) {
 				chooseArmyId = dto.getId();
@@ -297,12 +298,6 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 		sound.play();
 		
 		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-		for(ArmyDto dto : myArmys.values()){//原来的
-//			if(dto.isGo()){
-//				dto.setAmout(0);
-//			}
-			dto.setGo(false);
-		}
 		for(GameActor actor : armys){
 			Army army = (Army)actor;
 			int type = army.armyType.id;

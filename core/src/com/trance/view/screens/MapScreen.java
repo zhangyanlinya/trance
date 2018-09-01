@@ -800,6 +800,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         if(buttonType == null){
             return;
         }
+
+        if(!isEdit() && buttonType != ButtonType.WORLD){
+            return;
+        }
+
         switch (buttonType){//
             case WORLD:
                 toWorld();
