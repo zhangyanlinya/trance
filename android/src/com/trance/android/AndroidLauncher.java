@@ -85,8 +85,9 @@ public class AndroidLauncher extends AndroidApplication {
 //        config.useGL20 = true;			  //就可以随便任何分辨率图片不必是2的N次方了
 		AndroidFreeFont.Strat();//初始化文本
 
-        View gameView = initializeForView(tranceGame,config);
-		showAD(gameView);
+        initialize(tranceGame);
+//        View gameView = initializeForView(tranceGame,config);
+//		showAD(gameView);
 
 		init();
 	}
@@ -134,14 +135,14 @@ public class AndroidLauncher extends AndroidApplication {
 
 	@Override
 	protected void onPause() {
-		adView.pause();
+//		adView.pause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		adView.resume();
+//		adView.resume();
 	}
 
 
@@ -183,7 +184,7 @@ public class AndroidLauncher extends AndroidApplication {
 					break;
 				case 2:
 					dialog.dismiss();
-					adView.setVisibility(View.GONE);
+//					adView.setVisibility(View.GONE);
 					break;
 				default:
 					Toast.makeText(reference.get(), msg.obj+"",
@@ -234,7 +235,7 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		adView.destroy();
+//		adView.destroy();
 		tranceGame.dispose();
 		SocketUtil.destroy();
 		Gdx.app.exit();

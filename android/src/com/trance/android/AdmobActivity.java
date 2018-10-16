@@ -28,21 +28,21 @@ public class AdmobActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        UpdateManager update = new UpdateManager(this , new Handler.Callback(){
-            @Override
-            public boolean handleMessage(Message message) {
-//                int delay = message.what;
-//                new TimeThread(delay).start();
-                return false;
-            }
-        });
-        update.checkUpdate();
+//        UpdateManager update = new UpdateManager(this , new Handler.Callback(){
+//            @Override
+//            public boolean handleMessage(Message message) {
+////                int delay = message.what;
+////                new TimeThread(delay).start();
+//                return false;
+//            }
+//        });
+//        update.checkUpdate();
 
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
 
         // 5秒后跳转
-        new TimeThread(6).start();
+        new TimeThread(1).start();
     }
 
 
@@ -92,9 +92,15 @@ public class AdmobActivity extends AppCompatActivity {
         }
         start = true;
         Intent intent = new Intent(AdmobActivity.this, AndroidLauncher.class);
-        startActivity(intent);
-        this.finish();
+        startActivityForResult(intent, 0);
+//        this.finish();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        showInterstitial();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public Handler handler = new Handler(){
