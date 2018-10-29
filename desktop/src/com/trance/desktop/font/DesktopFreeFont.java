@@ -49,7 +49,7 @@ public class DesktopFreeFont implements FreeListener {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g.setFont(font);
         if (vpaint.getStrokeColor() != null) {
-            // 描边
+
             GlyphVector v = font.createGlyphVector(fm.getFontRenderContext(),
                     txt);
             Shape shape = v.getOutline();
@@ -59,15 +59,15 @@ public class DesktopFreeFont implements FreeListener {
             g.setStroke(new BasicStroke(vpaint.getStrokeWidth()));
             g.setColor(getColor(vpaint.getStrokeColor()));
             g.draw(shape);
-        } else if (vpaint.getUnderlineText() == true) {
-            // 下划线
+        } else if (vpaint.getUnderlineText()) {
+
             AttributedString as = new AttributedString(txt);
             as.addAttribute(TextAttribute.FONT, font);
             as.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
             g.setColor(getColor(vpaint.getColor()));
             g.drawString(as.getIterator(), 0, fm.getAscent());
-        } else if (vpaint.getStrikeThruText() == true) {
-            // 删除线
+        } else if (vpaint.getStrikeThruText()) {
+
             AttributedString as = new AttributedString(txt);
             as.addAttribute(TextAttribute.FONT, font);
             as.addAttribute(TextAttribute.STRIKETHROUGH,
@@ -75,7 +75,7 @@ public class DesktopFreeFont implements FreeListener {
             g.setColor(getColor(vpaint.getColor()));
             g.drawString(as.getIterator(), 0, fm.getAscent());
         } else {
-            // 普通
+
             g.setColor(getColor(vpaint.getColor()));
             g.drawString(txt, 0, fm.getAscent());
         }

@@ -206,7 +206,7 @@ public class DialogOperateStage extends BaseStage {
             this.getTranceGame().mapScreen.refreshPlayerDtoData();
 
             //如果是主城升级的话  可能有新的建筑和部队
-            if (dto.getMid() == BuildingType.OFFICE) {
+            if (dto.getMid() == BuildingType.OFFICE.getId()) {
                 Object newArmys = result.get("newArmyDtos");
                 if (newArmys != null) {
                     List<ArmyDto> armyDtos = JSON.parseArray(JSON.toJSON(newArmys).toString(), ArmyDto.class);

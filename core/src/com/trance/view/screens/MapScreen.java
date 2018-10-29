@@ -40,8 +40,6 @@ import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.mapdata.handler.MapDataCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
-import com.trance.empire.modules.replay.entity.Report;
-import com.trance.empire.modules.replay.handler.ReplayCmd;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.empire.modules.world.handler.WorldCmd;
@@ -104,7 +102,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private Sprite toWorld;
 	private Image toChange;
 	private Sprite toTrain;
-	private Sprite toUpBuilding;
+//	private Sprite toUpBuilding;
 	private Sprite toRankUp;
 	private Sprite toAttackInfo;
 	private Sprite rename;
@@ -112,7 +110,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private Label label_world;
 	private Label label_rename;
 	private Label label_train;
-	private Label label_upgrade;
+//	private Label label_upgrade;
 	private Label label_ranking;
 	private Label label_attack;
 	private Label label_change;
@@ -196,24 +194,24 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		toTrain = new Sprite(ResUtil.getInstance().getUi(UiType.TRAIN));
 		toTrain.setBounds(side * 2, 0, side, side);
 
-		label_upgrade = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("upgrade"));
-		label_upgrade.setPosition(side * 3 + side/2, side, Align.center);
-
-		toUpBuilding = new Sprite(ResUtil.getInstance().getUi(UiType.UPBUILDING));
-		toUpBuilding.setBounds(side * 3, 0, side, side);
+//		label_upgrade = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("upgrade"));
+//		label_upgrade.setPosition(side * 3 + side/2, side, Align.center);
+//
+//		toUpBuilding = new Sprite(ResUtil.getInstance().getUi(UiType.UPBUILDING));
+//		toUpBuilding.setBounds(side * 3, 0, side, side);
 
 
 		label_ranking= FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("ranking"));
-		label_ranking.setPosition(side * 4 + side/2, side, Align.center);
+		label_ranking.setPosition(side * 3 + side/2, side, Align.center);
 
 		toRankUp = new Sprite(ResUtil.getInstance().getUi(UiType.LEVEL));
-		toRankUp.setBounds(side * 4, 0, side, side);
+		toRankUp.setBounds(side * 3, 0, side, side);
 
 		label_change = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("change"));
-		label_change.setPosition(side * 5 + side/2, side, Align.center);
+		label_change.setPosition(side * 4 + side/2, side, Align.center);
 
 		toChange = new Image(ResUtil.getInstance().getUi(UiType.CHANGE));
-		toChange.setBounds(side * 5, 0, side, side);
+		toChange.setBounds(side * 4, 0, side, side);
 		toChange.addListener(new ClickListener(){
 
 			@Override
@@ -223,10 +221,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		});
 
 		label_attack = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("attack"));
-		label_attack.setPosition(side * 6 + side/2, side, Align.center);
+		label_attack.setPosition(side * 5 + side/2, side, Align.center);
 
 		attack = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.ATTACK));
-		attack.setBounds(side * 6, 0, side, side);
+		attack.setBounds(side * 5, 0, side, side);
 		attack.addListener(new ClickListener(){
 
 			@Override
@@ -237,10 +235,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 
 		label_info= FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("info"));
-		label_info.setPosition(side * 7 + side/2, side, Align.center);
+		label_info.setPosition(side * 6 + side/2, side, Align.center);
 
 		toAttackInfo = new Sprite(ResUtil.getInstance().getUi(UiType.LEVEL));
-		toAttackInfo.setBounds(side * 7, 0, side, side);
+		toAttackInfo.setBounds(side * 6, 0, side, side);
 	}
 	
 	public void setPlayerDto(PlayerDto playerDto){
@@ -290,7 +288,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 			stage.addActor(label_rename);
 			stage.addActor(label_train);
-			stage.addActor(label_upgrade);
+//			stage.addActor(label_upgrade);
 			stage.addActor(label_ranking);
 			stage.addActor(label_info);
 		}else{
@@ -473,7 +471,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
             rename.draw(spriteBatch);
             toTrain.draw(spriteBatch);
-            toUpBuilding.draw(spriteBatch);
+//            toUpBuilding.draw(spriteBatch);
             toRankUp.draw(spriteBatch);
             toAttackInfo.draw(spriteBatch);
 		}else{
@@ -595,13 +593,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             return;
         }
         int buildingId = dto.getMid();
-		if(buildingId != BuildingType.HOUSE && buildingId != BuildingType.BARRACKS){
+		if(buildingId != BuildingType.HOUSE.getId() && buildingId != BuildingType.BARRACKS.getId()){
 			return;
 		}
 
 		long now = System.currentTimeMillis();
 		long diffTime = 0;
-		if(buildingId == BuildingType.HOUSE){
+		if(buildingId == BuildingType.HOUSE.getId()){
 			diffTime = now - huoseTime;
 		}else{
 			diffTime = now - barracksTime;
@@ -638,7 +636,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			Sound sound = ResUtil.getInstance().getSound(5);
 			sound.play();
 
-			if(buildingId == BuildingType.HOUSE){
+			if(buildingId == BuildingType.HOUSE.getId()){
 				huoseTime = System.currentTimeMillis();
 			}else{
 				barracksTime = now - barracksTime;
@@ -815,9 +813,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             case TRAIN:
                 train();
                 break;
-            case UPGRADE:
+//            case UPGRADE:
 //                upBuilding();
-                break;
+//                break;
             case RANKING:
                 rankUp();
                 break;
@@ -829,21 +827,25 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
     //各种点击事件
     private void handleBuildingOnClick(Building building, float x, float y){
-        switch (building.type){
-            case BuildingType.OFFICE:
+        BuildingType bType = BuildingType.valueOf(building.type);
+        if(bType == null){
+            return;
+        }
+        switch (bType){
+            case OFFICE:
                 break;
-            case BuildingType.CANNON:
-            case BuildingType.ROCKET:
-            case BuildingType.FLAME:
-            case BuildingType.GUN:
-            case BuildingType.TOWER:
-            case BuildingType.MORTAR:
+            case CANNON:
+            case ROCKET:
+            case FLAME:
+            case GUN:
+            case TOWER:
+            case MORTAR:
                 RangeInfo e = new RangeInfo(x,y,building.range);
                 rangeQueue.offer(e);
                 break;
 
-            case BuildingType.HOUSE:
-            case BuildingType.BARRACKS:
+            case HOUSE:
+            case BARRACKS:
                 if(isEdit()){
                     harvist(building.getDto());
                 }

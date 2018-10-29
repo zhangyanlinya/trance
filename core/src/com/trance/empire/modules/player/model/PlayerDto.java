@@ -308,7 +308,7 @@ public class PlayerDto {
 
     public int getOfficeLevel(){
         for(BuildingDto dto : buildings.values()){
-            if(dto.getMid() == BuildingType.OFFICE){
+            if(dto.getMid() == BuildingType.OFFICE.getId()){
                 return  dto.getLvl();
             }
         }

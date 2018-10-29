@@ -62,7 +62,15 @@ public class Building extends GameActor {
 	 * @param height
 	 */
 	public void init(World world, final int type, float x , float y, float width, float height, ShapeRenderer renderer){
-		super.init(x, y, width, height);
+        BuildingType bType = BuildingType.valueOf(type);
+        if(bType == null){
+            return;
+        }
+
+        width *= bType.getOccupy();
+        height *= bType.getOccupy();
+
+        super.init(x, y, width, height);
 		this.renderer = renderer;
 		this.alive = true;
 		this.camp = 1;
@@ -86,50 +94,50 @@ public class Building extends GameActor {
 		}
 		
 		this.role = 0;
-		
-		switch(type){
-		case BuildingType.OFFICE:
+
+		switch(bType){
+		case OFFICE:
 			hp = 400;
 			break;
-		case BuildingType.HOUSE:
+		case HOUSE:
 			break;
-		case BuildingType.BARRACKS:
+		case BARRACKS:
 			break;
-		case BuildingType.CANNON:
+		case CANNON:
 			fireDelay = 5000;
 			atk = 300;
 			range = RangeType.LONG;
 //			linearDamping = 0;
 			density = 0;
 			break;
-		case BuildingType.ROCKET:
+		case ROCKET:
 			fireDelay = 3500;
 			range = RangeType.LONG;
 //			linearDamping = 0;
 			density = 0;
 			atk = 1;
 			break;
-		case BuildingType.FLAME:
+		case FLAME:
 			fireDelay = 1000;
 			atk = 30;
 //			linearDamping = 0;
 			density = 0;
 			break;
-		case BuildingType.GUN:
+		case GUN:
 //			linearDamping = 0;
 			density = 0;
 			break;
-		case BuildingType.TOWER:
+		case TOWER:
 			face = false;
 			range = RangeType.TOOLONG;
 			break;
-		case BuildingType.MORTAR:
+		case MORTAR:
 			face = false;
 			break;
-		case BuildingType.TREE:
+		case TREE:
 			face = false;
 			break;
-		case BuildingType.GRASS:
+		case GRASS:
 			face = false;
 			break;
 		}
@@ -355,7 +363,7 @@ public class Building extends GameActor {
 		buildingPool.free(this);
 		GameScreen.buildings.removeValue(this, true);
 		
-		if(type == BuildingType.OFFICE){
+		if(type == BuildingType.OFFICE.getId()){
 			GameScreen.finishBattle(BattleFinishType.WIN);
 		}
 	}

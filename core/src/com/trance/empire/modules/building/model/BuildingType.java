@@ -2,55 +2,79 @@ package com.trance.empire.modules.building.model;
 
 /**
  * 主城建筑类型
- * 
- * @author Along
- * 
- */
-public interface BuildingType {
+         */
+public enum BuildingType {
+    NONE(0, 0),  //空地
 
-	int OFFICE = 1; // 官府
-			
-	int HOUSE = 2;// 民居
+    OFFICE(1, 3), // 官府
 
-	int BARRACKS = 3; // 兵营
-	
-	/**
-	 * 加农
-	 */
-	int CANNON = 4; 
-	
-	/**
-	 * 火箭
-	 */
-	int ROCKET = 5; 
-	
-	/**
-	 * 火焰
-	 */
-	int FLAME = 6; 
-	
-	/**
-	 * 机枪
-	 */
-	int GUN = 7;
-	
-	/**
-	 * 箭塔
-	 */
-	int TOWER = 8;
-	
-	/**
-	 * 迫击炮
-	 */
-	int MORTAR = 9;
+    HOUSE(2, 2), // 民居
 
-	/**
-	 *
-	 */
-	int TREE = 10;
+    BARRACKS(3, 2), // 兵营
 
-	/**
-	 *
-	 */
-	int GRASS = 11;
+    /**
+     * 加农
+     */
+    CANNON(4, 1),
+
+    /**
+     * 火箭
+     */
+    ROCKET(5, 1),
+
+    /**
+     * 火焰
+     */
+    FLAME(6, 1),
+
+    /**
+     * 机枪
+     */
+    GUN(7, 1),
+
+    /**
+     * 箭塔
+     */
+    TOWER(8, 1),
+
+    /**
+     * 迫击炮
+     */
+    MORTAR(9, 1),
+
+    /**
+     *
+     */
+    TREE(10, 1),
+
+    /**
+     *
+     */
+    GRASS(11, 1), ;
+
+    final int id;
+
+    final int occupy;
+
+    BuildingType(int id, int occupy) {
+        this.id = id;
+        this.occupy = occupy;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getOccupy() {
+        return occupy;
+    }
+
+    public static BuildingType valueOf(int id){
+        for(BuildingType type : BuildingType.values()){
+            if(type.id == id){
+                return type;
+            }
+        }
+        return null;
+    }
 }

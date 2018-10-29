@@ -8,9 +8,8 @@ public enum ButtonType {
     WORLD(0),
     RENAME(1),
     TRAIN(2),
-    UPGRADE(3),
-    RANKING(4),
-    ATTACKINFO(7),
+    RANKING(3),
+    ATTACKINFO(6),
 
     ;
     private int id;
