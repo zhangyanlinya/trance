@@ -23,4 +23,9 @@ public class Gird {
         this.x = x;
         this.y = y;
     }
+
+    public Gird(int i, int j) {
+        this.i = i;
+        this.j = j;
+    }
 }

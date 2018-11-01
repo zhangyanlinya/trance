@@ -41,6 +41,7 @@ public class DesktopFreeFont implements FreeListener {
         int strHeight = fm.getAscent() + fm.getDescent();
         if (strWidth == 0) {
             strWidth = strHeight = vpaint.getTextSize();
+
         }
         BufferedImage bi = new BufferedImage(strWidth, strHeight,
                 BufferedImage.TYPE_4BYTE_ABGR);

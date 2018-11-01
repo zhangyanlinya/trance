@@ -78,7 +78,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class MapScreen extends BaseScreen implements InputProcessor {
 
-	private float menu_width = 0;
+    private static final int BASE_NUMBER = 100;
+
+    private float menu_width = 0;
 	/** 控制区域高度 */
 	private int width;
 	private int height;
@@ -735,6 +737,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 
         if(i >= 0  && j >= 0 && i < ARR_HEIGHT_SIZE && j < ARR_WIDTH_SIZE ){
+            int code = playerDto.getMap()[i][j];
+            if(code > BASE_NUMBER){ //表示占了不止一个格子
+                Gird temp = parseCode(code);
+                i = temp.i;
+                j = temp.j;
+            }
+
             int id = 0;
             BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
             if(dto != null){
@@ -747,6 +756,16 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             return new Gird(id, i, j, cx, cy);
         }
         return null;
+    }
+
+    private int toOccupyCode(int i, int j){
+        return  (i+1) * BASE_NUMBER + (j+1);
+    }
+
+    private Gird parseCode(int code){
+        int i = code / BASE_NUMBER;
+        int j = code % BASE_NUMBER;
+        return new Gird(i-1, j-1);
     }
 
     public void refreshLeftBuiding() {
@@ -1003,13 +1022,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 return false;
             }
         }
+
+
 		
 		////替换
-
-		a.setPosition(gird.x, gird.y);
-		a.setIndex(gird.i, gird.j);
-		playerDto.getMap()[gird.i][gird.j] = oldType;
-
         int targetType = 0;
         Building b = compute(x, y);
         if(b != null){
@@ -1018,14 +1034,41 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
                 return false;
             }
-
-            b.setPosition(oldx, oldy);
-            b.setIndex(oldi, oldj);
             targetType = b.type;
         }
-        playerDto.getMap()[oldi][oldj] = targetType;
 
-		
+        if(targetType == 0){//add
+            if(!isBlank( playerDto.getMap(), gird.i, gird.j, targetType)){
+                a.setPosition(oldx, oldy);
+                a.setTouchable(Touchable.enabled);//比较后就可以点了
+                return false;
+            }
+        }else {
+            if (!canChange(oldType, targetType)) {
+                a.setPosition(oldx, oldy);
+                a.setTouchable(Touchable.enabled);//比较后就可以点了
+                return false;
+            }
+        }
+
+        if(b != null){
+            b.setPosition(oldx, oldy);
+            b.setIndex(oldi, oldj);
+        }
+
+        if(targetType == 0){//add
+            addToBlank(playerDto.getMap(),  gird.i, gird.j, oldType);
+        }else{
+            moveToBlank(playerDto.getMap(), oldi, oldj, gird.i, gird.j, gird.id);
+        }
+
+//        playerDto.getMap()[oldi][oldj] = targetType;
+
+		a.setPosition(gird.x, gird.y);
+		a.setIndex(gird.i, gird.j);
+//		playerDto.getMap()[gird.i][gird.j] = oldType;
+
+
 //		System.out.println(oldType  +" 与 " + b.type +" 进行了交换~ ");
 		
 		StringBuilder from = new StringBuilder();
@@ -1036,6 +1079,100 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         a.setTouchable(Touchable.enabled);//比较后就可以点了
 		return false;
 	}
+
+    /**
+     * 是否空地
+     * @param map
+     * @param tx
+     * @param ty
+     * @param id //即将占据的id
+     * @return
+     */
+    private boolean isBlank(int[][] map, int x, int y, int id) {
+        BuildingType buildingType = BuildingType.valueOf(id);
+        if (buildingType == null || buildingType == BuildingType.NONE) {
+            return false;
+        }
+
+        int occupy = buildingType.getOccupy();
+        for (int i = x; i < x + occupy; i++) {
+            for (int j = y; j < y + occupy; j++) {
+                if (map[i][j] != 0) { // 目标范围里不是完全空地
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 是否可以交换（占格子数相等才能交换）
+     * @param fv
+     * @param tv
+     * @return
+     */
+    private boolean canChange(int fv, int tv){
+        BuildingType fType = BuildingType.valueOf(fv);
+        if (fType == null || fType == BuildingType.NONE) {
+            return false;
+        }
+        BuildingType tType = BuildingType.valueOf(tv);
+        if (tType == null || tType == BuildingType.NONE) {
+            return false;
+        }
+
+        return fType.getOccupy() == tType.getOccupy();
+    }
+
+
+    /**
+     * 向空地移动
+     */
+    private void moveToBlank(int[][] map, int fx, int fy, int tx, int ty, int id) {
+        BuildingType buildingType = BuildingType.valueOf(id);
+        if (buildingType == null || buildingType == BuildingType.NONE) {
+            return;
+        }
+
+        int occupy = buildingType.getOccupy();
+        for (int i = fx; i < fx + occupy; i++) {
+            for (int j = fy; j < fy + occupy; j++) {
+                map[i][j] = 0;
+            }
+        }
+
+        for (int i = tx; i < tx + occupy; i++) {
+            for (int j = ty; j < ty + occupy; j++) {
+                if (i == tx && j == ty) {
+                    map[i][j] = id;
+                } else {
+                    map[i][j] = toOccupyCode(i, j);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 向空地增加
+     */
+    private void addToBlank(int[][] map, int tx, int ty, int id) {
+        BuildingType buildingType = BuildingType.valueOf(id);
+        if (buildingType == null || buildingType == BuildingType.NONE) {
+            return;
+        }
+
+        int occupy = buildingType.getOccupy();
+        for (int i = tx; i < tx + occupy; i++) {
+            for (int j = ty; j < ty + occupy; j++) {
+                if (i == tx && j == ty) {
+                    map[i][j] = id;
+                } else {
+                    map[i][j] = toOccupyCode(i, j);
+                }
+            }
+        }
+    }
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
