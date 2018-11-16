@@ -986,6 +986,12 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				return false;
 			}
 
+            if(!isBlank( playerDto.getMap(), gird.i, gird.j, oldType)){
+                a.setPosition(oldx, oldy);
+                a.setTouchable(Touchable.enabled);//比较后就可以点了
+                return false;
+            }
+
 			//增加
 			a.setPosition(gird.x, gird.y);
 			a.setIndex(gird.i, gird.j);
@@ -1085,18 +1091,18 @@ public class MapScreen extends BaseScreen implements InputProcessor {
      * @param map
      * @param tx
      * @param ty
-     * @param id //即将占据的id
+     * @param id //即将占据的id 用来计算范围
      * @return
      */
     private boolean isBlank(int[][] map, int x, int y, int id) {
         BuildingType buildingType = BuildingType.valueOf(id);
-        if (buildingType == null || buildingType == BuildingType.NONE) {
+        if (buildingType == null) {
             return false;
         }
 
         int occupy = buildingType.getOccupy();
-        for (int i = x; i < x + occupy; i++) {
-            for (int j = y; j < y + occupy; j++) {
+        for (int i = x; i < x + occupy && i < ARR_HEIGHT_SIZE; i++) {
+            for (int j = y; j < y + occupy &&  j < ARR_WIDTH_SIZE; j++) {
                 if (map[i][j] != 0) { // 目标范围里不是完全空地
                     return false;
                 }
