@@ -972,6 +972,19 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return false;
 		}
 
+		if(!checkXy(gird.i, gird.j, oldType)){
+            a.setPosition(oldx, oldy);
+            a.setTouchable(Touchable.enabled);//比较后就可以点了
+            return false;
+        }
+
+        int[][] map = playerDto.getMap();
+        if(!isBlank(map, gird.i, gird.j, oldType)){
+            a.setPosition(oldx, oldy);
+            a.setTouchable(Touchable.enabled);//比较后就可以点了
+            return false;
+        }
+
 		if(oldy <= control_height - length){//增加
 //			System.out.println("开始增加...");
 			if(gird.id != 0){
@@ -986,16 +999,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 				return false;
 			}
 
-            if(!isBlank( playerDto.getMap(), gird.i, gird.j, oldType)){
-                a.setPosition(oldx, oldy);
-                a.setTouchable(Touchable.enabled);//比较后就可以点了
-                return false;
-            }
-
 			//增加
 			a.setPosition(gird.x, gird.y);
 			a.setIndex(gird.i, gird.j);
-			playerDto.getMap()[gird.i][gird.j] = oldType;
+            map[gird.i][gird.j] = oldType;
 
             BuildingDto dto = new BuildingDto();
             dto.setMid(oldType);
@@ -1013,6 +1020,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 
             a.setLeftNum(0);
+
+            addToBlank(map,  gird.i, gird.j, oldType);
 
 			StringBuilder to = new StringBuilder();
 			to.append(gird.i).append("|").append(gird.j).append("|").append(oldType);
@@ -1044,7 +1053,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         if(targetType == 0){//add
-            if(!isBlank( playerDto.getMap(), gird.i, gird.j, targetType)){
+            if(!isBlank( map, gird.i, gird.j, targetType)){
                 a.setPosition(oldx, oldy);
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
                 return false;
@@ -1063,9 +1072,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         if(targetType == 0){//add
-            addToBlank(playerDto.getMap(),  gird.i, gird.j, oldType);
+            moveToBlank(map, oldi, oldj, gird.i, gird.j, gird.id);
         }else{
-            moveToBlank(playerDto.getMap(), oldi, oldj, gird.i, gird.j, gird.id);
+            map[oldi][oldj] = targetType;
+            map[gird.i][gird.j] = oldType;
         }
 
 //        playerDto.getMap()[oldi][oldj] = targetType;
@@ -1108,6 +1118,33 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 }
             }
         }
+        return true;
+    }
+
+
+    private boolean checkXy(int x, int y, int id) {
+        if (x < 0 || x >= ARR_HEIGHT_SIZE) {
+            return false;
+        }
+        if (y < 0 || y >= ARR_WIDTH_SIZE) {
+            return false;
+        }
+
+        BuildingType buildingType = BuildingType.valueOf(id);
+        if (buildingType == null) {
+            return false;
+        }
+
+        int occupy = buildingType.getOccupy();
+        if (occupy > 1) { // 占据大于1个格子
+            if (x >= ARR_HEIGHT_SIZE - occupy) {
+                return false;
+            }
+            if (y >= ARR_WIDTH_SIZE - occupy) {
+                return false;
+            }
+        }
+
         return true;
     }
 
