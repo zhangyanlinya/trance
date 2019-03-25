@@ -306,7 +306,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		stage.addActor(label_world);
 
 //		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
-		camera.position.set(width/2, height/2, 0);
+		camera.position.set(width/2f, height/2f, 0);
 //		controller.setCanPan(false);
 
 		inputMultiplexer = new InputMultiplexer();
@@ -649,7 +649,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private long levelExp;
 	
 	private void initPlayerInfo(){
-		float side = width / 5;
+		float side = width / 5f;
 		ResImage level = new ResImage(ResUtil.getInstance().getUi(UiType.LEVEL),font, playerDto, 1);
 		level.setBounds(side, height - length , length, length);
 		stage.addActor(level);
@@ -769,7 +769,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     }
 
     public void refreshLeftBuiding() {
-		float side = width/10;
+		float side = width/10f;
 		int i = 0;
 		Array<Actor> actors = stage.getActors();
 		for(Actor ac :actors){
@@ -806,7 +806,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 
     private void tochTaskButton(int screenX, int screenY, int pointer, int button){
-        float side = width/8;
+        float side = width/8f;
         float y =  height - screenY;
         if(y > side){
             return;
@@ -1099,8 +1099,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     /**
      * 是否空地
      * @param map
-     * @param tx
-     * @param ty
+     * @param x
+     * @param y
      * @param id //即将占据的id 用来计算范围
      * @return
      */
