@@ -175,7 +175,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
 		
-		float side = width/8;
+		float side = width/8f;
 
 		label_world = FreeFont.getLabel(MsgUtil.getInstance().getLocalMsg("world"));
 		label_world.setPosition(10 + side/2, side, Align.center);
@@ -600,7 +600,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		}
 
 		long now = System.currentTimeMillis();
-		long diffTime = 0;
+		long diffTime;
 		if(buildingId == BuildingType.HOUSE.getId()){
 			diffTime = now - huoseTime;
 		}else{
