@@ -1189,7 +1189,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 if (i == tx && j == ty) {
                     map[i][j] = id;
                 } else {
-                    map[i][j] = toOccupyCode(i, j);
+                    map[i][j] = toOccupyCode(tx, ty);
                 }
             }
         }
@@ -1211,7 +1211,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 if (i == tx && j == ty) {
                     map[i][j] = id;
                 } else {
-                    map[i][j] = toOccupyCode(i, j);
+                    map[i][j] = toOccupyCode(tx, ty);
                 }
             }
         }
