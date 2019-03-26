@@ -97,8 +97,8 @@ public class LoginScreen extends BaseScreen {
 		
 		start.setWidth(start.getWidth() * 5);
 		start.setHeight(start.getHeight() * 5);
-		float x = Gdx.graphics.getWidth()/2 - start.getWidth()/2;
-		float y = Gdx.graphics.getHeight()/2 - start.getHeight()/2;
+		float x = Gdx.graphics.getWidth()/2f - start.getWidth()/2;
+		float y = Gdx.graphics.getHeight()/2f - start.getHeight()/2;
 		start.setX(x);
 		start.setY(y);
 		stage.addActor(start);
@@ -293,7 +293,7 @@ public class LoginScreen extends BaseScreen {
 		float percent = resUtil.getProgress(); 
 		renderer.setColor(Color.RED);
 		renderer.begin(ShapeType.Line);
-		renderer.rect(Gdx.graphics.getWidth() / 4 , 100, Gdx.graphics.getWidth() / 2, 40);
+		renderer.rect(Gdx.graphics.getWidth() / 4f , 100, Gdx.graphics.getWidth() / 2f, 40);
 		renderer.end();
 		if(percent < 0.2){
 			renderer.setColor(Color.RED);
@@ -303,7 +303,7 @@ public class LoginScreen extends BaseScreen {
 			renderer.setColor(Color.GREEN);
 		}
 		renderer.begin(ShapeType.Filled);
-		renderer.rect(Gdx.graphics.getWidth() / 4 + 2, 104, percent * Gdx.graphics.getWidth()/2 - 6, 34);
+		renderer.rect(Gdx.graphics.getWidth() / 4f + 2, 104, percent * Gdx.graphics.getWidth()/2 - 6, 34);
 		renderer.end();
 
 		super.render(delta);
