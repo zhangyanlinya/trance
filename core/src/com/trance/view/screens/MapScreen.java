@@ -1105,21 +1105,31 @@ public class MapScreen extends BaseScreen implements InputProcessor {
      * @return
      */
     private boolean isBlank(int[][] map, int x, int y, int id) {
-        BuildingType buildingType = BuildingType.valueOf(id);
-        if (buildingType == null) {
-            return false;
-        }
+		BuildingType buildingType = BuildingType.valueOf(id);
+		if (buildingType == null) {
+			return false;
+		}
 
-        int occupy = buildingType.getOccupy();
-        for (int i = x; i < x + occupy && i < ARR_HEIGHT_SIZE; i++) {
-            for (int j = y; j < y + occupy &&  j < ARR_WIDTH_SIZE; j++) {
-                if (map[i][j] != 0) { // 目标范围里不是完全空地
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+		int occupy = buildingType.getOccupy();
+		int limitX = x + occupy;
+		if (limitX > ARR_HEIGHT_SIZE) {
+			return false;
+		}
+
+		int limitY = y + occupy;
+		if (limitY > ARR_WIDTH_SIZE) {
+			return false;
+		}
+
+		for (int i = x; i < limitX; i++) {
+			for (int j = y; j < limitY; j++) {
+				if (map[i][j] != 0) { // 目标范围里不是完全空地
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 
     private boolean checkXy(int x, int y, int id) {
