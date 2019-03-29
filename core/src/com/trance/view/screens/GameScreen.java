@@ -83,606 +83,621 @@ import java.util.List;
 import java.util.Map;
 
 
+public class GameScreen extends BaseScreen implements ContactListener, InputProcessor {
 
-public class GameScreen extends BaseScreen implements ContactListener,InputProcessor{
+    private Window window;
+    private Batch spriteBatch;
+    public static PlayerDto playerDto;
+    private Stage stage;
+    private FreeBitmapFont font;
+    private float width;
+    private float height;
 
-	private Window window;
-	private Batch spriteBatch;
-	public static PlayerDto playerDto;
-	private Stage stage;
-	private FreeBitmapFont font;
-	private float width;
-	private float height;
-	
-	/** 数组宽数量 */
-	private final static int ARR_WIDTH_SIZE = 16;
-	/** 数组高数量 */
-	private final static int ARR_HEIGHT_SIZE = 20;
-	
-	/** 中间游戏区域的百分比 */
-	private static double percent = 0.9;
-	/** 每格的边长 */
-	private static float length = 32;
-	/** 游戏区域宽 */
-	private static float game_width = 512;
-	/** 游戏区域高 */
-	private static float game_height = 832;
-	/** 菜单区域宽度 */
-	private static float menu_width = 208;
-	/** 控制区域高度 */
-	private static float control_height = 368;
-	
+    /**
+     * 数组宽数量
+     */
+    private final static int ARR_WIDTH_SIZE = 16;
+    /**
+     * 数组高数量
+     */
+    private final static int ARR_HEIGHT_SIZE = 20;
+
+    /**
+     * 中间游戏区域的百分比
+     */
+    private static double percent = 0.9;
+    /**
+     * 每格的边长
+     */
+    private static float length = 32;
+    /**
+     * 游戏区域宽
+     */
+    private static float game_width = 512;
+    /**
+     * 游戏区域高
+     */
+    private static float game_height = 832;
+    /**
+     * 菜单区域宽度
+     */
+    private static float menu_width = 208;
+    /**
+     * 控制区域高度
+     */
+    private static float control_height = 368;
+
 
     private World world;
     private ShapeRenderer shapeRenderer;
     private final float TIME_STEP = 1 / 50f;
-    
+
 
 //    private Box2DDebugRenderer debugRenderer;
 
-	public final static Array<GameActor> buildings = new Array<GameActor>();
+    public final static Array<GameActor> buildings = new Array<GameActor>();
 
-	private final static Array<GameActor> armys = new Array<GameActor>();
+    private final static Array<GameActor> armys = new Array<GameActor>();
 
-	private final static Array<GameActor> connons = new Array<GameActor>();
-	
-	private final Array<Body> bodies = new Array<Body>();
-	
-	private OrthographicCamera camera;
-	private Image bg;
+    private final static Array<GameActor> connons = new Array<GameActor>();
 
-	/**
-	 * 一局所用总时间
-	 */
-	private final static int TOTAL_TIME = 2 * 60;
+    private final Array<Body> bodies = new Array<Body>();
 
-	/**
-	 * 当前时间
-	 */
-	private int currTime = TOTAL_TIME;
-	private boolean init;
-	
-	private static boolean finishBattle;
+    private OrthographicCamera camera;
+    private Image bg;
+
+    /**
+     * 一局所用总时间
+     */
+    private final static int TOTAL_TIME = 2 * 60;
+
+    /**
+     * 当前时间
+     */
+    private int currTime = TOTAL_TIME;
+    private boolean init;
+
+    private static boolean finishBattle;
 
     private static long startTime;
 
-	private InputMultiplexer inputMultiplexer;
+    private InputMultiplexer inputMultiplexer;
 //	private GestureDetector gestureHandler;
 
     private static List<Click> clicks = new ArrayList<Click>();
-	
-	public GameScreen(TranceGame tranceGame) {
-		super(tranceGame);
-	}
-	
-	@Override
-	public void show() {
-		if(!init){
-			init();
-			init = true;
-		}
-		MapData.gamerunning = true;
-		finishBattle = false;
-		gobattle = false;
-		chooseTechId = 0;
-		camera.position.set(width/2 , height/2 , 0);
-		currTime = TOTAL_TIME;//初始化时间 
-		stage.clear();
-		initClock();
-		initWorld();
-		initMap();
-		initArmy();
+
+    public GameScreen(TranceGame tranceGame) {
+        super(tranceGame);
+    }
+
+    @Override
+    public void show() {
+        if (!init) {
+            init();
+            init = true;
+        }
+        MapData.gamerunning = true;
+        finishBattle = false;
+        gobattle = false;
+        chooseTechId = 0;
+        camera.position.set(width / 2, height / 2, 0);
+        currTime = TOTAL_TIME;//初始化时间
+        stage.clear();
+        initClock();
+        initWorld();
+        initMap();
+        initArmy();
         clicks.clear();
-		inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer = new InputMultiplexer();
 //		GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 //		gestureHandler = new GestureDetector(controller);
-		initInputProcessor();
+        initInputProcessor();
 
         startTime = System.currentTimeMillis();
-	}
+    }
 
-	private void initInputProcessor(){
+    private void initInputProcessor() {
 //		inputMultiplexer.addProcessor(gestureHandler);
-		inputMultiplexer.addProcessor(stage);
-		inputMultiplexer.addProcessor(this);
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
+        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(inputMultiplexer);
+    }
 
 
-	private void init(){
-		spriteBatch = new SpriteBatch();
-		width = Gdx.graphics.getWidth(); // 720
-		height = Gdx.graphics.getHeight(); // 1200
-		font = FontUtil.getFont();
-		font.appendText(MsgUtil.getInstance().getLocalMsg("laud"));
-		font.appendText(MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers or other side"));
-		stage = new Stage(new StretchViewport(width * 2, height * 2));
+    private void init() {
+        spriteBatch = new SpriteBatch();
+        width = Gdx.graphics.getWidth(); // 720
+        height = Gdx.graphics.getHeight(); // 1200
+        font = FontUtil.getFont();
+        font.appendText(MsgUtil.getInstance().getLocalMsg("laud"));
+        font.appendText(MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers or other side"));
+        stage = new Stage(new StretchViewport(width * 2, height * 2));
 
-		CELL_LENGHT = width / 10;
+        CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
 //		debugRenderer = new Box2DDebugRenderer();
-		stage.getViewport().setCamera(camera);
+        stage.getViewport().setCamera(camera);
 
-		length = (int) (width * percent / ARR_WIDTH_SIZE);
-		game_width   = length * ARR_WIDTH_SIZE;
-		game_height  = length * ARR_HEIGHT_SIZE;
-		menu_width     = (width - game_width)/2;
-		control_height = height - game_height -length * 2;//再减少2格
-		shapeRenderer = new ShapeRenderer();
-		
-		//返回家
-		Image toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
-		toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth()/2, toWorld.getHeight() + toWorld.getHeight()/2);
-		toWorld.addListener(new ClickListener(){
-			
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				tranceGame.setScreen(tranceGame.worldScreen);
-			}
-		});
-		
-		//提示框
-		TextureRegionDrawable tips = new TextureRegionDrawable( new TextureRegion(
-				ResUtil.getInstance().get("world/tips.png",Texture.class)));
-		Drawable background = new TextureRegionDrawable(tips);
-		WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
-		window = new Window(MsgUtil.getInstance().getLocalMsg("laud"),style);
-		window.setPosition(width/2 - window.getWidth()/2, height/2 - window.getHeight()/2);
-		window.addListener(new ClickListener(){
+        length = (int) (width * percent / ARR_WIDTH_SIZE);
+        game_width = length * ARR_WIDTH_SIZE;
+        game_height = length * ARR_HEIGHT_SIZE;
+        menu_width = (width - game_width) / 2;
+        control_height = height - game_height - length * 2;//再减少2格
+        shapeRenderer = new ShapeRenderer();
 
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				if(playerDto != null){
-					Map<String,Object> params = new HashMap<String,Object>();
-					params.put("targetId", playerDto.getId());
-					SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
-				}
-			}
-		});
-    	world = WorldUtils.createWorld();
-	}
-	
-	private static float CELL_LENGHT;
-	private int chooseArmyId;
-	private int chooseTechId;
-	private void initArmy(){
-		armys.clear();
-		Map<Integer,ArmyDto> amrys_map = Player.player.getArmys();
-		if(amrys_map == null || amrys_map.isEmpty()){
-			return;
-		}
-		
-		int i = 0;
-		for(ArmyDto dto : amrys_map.values()){
-			if(dto.getAmout() == 0){
-				continue;
-			}
-			dto.setGo(false);
+        //返回家
+        Image toWorld = new Image(ResUtil.getInstance().getControlTextureRegion(ControlType.WORLD));
+        toWorld.setBounds(10, 10, toWorld.getWidth() + toWorld.getWidth() / 2, toWorld.getHeight() + toWorld.getHeight() / 2);
+        toWorld.addListener(new ClickListener() {
 
-			if(chooseArmyId == 0) {
-				chooseArmyId = dto.getId();
-			}
-			dto.setGo(false);
-			dto.setRegion(ResUtil.getInstance().getArmyTextureRegion(dto.getId()));
-			Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
-			dto.setRect(rect);
-			i++;
-		}
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                tranceGame.setScreen(tranceGame.worldScreen);
+            }
+        });
 
-		int j = 0;
-		for(TechDto techDto : Player.player.getTechs().values()){
-			if(chooseTechId == 0){
-				chooseTechId = techDto.getId();
-			}
-			techDto.resetAmount();
-			techDto.setRegion(ResUtil.getInstance().getExplodeTextureRegion(techDto.getId()));
-			Rectangle rect = new Rectangle(j * CELL_LENGHT, CELL_LENGHT, CELL_LENGHT, CELL_LENGHT);
-			techDto.setRect(rect);
-			j++;
-		}
-	}
-	
-	public static void finishBattle(BattleFinishType finishType){
+        //提示框
+        TextureRegionDrawable tips = new TextureRegionDrawable(new TextureRegion(
+                ResUtil.getInstance().get("world/tips.png", Texture.class)));
+        Drawable background = new TextureRegionDrawable(tips);
+        WindowStyle style = new WindowStyle(font, Color.MAGENTA, background);
+        window = new Window(MsgUtil.getInstance().getLocalMsg("laud"), style);
+        window.setPosition(width / 2 - window.getWidth() / 2, height / 2 - window.getHeight() / 2);
+        window.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (playerDto != null) {
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("targetId", playerDto.getId());
+                    SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
+                }
+            }
+        });
+        world = WorldUtils.createWorld();
+    }
+
+    private static float CELL_LENGHT;
+    private int chooseArmyId;
+    private int chooseTechId;
+
+    private void initArmy() {
+        armys.clear();
+        Map<Integer, ArmyDto> amrys_map = Player.player.getArmys();
+        if (amrys_map == null || amrys_map.isEmpty()) {
+            return;
+        }
+
+        int i = 0;
+        for (ArmyDto dto : amrys_map.values()) {
+            if (dto.getAmout() == 0) {
+                continue;
+            }
+            dto.setGo(false);
+
+            if (chooseArmyId == 0) {
+                chooseArmyId = dto.getId();
+            }
+            dto.setGo(false);
+            dto.setRegion(ResUtil.getInstance().getArmyTextureRegion(dto.getId()));
+            Rectangle rect = new Rectangle(i * CELL_LENGHT, 0, CELL_LENGHT, CELL_LENGHT);
+            dto.setRect(rect);
+            i++;
+        }
+
+        int j = 0;
+        for (TechDto techDto : Player.player.getTechs().values()) {
+            if (chooseTechId == 0) {
+                chooseTechId = techDto.getId();
+            }
+            techDto.resetAmount();
+            techDto.setRegion(ResUtil.getInstance().getExplodeTextureRegion(techDto.getId()));
+            Rectangle rect = new Rectangle(j * CELL_LENGHT, CELL_LENGHT, CELL_LENGHT, CELL_LENGHT);
+            techDto.setRect(rect);
+            j++;
+        }
+    }
+
+    public static void finishBattle(BattleFinishType finishType) {
         MapData.gamerunning = false;
-        if( finishType == BattleFinishType.CANCEL) {
+        if (finishType == BattleFinishType.CANCEL) {
             Click click = new Click();
             click.setT((int) (System.currentTimeMillis() - startTime));
             clicks.add(click);
         }
-		if(finishBattle || !gobattle){
-			return;
-		}
-		
-		Sound sound = ResUtil.getInstance().getSound(5);
-		sound.play();
-		
-		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-		for(GameActor actor : armys){
-			Army army = (Army)actor;
-			int type = army.armyType.id;
-			ArmyDto a = myArmys.get(type);
-			if(a != null){
-				a.setAmout(a.getAmout() + 1);
-			}
-		}
-		
-		//转换
-		List<ArmyVo> vos = new ArrayList<ArmyVo>();
-		for(ArmyDto armyDto : myArmys.values()){
-			vos.add(ArmyVo.valueOf(armyDto));
-		}
+        if (finishBattle || !gobattle) {
+            return;
+        }
+
+        Sound sound = ResUtil.getInstance().getSound(5);
+        sound.play();
+
+        Map<Integer, ArmyDto> myArmys = Player.player.getArmys();
+        for (GameActor actor : armys) {
+            Army army = (Army) actor;
+            int type = army.armyType.id;
+            ArmyDto a = myArmys.get(type);
+            if (a != null) {
+                a.setAmout(a.getAmout() + 1);
+            }
+        }
+
+        //转换
+        List<ArmyVo> vos = new ArrayList<ArmyVo>();
+        for (ArmyDto armyDto : myArmys.values()) {
+            vos.add(ArmyVo.valueOf(armyDto));
+        }
 
         finishBattle = true;
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("armys", vos);
-		params.put("x", playerDto.getX());
-		params.put("y", playerDto.getY());
-		params.put("state", finishType == BattleFinishType.WIN ? 0 : 1);
-		params.put("sign", "");//TODO
-		params.put("clicks", clicks);
-		Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, params);
-		Response response = SocketUtil.send(request, true);
-		if(response == null){
-			return;
-		}
-		
-		ResponseStatus status = response.getStatus();
-		if (status != ResponseStatus.SUCCESS) {
-			return;
-		}
-		
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-		Object codeObject = result.get("result");
-		int code = Integer.valueOf(String.valueOf(codeObject));
-		if(code != Result.SUCCESS){
-			MsgUtil.getInstance().showMsg(Module.BATTLE, code);
-			return;
-		}
-		
-		Object o = result.get("content");
-		if(o != null){
-			ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
-			RewardService.executeRewards(valueResultSet);
-		}
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("armys", vos);
+        params.put("x", playerDto.getX());
+        params.put("y", playerDto.getY());
+        params.put("state", finishType == BattleFinishType.WIN ? 0 : 1);
+        params.put("sign", "");//TODO
+        params.put("clicks", clicks);
+        Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, params);
+        Response response = SocketUtil.send(request, true);
+        if (response == null) {
+            return;
+        }
 
-		//refresh world
-		if(finishType == BattleFinishType.WIN){
-			WorldScreen.remove(playerDto.getX(), playerDto.getY());
-		}
-	}
+        ResponseStatus status = response.getStatus();
+        if (status != ResponseStatus.SUCCESS) {
+            return;
+        }
 
-	//DestoryBody
-	private void destoryBody(Body body) {
-		GameActor ga = (GameActor) body.getUserData();
-		if(ga == null){
-			return;
-		}
-		if(!ga.alive){
-		   world.destroyBody(body);
-		}
-	}
-	
+        byte[] bytes = response.getValueBytes();
+        String text = new String(bytes);
+        @SuppressWarnings("unchecked")
+        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+        Object codeObject = result.get("result");
+        int code = Integer.valueOf(String.valueOf(codeObject));
+        if (code != Result.SUCCESS) {
+            MsgUtil.getInstance().showMsg(Module.BATTLE, code);
+            return;
+        }
+
+        Object o = result.get("content");
+        if (o != null) {
+            ValueResultSet valueResultSet = JSON.parseObject(o.toString(), ValueResultSet.class);
+            RewardService.executeRewards(valueResultSet);
+        }
+
+        //refresh world
+        if (finishType == BattleFinishType.WIN) {
+            WorldScreen.remove(playerDto.getX(), playerDto.getY());
+        }
+    }
+
+    //DestoryBody
+    private void destoryBody(Body body) {
+        GameActor ga = (GameActor) body.getUserData();
+        if (ga == null) {
+            return;
+        }
+        if (!ga.alive) {
+            world.destroyBody(body);
+        }
+    }
+
     private void initWorld() {
-    	world.clearForces();
+        world.clearForces();
         world.getBodies(bodies);
-        for(int i = 0 ; i < bodies.size ; i++){
-        	world.destroyBody(bodies.get(i));
+        for (int i = 0; i < bodies.size; i++) {
+            world.destroyBody(bodies.get(i));
         }
         bodies.clear();
-        
+
         world.setContactListener(this);
-        world.setContactFilter( new ContactFilter() {
-			
-			@Override
-			public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
-		        Body bodyA = fixtureA.getBody();
-		        Body bodyB = fixtureB.getBody();
-		        GameActor a =(GameActor) bodyA.getUserData();
-		        GameActor b =(GameActor) bodyB.getUserData();
-		        if(a != null){
-		        	if(a.role == 1){
-		        		if(b!= null && b.camp == a.camp){
-		        			return false;
-		        		}
-		        	}
-		        }
-		        if(b != null ){
-		        	if(b.role == 1){
-		        		if(a!= null && a.camp == b.camp){
-		        			return false;
-		        		}
-		        	}
-		        }
-				return true;
-			}
-		});
-        
-        WorldUtils.createBorder(world,menu_width, control_height, game_width+menu_width, height - length);
+        world.setContactFilter(new ContactFilter() {
+
+            @Override
+            public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
+                Body bodyA = fixtureA.getBody();
+                Body bodyB = fixtureB.getBody();
+                GameActor a = (GameActor) bodyA.getUserData();
+                GameActor b = (GameActor) bodyB.getUserData();
+                if (a != null) {
+                    if (a.role == 1) {
+                        if (b != null && b.camp == a.camp) {
+                            return false;
+                        }
+                    }
+                }
+                if (b != null) {
+                    if (b.role == 1) {
+                        if (a != null && a.camp == b.camp) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+
+        WorldUtils.createBorder(world, menu_width, control_height, game_width + menu_width, height - length);
     }
-	
-	private void initClock() {
+
+    private void initClock() {
         Action[] sAction = new Action[TOTAL_TIME];// 一共执行120次
-		// 使用action实现定时器
-		for (int i = 0; i < sAction.length; i++) {
-			Action delayedAction = Actions.run(new Runnable() {
+        // 使用action实现定时器
+        for (int i = 0; i < sAction.length; i++) {
+            Action delayedAction = Actions.run(new Runnable() {
 
-				@Override
-				public void run() {
-					currTime--;
-					if(currTime <= 0){
+                @Override
+                public void run() {
+                    currTime--;
+                    if (currTime <= 0) {
                         finishBattle(BattleFinishType.TIMEOUT);
-					}
-				}
-			});
-			// 延迟1s后执行delayedAction
-			Action action = Actions.delay(1f, delayedAction);
-			sAction[i] = action;
-		}
-		stage.addAction(Actions.sequence(sAction));
-	}
-	
-	//
-	private void initMap() {
-		buildings.clear();
-		connons.clear();
-		if(playerDto == null){
-			return;
-		}
-		int[][] map = playerDto.getMap();
-		if(map == null){
-			return;
-		}
-		
-		bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-		float w = bg.getWidth();
-		float h = bg.getHeight();
-		for(float x = -w ; x < stage.getWidth(); x += w){//background;
-			for(float y = -h * 4 ; y < stage.getHeight() + h * 4 ; y += h){
-				bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg",Texture.class));
-				bg.setPosition(x, y);
-				stage.addActor(bg);
-			}
-		}
+                    }
+                }
+            });
+            // 延迟1s后执行delayedAction
+            Action action = Actions.delay(1f, delayedAction);
+            sAction[i] = action;
+        }
+        stage.addAction(Actions.sequence(sAction));
+    }
 
-		for(int i = 0 ; i < 5; i ++){
-			int index = RandomUtil.nextInt(4) + 1;
-			int x = RandomUtil.nextInt((int)width);
-			int y = RandomUtil.nextInt((int)height);
-			Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index +".png", Texture.class));
-			grass.setPosition(x, y);
-			stage.addActor(grass);
-		}
-		
-		
-		
-		for (int i = 0; i < map.length; i++) {
-			float n = map.length - 1 - i;
-			for (int j = 0; j < map[i].length; j++) {
+    //
+    private void initMap() {
+        buildings.clear();
+        connons.clear();
+        if (playerDto == null) {
+            return;
+        }
+        int[][] map = playerDto.getMap();
+        if (map == null) {
+            return;
+        }
+
+        bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg", Texture.class));
+        float w = bg.getWidth();
+        float h = bg.getHeight();
+        for (float x = -w; x < stage.getWidth(); x += w) {//background;
+            for (float y = -h * 4; y < stage.getHeight() + h * 4; y += h) {
+                bg = new MapImage(ResUtil.getInstance().get("world/bg.jpg", Texture.class));
+                bg.setPosition(x, y);
+                stage.addActor(bg);
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            int index = RandomUtil.nextInt(4) + 1;
+            int x = RandomUtil.nextInt((int) width);
+            int y = RandomUtil.nextInt((int) height);
+            Image grass = new MapImage(ResUtil.getInstance().get("world/soil" + index + ".png", Texture.class));
+            grass.setPosition(x, y);
+            stage.addActor(grass);
+        }
+
+
+        for (int i = 0; i < map.length; i++) {
+            float n = map.length - 1 - i;
+            for (int j = 0; j < map[i].length; j++) {
 //				int type = map[i][j];
-				float x = menu_width + j * length;
-				float y = control_height + n * length;
-				
-				if(i == 0 ){
+                float x = menu_width + j * length;
+                float y = control_height + n * length;
+
+                if (i == 0) {
 //					int index = RandomUtil.nextInt(5) + 1;
 //					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
-					grass.setPosition(x, y + length);
-					stage.addActor(grass);
-				}else if(i == map.length - 1){
-					if(x < length * 4 || x > width - length * 5) { //形成一个口
+                    Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
+                    grass.setPosition(x, y + length);
+                    stage.addActor(grass);
+                } else if (i == map.length - 1) {
+                    if (x < length * 4 || x > width - length * 5) { //形成一个口
 //						int index = RandomUtil.nextInt(5) + 1;
 //						Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-						Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
-						grass.setPosition(x, y - length * 2);
-						stage.addActor(grass);
-					}
-				}
+                        Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
+                        grass.setPosition(x, y - length * 2);
+                        stage.addActor(grass);
+                    }
+                }
 
-				if(j == 0){
+                if (j == 0) {
 //					int index = RandomUtil.nextInt(5) + 1;
 //					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
-					grass.setPosition(x - length, y);
-					stage.addActor(grass);
-				}else if(j == map[i].length -1){
+                    Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
+                    grass.setPosition(x - length, y);
+                    stage.addActor(grass);
+                } else if (j == map[i].length - 1) {
 //					int index = RandomUtil.nextInt(5) + 1;
 //					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
-					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
-					grass.setPosition(x + length, y);
-					stage.addActor(grass);
-				}
+                    Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
+                    grass.setPosition(x + length, y);
+                    stage.addActor(grass);
+                }
 
-			}
-		}
+            }
+        }
 
         // add building
-        for(BuildingDto dto : playerDto.getBuildings().values()) {
+        for (BuildingDto dto : playerDto.getBuildings().values()) {
             int i = dto.getX();
             int j = dto.getY();
-            Building block = Building.buildingPool.obtain();
+            Building building = new Building();
             int n = map.length - 1 - i;
             float px = menu_width + j * length;
             float py = control_height + n * length;
 
-            block.setIndex(i, j);
-            block.init(world, dto.getMid(), px, py, length, length, shapeRenderer, dto);
-            block.setInScreenType(1);
+            building.setIndex(i, j);
+            building.init(world, dto.getMid(), px, py, length, length, shapeRenderer, dto);
+            building.setInScreenType(1);
 
             if (dto.getMid() >= BuildingType.CANNON.getId() && dto.getMid() <= BuildingType.MORTAR.getId()) {
-                connons.add(block);
+                connons.add(building);
             }
 
-            buildings.add(block);
-            stage.addActor(block);
-        }
-	}
-	
-	private void renderKeeps(Batch batch){
-		Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-		for(ArmyDto dto : myArmys.values()){
-			if(dto.getAmout() == 0){
-				continue;
-			}
-			if(dto.getId() == chooseArmyId){
-				batch.setColor(Color.RED);
-			}else{
-				batch.setColor(Color.WHITE);
-			}
-			batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width,dto.getRect().height);
-			font.draw(batch, dto.getAmout()+"", dto.getRect().x  + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
-		}
-
-		for(TechDto dto : Player.player.getTechs().values()){
-			if(dto.getId() == chooseTechId){
-				batch.setColor(Color.RED);
-			}else{
-				batch.setColor(Color.WHITE);
-			}
-			batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width,dto.getRect().height);
-			font.draw(batch, dto.getUseAmount()+"", dto.getRect().x  + dto.getRect().width/2, dto.getRect().y + dto.getRect().height/2);
-		}
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Gdx.gl.glClearColor(0, 0, 0, 0);
-		if(!MapData.gamerunning){
-			stage.addActor(window);
-		}
-		
-		//debug---
-//		debugRenderer.render(world, camera.combined);
-		//debug---
-
-		scan();
-		stage.draw();
-		stage.act(delta);
-
-		spriteBatch.begin();
-		renderKeeps(spriteBatch);
-		font.draw(spriteBatch,"count down:" + currTime, 10 ,height);
-		font.draw(spriteBatch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers or other side"), 24, control_height - length * 2 - 10);
-		spriteBatch.end();
-		
-		shapeRenderer.setProjectionMatrix(camera.combined);
-
-		shapeRenderer.setColor(Color.GREEN);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.rect(length * 4, length * 2, width - length * 8, control_height - length * 4);
-//		shapeRenderer.rect(20, height + length * 2, width - 40, control_height - length * 4);
-
-		shapeRenderer.end();
-
-		checkArmyStatus(delta);
-		
-		//box2d
-        world.step(TIME_STEP, 6, 2);
-        
-        world.getBodies(bodies);
-        for(int i = 0 ; i < bodies.size ; i++){
-        	destoryBody(bodies.get(i));
-        }
-
-		super.render(delta);
-	}
-
-	private float sendDelta = 0;
-
-	private void checkArmyStatus(float delta) {
-		if(armys.size == 0){ // 是否已经派完
-			Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-			for(ArmyDto dto : myArmys.values()){
-				if(dto.getAmout() > 0) {
-					if (!dto.isGo()) {
-						return;
-					}
-				}
-			}
-			finishBattle(BattleFinishType.LOSE);
-		}else{//监听是否有要派出
-			for(GameActor ga :armys){
-				Army a = (Army) ga;
-				if(a.isSend()){
-					continue;
-				}
-
-				float speed = 5 - a.getSpeed();//5可能是最大速度
-				if(sendDelta == 0 || sendDelta > speed){ //
-					stage.addActor(a);
-					a.setSend(true);
-					sendDelta = 0;
-				}
-				sendDelta += delta;
-			}
-		}
-	}
-
-	private void scan() {
-		for(GameActor block : connons){
-			block.scan(armys);
-		}
-
-        for (GameActor army : armys) {
-                army.scan(buildings);
+            buildings.add(building);
+            stage.addActor(building);
         }
     }
-	
 
-	@Override
+    private void renderKeeps(Batch batch) {
+        Map<Integer, ArmyDto> myArmys = Player.player.getArmys();
+        for (ArmyDto dto : myArmys.values()) {
+            if (dto.getAmout() == 0) {
+                continue;
+            }
+            if (dto.getId() == chooseArmyId) {
+                batch.setColor(Color.RED);
+            } else {
+                batch.setColor(Color.WHITE);
+            }
+            batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width, dto.getRect().height);
+            font.draw(batch, dto.getAmout() + "", dto.getRect().x + dto.getRect().width / 2, dto.getRect().y + dto.getRect().height / 2);
+        }
+
+        for (TechDto dto : Player.player.getTechs().values()) {
+            if (dto.getId() == chooseTechId) {
+                batch.setColor(Color.RED);
+            } else {
+                batch.setColor(Color.WHITE);
+            }
+            batch.draw(dto.getRegion(), dto.getRect().x, dto.getRect().y, dto.getRect().width, dto.getRect().height);
+            font.draw(batch, dto.getUseAmount() + "", dto.getRect().x + dto.getRect().width / 2, dto.getRect().y + dto.getRect().height / 2);
+        }
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        if (!MapData.gamerunning) {
+            stage.addActor(window);
+        }
+
+        //debug---
+//		debugRenderer.render(world, camera.combined);
+        //debug---
+
+        scan();
+        stage.draw();
+        stage.act(delta);
+
+        spriteBatch.begin();
+        renderKeeps(spriteBatch);
+        font.draw(spriteBatch, "count down:" + currTime, 10, height);
+        font.draw(spriteBatch, MsgUtil.getInstance().getLocalMsg("Click on the green area to send soldiers or other side"), 24, control_height - length * 2 - 10);
+        spriteBatch.end();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.rect(length * 4, length * 2, width - length * 8, control_height - length * 4);
+//		shapeRenderer.rect(20, height + length * 2, width - 40, control_height - length * 4);
+
+        shapeRenderer.end();
+
+        checkArmyStatus(delta);
+
+        //box2d
+        world.step(TIME_STEP, 6, 2);
+
+        world.getBodies(bodies);
+        for (int i = 0; i < bodies.size; i++) {
+            destoryBody(bodies.get(i));
+        }
+
+        super.render(delta);
+    }
+
+    private float sendDelta = 0;
+
+    private void checkArmyStatus(float delta) {
+        if (armys.size == 0) { // 是否已经派完
+            Map<Integer, ArmyDto> myArmys = Player.player.getArmys();
+            for (ArmyDto dto : myArmys.values()) {
+                if (dto.getAmout() > 0) {
+                    if (!dto.isGo()) {
+                        return;
+                    }
+                }
+            }
+            finishBattle(BattleFinishType.LOSE);
+        } else {//监听是否有要派出
+            for (GameActor ga : armys) {
+                Army a = (Army) ga;
+                if (a.isSend()) {
+                    continue;
+                }
+
+                float speed = 5 - a.getSpeed();//5可能是最大速度
+                if (sendDelta == 0 || sendDelta > speed) { //
+                    stage.addActor(a);
+                    a.setSend(true);
+                    sendDelta = 0;
+                }
+                sendDelta += delta;
+            }
+        }
+    }
+
+    private void scan() {
+        for (GameActor connon : connons) {
+            connon.scan(armys);
+        }
+
+        for (GameActor army : armys) {
+            army.scan(buildings);
+        }
+    }
+
+
+    @Override
     public void beginContact(Contact contact) {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
         Body bodyA = fa.getBody();
         Body bodyB = fb.getBody();
-        GameActor a =(GameActor) bodyA.getUserData();
-        GameActor b =(GameActor) bodyB.getUserData();
-        if(a == null &&  b == null){
-        	return;
+        GameActor a = (GameActor) bodyA.getUserData();
+        GameActor b = (GameActor) bodyB.getUserData();
+        if (a == null && b == null) {
+            return;
         }
-        if(a != null && b == null){
-           if(a.role == 1){
-        	   a.dead();
-           }
-           return;
+        if (a != null && b == null) {
+            if (a.role == 1) {
+                a.dead();
+            }
+            return;
         }
-        if(a == null){
-        	if(b.role == 1){
-        		b.dead();
-        	}
-        	return;
+        if (a == null) {
+            if (b.role == 1) {
+                b.dead();
+            }
+            return;
         }
 
-        if(a.role != b.role){//角色不一样
-			if (a.camp != b.camp) {//敌对的
-				if (a.role == 1) {
-					b.byAttack(a);
-				} else {
-					a.byAttack(b);
-				}
-			}
+        if (a.role != b.role) {//角色不一样
+            if (a.camp != b.camp) {//敌对的
+                if (a.role == 1) {
+                    b.byAttack(a);
+                } else {
+                    a.byAttack(b);
+                }
+            }
         }
-        
-        if(a.role == 1 && b.role == 1){
-        	return;
+
+        if (a.role == 1 && b.role == 1) {
+            return;
         }
-        
-        if(a.role == 1){
-     	   a.dead();
+
+        if (a.role == 1) {
+            a.dead();
         }
-        if(b.role == 1){
-    		b.dead();
-    	}
+        if (b.role == 1) {
+            b.dead();
+        }
     }
-	
-	
+
+
     @Override
     public void endContact(Contact contact) {
-    	
+
     }
 
     @Override
@@ -694,71 +709,71 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
     }
-    
-    private Integer hitKeepArmy(float x, float y){
-    	Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-    	for(ArmyDto dto : myArmys.values()){
-    		if(dto.getAmout() == 0){
-    			continue;
-    		}
-    		if(dto.getRect().contains(x, y)){
-    			return dto.getId();
-    		}
-    	}
 
-    	return null;
+    private Integer hitKeepArmy(float x, float y) {
+        Map<Integer, ArmyDto> myArmys = Player.player.getArmys();
+        for (ArmyDto dto : myArmys.values()) {
+            if (dto.getAmout() == 0) {
+                continue;
+            }
+            if (dto.getRect().contains(x, y)) {
+                return dto.getId();
+            }
+        }
+
+        return null;
     }
 
-	private Integer hitKeepTech(float x, float y){
-		for(TechDto dto : Player.player.getTechs().values()){
-			if(dto.getUseAmount() == 0){
-				continue;
-			}
-			if(dto.getRect().contains(x, y)){
-				return dto.getId();
-			}
-		}
+    private Integer hitKeepTech(float x, float y) {
+        for (TechDto dto : Player.player.getTechs().values()) {
+            if (dto.getUseAmount() == 0) {
+                continue;
+            }
+            if (dto.getRect().contains(x, y)) {
+                return dto.getId();
+            }
+        }
 
-		return null;
-	}
-    
+        return null;
+    }
+
     private static boolean gobattle;
 
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         boolean validClick; //是否有效点击
-        int Y = (int)height - screenY; //y top to down
-        if(Y < (width / 10) * 2 ){
+        int Y = (int) height - screenY; //y top to down
+        if (Y < (width / 10) * 2) {
             validClick = chooseArea(screenX, Y); //选择区域
-        }else{
+        } else {
             validClick = executeArea(screenX, screenY); //执行区域
         }
-        if(validClick){
+        if (validClick) {
             Click click = new Click();
-            click.setT((int)(System.currentTimeMillis() - startTime));
+            click.setT((int) (System.currentTimeMillis() - startTime));
             click.setX(screenX);
             click.setY(screenY);
             clicks.add(click);
         }
 
-        return  false;
-	}
+        return false;
+    }
 
     /**
      * 选择区域事件
      */
-	private boolean chooseArea(int screenX, int screenY) {
+    private boolean chooseArea(int screenX, int screenY) {
         boolean validClick = false; //是否有效点击
         Integer armyType = hitKeepArmy(screenX, screenY);
-        if(armyType != null){
+        if (armyType != null) {
             chooseArmyId = armyType;
             validClick = true;
         }
 
-		Integer techType = hitKeepTech(screenX, screenY);
-		if(techType != null){
-			chooseTechId = techType;
+        Integer techType = hitKeepTech(screenX, screenY);
+        if (techType != null) {
+            chooseTechId = techType;
             validClick = true;
         }
 
@@ -768,7 +783,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
     /**
      * 执行区域事件
      */
-	private boolean executeArea(int screenX, int screenY) {
+    private boolean executeArea(int screenX, int screenY) {
         boolean validClick = false; //是否有效点击
         Vector3 vector3 = new Vector3(screenX, screenY, 0);
         camera.unproject(vector3); // coordinate convert
@@ -786,7 +801,7 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 //			return false;
 //	    }
 
-        if(y > control_height - length * 2 || x <  length * 4 || x > width -length * 4 ){ // 只有下面一个区域可能进攻
+        if (y > control_height - length * 2 || x < length * 4 || x > width - length * 4) { // 只有下面一个区域可能进攻
             if (chooseTechId > 0) {
                 validClick = sendTechEffect(x, y);
             }
@@ -795,22 +810,22 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
 
 
         Actor actor = stage.hit(x, y, true);
-        if(actor != null){
+        if (actor != null) {
             return false;
         }
-        Map<Integer,ArmyDto> myArmys = Player.player.getArmys();
-        for(ArmyDto army : myArmys.values()){
-            if(army.isGo() || army.getAmout() == 0){
+        Map<Integer, ArmyDto> myArmys = Player.player.getArmys();
+        for (ArmyDto army : myArmys.values()) {
+            if (army.isGo() || army.getAmout() == 0) {
                 continue;
             }
 
-            if(army.getId() != chooseArmyId){
+            if (army.getId() != chooseArmyId) {
                 continue;
             }
 
-            for(int i = 0 ; i < army.getAmout(); i++){
+            for (int i = 0; i < army.getAmout(); i++) {
                 Army block = Army.armyPool.obtain();
-                block.init(world, ArmyType.valueOf(army.getId()), x,  y, length,length,shapeRenderer);
+                block.init(world, ArmyType.valueOf(army.getId()), x, y, length, length, shapeRenderer);
                 armys.add(block);
             }
             army.setAmout(0);
@@ -820,115 +835,120 @@ public class GameScreen extends BaseScreen implements ContactListener,InputProce
         }
 
         //for the next choose type;
-        for(ArmyDto army : myArmys.values()){
-            if(army.isGo() || army.getAmout() == 0){
+        for (ArmyDto army : myArmys.values()) {
+            if (army.isGo() || army.getAmout() == 0) {
                 continue;
             }
             chooseArmyId = army.getId();
             break;
         }
 
-        return  validClick;
+        return validClick;
     }
 
-	/**
-	 *  执行科技效果
-	 */
-	private boolean sendTechEffect(float x, float y) {
-		TechDto tech = Player.player.getTechs().get(chooseTechId);
-		if(tech == null || tech.getUseAmount() <= 0) {
-			return false;
-		}
+    /**
+     * 执行科技效果s
+     */
+    private boolean sendTechEffect(float x, float y) {
+        TechDto tech = Player.player.getTechs().get(chooseTechId);
+        if (tech == null || tech.getUseAmount() <= 0) {
+            return false;
+        }
 
-		if(tech.getId() == 1){
-			sendExplode(x, y, tech);
+        if (tech.getId() == 1) {
+            sendExplode(x, y, tech);
             return true;
-		}else if( tech.getId() ==  2){
+        } else if (tech.getId() == 2) {
             sendLamp(x, y, tech);
             return true;
-		}
-		return false;
-	}
+        }
+        return false;
+    }
 
-	/**
-	 *  执行EXPLODE
-	 */
-	private void sendExplode(float x, float y, TechDto tech){
-		Explode explode = Explode.pool.obtain();
-		explode.init(world, ExplodeType.valueOf(tech.getId()), x, y);
-		stage.addActor(explode);
-		tech.setUseAmount(tech.getUseAmount() - 1);
-		gobattle = true;
-	}
-
-
-	/**
-	 *  执行LAMP
-	 */
-	private void sendLamp(float x, float y, TechDto tech){
+    /**
+     * 执行EXPLODE
+     */
+    private void sendExplode(float x, float y, TechDto tech) {
         Explode explode = Explode.pool.obtain();
         explode.init(world, ExplodeType.valueOf(tech.getId()), x, y);
         stage.addActor(explode);
-		for(GameActor army : armys){
-            army.lampExpireTime = System.currentTimeMillis() + tech.getLevel() * 1000;
-			army.moveTo(x, y);
-
-		}
         tech.setUseAmount(tech.getUseAmount() - 1);
-		gobattle = true;
-	}
+        gobattle = true;
+    }
 
-	public boolean keyUp (int keycode){
-		return false;
-	}
-	public boolean mouseMoved (int screenX, int screenY){
-		return false;
-	}
-	public boolean scrolled (int amount){
-		return false;
-	}
-	public boolean keyDown (int keycode){
-		return  false;
-	}
-	public boolean keyTyped (char character){
-		return  false;
-	}
-	public boolean touchUp (int screenX, int screenY, int pointer, int button){
-		return  false;
-	}
-	public boolean touchDragged (int screenX, int screenY, int pointer){
-		return false;
-	}
 
-	@Override
-	public void dispose() {
-		if(!init){
-			return;
-		}
-		init = false;
-		stage.dispose();
+    /**
+     * 执行LAMP
+     */
+    private void sendLamp(float x, float y, TechDto tech) {
+        Explode explode = Explode.pool.obtain();
+        explode.init(world, ExplodeType.valueOf(tech.getId()), x, y);
+        stage.addActor(explode);
+        for (GameActor army : armys) {
+            army.lampExpireTime = System.currentTimeMillis() + tech.getLevel() * 1000;
+            army.moveTo(x, y);
 
-		if(spriteBatch != null){
-			spriteBatch.dispose();
-		}
+        }
+        tech.setUseAmount(tech.getUseAmount() - 1);
+        gobattle = true;
+    }
 
-		shapeRenderer.dispose();
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    public boolean scrolled(int amount) {
+        return false;
+    }
+
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public void dispose() {
+        if (!init) {
+            return;
+        }
+        init = false;
+        stage.dispose();
+
+        if (spriteBatch != null) {
+            spriteBatch.dispose();
+        }
+
+        shapeRenderer.dispose();
 //		debugRenderer.dispose();
-		
-		if(world != null){
-			world.dispose();
-		}
-		bodies.clear();
-		
-		buildings.clear();
-		armys.clear();
-		connons.clear();
-		Bullet.bulletPool.clear();
-		Building.buildingPool.clear();
 
-		ParticleService.getInstance().disponse();
-		
-	}
+        if (world != null) {
+            world.dispose();
+        }
+        bodies.clear();
+
+        buildings.clear();
+        armys.clear();
+        connons.clear();
+        Bullet.bulletPool.clear();
+
+        ParticleService.getInstance().disponse();
+
+    }
 
 
 }

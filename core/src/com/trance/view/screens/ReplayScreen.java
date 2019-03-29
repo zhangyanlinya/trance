@@ -434,7 +434,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         for(BuildingDto dto : report.getBuildings().values()) {
             int i = dto.getX();
             int j = dto.getY();
-            Building block = Building.buildingPool.obtain();
+            Building block = new Building();
             int n = map.length - 1 - i;
             float px = menu_width + j * length;
             float py = control_height + n * length;
@@ -844,7 +844,6 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         armys.clear();
         connons.clear();
         Bullet.bulletPool.clear();
-        Building.buildingPool.clear();
 
         ParticleService.getInstance().disponse();
 

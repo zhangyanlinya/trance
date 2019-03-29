@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Pool;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.view.constant.BulletType;
@@ -15,7 +14,6 @@ import com.trance.view.constant.RangeType;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
 import com.trance.view.mapdata.MapData;
-import com.trance.view.pools.BuildingPool;
 import com.trance.view.screens.GameScreen;
 import com.trance.view.screens.type.BattleFinishType;
 import com.trance.view.utils.RandomUtil;
@@ -29,7 +27,6 @@ import com.trance.view.utils.WorldUtils;
  */
 public class Building extends GameActor {
 	
-	public final static Pool<Building> buildingPool = new BuildingPool();
 	private Body body;
 	public int type;
 	private TextureRegion textureRegion;
@@ -360,7 +357,6 @@ public class Building extends GameActor {
 	public void dead() {
 		alive = false;
 		remove();
-		buildingPool.free(this);
 		GameScreen.buildings.removeValue(this, true);
 		
 		if(type == BuildingType.OFFICE.getId()){

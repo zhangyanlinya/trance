@@ -721,7 +721,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private void addBuildingActor( BuildingDto dto){
         int i = dto.getX();
         int j = dto.getY();
-        Building block = Building.buildingPool.obtain();
+        Building block = new Building();
         int n = ARR_HEIGHT_SIZE - 1 - i;
         float px = menu_width + j * length;
         float py = control_height + n * length;
@@ -792,7 +792,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 }
                 int leftNum = element.getAmount() - hasBuildNum;
                 if(leftNum> 0){
-                    Building buiding = Building.buildingPool.obtain();
+                    Building buiding = new Building();
                     int rate  = i % 5;
                     float x = rate * side + length;
                     int rate2 = i/5 + 1;
@@ -1014,7 +1014,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
             int leftNum = a.getLeftNum() - 1;
 			if(leftNum > 0){
-				Building block = Building.buildingPool.obtain();
+				Building block = new Building();
 				block.init(null,oldType, oldx, oldy, length, length, null, leftNum);
 				stage.addActor(block);
 			}

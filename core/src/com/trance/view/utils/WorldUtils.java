@@ -31,8 +31,8 @@ import com.trance.view.constant.BulletType;
 
 public class WorldUtils {
 
-	public static final float WORLD_TO_BOX = 0.05f;
-	public static final float BOX_TO_WORLD = 20f;
+	public static final float WORLD_TO_BOX = 1 / 32f;
+	public static final float BOX_TO_WORLD = 32f;
 
     public static World createWorld() {
         return new World(new Vector2(0, 0), true);
