@@ -13,7 +13,13 @@ public class DesktopLauncher {
 	 * @param arg
 	 */
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+		cfg.width = 480;
+		cfg.height = 800;
+		// 全屏
+	//cfg.fullscreen = true;
+		// 垂直同步
+	//	cfg.vSyncEnabled = true;
 		DesktopFreeFont.Strat();
 		Player.userName ="test10";
 		new LwjglApplication(new TranceGame(new BsuEvent() {
@@ -21,6 +27,6 @@ public class DesktopLauncher {
 			public void notify(int what, Object obj) {
 				System.out.println(what);
 			}
-		},"en"), config);
+		},"en"), cfg);
 	}
 }
