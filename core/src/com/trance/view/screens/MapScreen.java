@@ -961,6 +961,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(y < 0){
 			a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
+			MsgUtil.getInstance().showMsg(1);
 			return false;
 		}
 		
@@ -969,12 +970,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			System.out.println("gird = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
             a.setTouchable(Touchable.enabled);//比较后就可以点了
+			MsgUtil.getInstance().showMsg(2);
 			return false;
 		}
 
 		if(!checkXy(gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
+			MsgUtil.getInstance().showMsg(3);
             return false;
         }
 
@@ -982,6 +985,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         if(!isBlank(map, gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
+			MsgUtil.getInstance().showMsg(4);
             return false;
         }
 
@@ -990,12 +994,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			if(gird.id != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
+				MsgUtil.getInstance().showMsg(5);
 				return false;
 			}
 
 			if(a.getLeftNum() <= 0){
 				a.setPosition(oldx, oldy);
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
+				MsgUtil.getInstance().showMsg(6);
 				return false;
 			}
 
@@ -1038,8 +1044,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             }
         }
 
-
-		
 		////替换
         int targetType = 0;
         Building b = compute(x, y);

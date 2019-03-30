@@ -1,5 +1,6 @@
 package com.trance.desktop;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.trance.desktop.font.DesktopFreeFont;
@@ -14,19 +15,21 @@ public class DesktopLauncher {
 	 */
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.width = 480;
-		cfg.height = 800;
+		cfg.width = 280;
+		cfg.height = 480;
 		// 全屏
 	//cfg.fullscreen = true;
 		// 垂直同步
 	//	cfg.vSyncEnabled = true;
+
 		DesktopFreeFont.Strat();
 		Player.userName ="test10";
-		new LwjglApplication(new TranceGame(new BsuEvent() {
+		LwjglApplication lwjgl= new LwjglApplication(new TranceGame(new BsuEvent() {
 			@Override
 			public void notify(int what, Object obj) {
 				System.out.println(what);
 			}
 		},"en"), cfg);
+		lwjgl.getGraphics().setDisplayMode(480,800, false);
 	}
 }

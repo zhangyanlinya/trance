@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.CodeJson;
 import com.trance.view.TranceGame;
+import com.trance.view.config.Config;
 
 import java.util.HashMap;
 import java.util.List;
@@ -227,6 +228,13 @@ public class MsgUtil {
 				tranceGame.showMsg(msg);
 			}
 		});
+	}
+
+	public void showLog(final Object  obj){
+		if(!Config.debug){
+			return;
+		}
+		showMsg(obj);
 	}
 
 	public void showLoading(){
