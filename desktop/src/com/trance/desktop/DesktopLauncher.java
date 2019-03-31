@@ -15,21 +15,38 @@ public class DesktopLauncher {
 	 */
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.width = 280;
-		cfg.height = 480;
+		cfg.width = 380;
+		cfg.height = 700;
+        cfg.x = 955;
+        cfg.y = 55;
+
 		// 全屏
-	//cfg.fullscreen = true;
+//	    cfg.fullscreen = true;
 		// 垂直同步
-	//	cfg.vSyncEnabled = true;
+		cfg.vSyncEnabled = true;
 
 		DesktopFreeFont.Strat();
 		Player.userName ="test10";
 		LwjglApplication lwjgl= new LwjglApplication(new TranceGame(new BsuEvent() {
 			@Override
 			public void notify(int what, Object obj) {
-				System.out.println(what);
+				//System.out.println(what);
 			}
 		},"en"), cfg);
-		lwjgl.getGraphics().setDisplayMode(480,800, false);
+
+        int w = Gdx.graphics.getDesktopDisplayMode().width;
+//        MsgUtil.getInstance().showMsg(w);
+        int h = Gdx.graphics.getDesktopDisplayMode().height;
+//        MsgUtil.getInstance().showMsg(h);
+        System.out.println(w);
+        System.out.println(h);
+
+//       lwjgl.getGraphics().setDisplayMode(1280, 720, false);
+        Gdx.graphics.setDisplayMode(380, 600, false);
+
+        //lwjgl.getGraphics().setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, false);
+
+
 	}
+
 }
