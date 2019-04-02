@@ -70,9 +70,11 @@ import com.trance.view.utils.SocketUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
@@ -982,7 +984,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         int[][] map = playerDto.getMap();
-        if(!isBlank(map, gird.i, gird.j, oldType)){
+        if(!isBlank(map, oldi, oldj, gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
 			MsgUtil.getInstance().showMsg(4);
@@ -1057,7 +1059,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         if(targetType == 0){//add
-            if(!isBlank( map, gird.i, gird.j, targetType)){
+            if(!isBlank( map, -1, -1, gird.i, gird.j, targetType)){
                 a.setPosition(oldx, oldy);
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
                 return false;
@@ -1108,30 +1110,53 @@ public class MapScreen extends BaseScreen implements InputProcessor {
      * @param id //即将占据的id 用来计算范围
      * @return
      */
-    private boolean isBlank(int[][] map, int x, int y, int id) {
+	/**
+	 * 是否空地
+	 *
+	 * @param map
+	 * @param tx
+	 * @param ty
+	 * @param id
+	 *            //即将占据的id
+	 * @return
+	 */
+	private boolean isBlank(int[][] map, int fx, int fy, int tx, int ty, int id) {
 		BuildingType buildingType = BuildingType.valueOf(id);
 		if (buildingType == null) {
 			return false;
 		}
 
 		int occupy = buildingType.getOccupy();
-		int limitX = x + occupy;
+		int limitX = tx + occupy;
 		if (limitX > ARR_HEIGHT_SIZE) {
 			return false;
 		}
 
-		int limitY = y + occupy;
+		int limitY = ty + occupy;
 		if (limitY > ARR_WIDTH_SIZE) {
 			return false;
 		}
 
-		for (int i = x; i < limitX; i++) {
-			for (int j = y; j < limitY; j++) {
-				if (map[i][j] != 0) { // 目标范围里不是完全空地
-					return false;
+		Set<Integer> codes = new HashSet<Integer>(); //old occupy
+		if( fx > 0 && fy > 0){
+			for (int i = fx; i < fx + occupy; i++) {
+				for (int j = fy; j < fy + occupy; j++) {
+					codes.add(toOccupyCode(i, j));
 				}
 			}
 		}
+
+		for (int i = tx; i < limitX; i++) {
+			for (int j = ty; j < limitY; j++) {
+				if (map[i][j] != 0) {
+					int code = toOccupyCode(i, j);
+					if(!codes.contains(code)){ // 目标范围里不是完全空地
+						return false;
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 
