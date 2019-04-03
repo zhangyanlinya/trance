@@ -979,7 +979,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(!checkXy(gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showMsg(3);
+			MsgUtil.getInstance().showLog(3);
             return false;
         }
 

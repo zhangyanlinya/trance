@@ -38,6 +38,7 @@ public class RenameInputListener implements TextInputListener {
 
 		if("test123".equals(text)){
 			Config.debug = true;
+			return;
 		}
 		
 		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.RENAME, text),true);
