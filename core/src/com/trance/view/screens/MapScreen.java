@@ -963,7 +963,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		if(y < 0){
 			a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showMsg(1);
+			MsgUtil.getInstance().showLog(1);
 			return false;
 		}
 		
@@ -972,7 +972,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			System.out.println("gird = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showMsg(2);
+			MsgUtil.getInstance().showLog(2);
 			return false;
 		}
 
@@ -987,7 +987,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         if(!isBlank(map, oldi, oldj, gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showMsg(4);
+			MsgUtil.getInstance().showLog(4);
             return false;
         }
 
@@ -996,14 +996,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			if(gird.id != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
-				MsgUtil.getInstance().showMsg(5);
+				MsgUtil.getInstance().showLog(5);
 				return false;
 			}
 
 			if(a.getLeftNum() <= 0){
 				a.setPosition(oldx, oldy);
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
-				MsgUtil.getInstance().showMsg(6);
+				MsgUtil.getInstance().showLog(6);
 				return false;
 			}
 
@@ -1176,10 +1176,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
         int occupy = buildingType.getOccupy();
         if (occupy > 1) { // 占据大于1个格子
-            if (x >= ARR_HEIGHT_SIZE - occupy) {
+            if (x > ARR_HEIGHT_SIZE - occupy) {
                 return false;
             }
-            if (y >= ARR_WIDTH_SIZE - occupy) {
+            if (y > ARR_WIDTH_SIZE - occupy) {
                 return false;
             }
         }
@@ -1223,12 +1223,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             }
         }
 
+        int code = toOccupyCode(tx, ty);
         for (int i = tx; i < tx + occupy; i++) {
             for (int j = ty; j < ty + occupy; j++) {
                 if (i == tx && j == ty) {
                     map[i][j] = id;
                 } else {
-                    map[i][j] = toOccupyCode(tx, ty);
+                    map[i][j] = code;
                 }
             }
         }
@@ -1245,12 +1246,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         int occupy = buildingType.getOccupy();
+        int code  = toOccupyCode(tx, ty);
         for (int i = tx; i < tx + occupy; i++) {
             for (int j = ty; j < ty + occupy; j++) {
                 if (i == tx && j == ty) {
                     map[i][j] = id;
                 } else {
-                    map[i][j] = toOccupyCode(tx, ty);
+                    map[i][j] = code;
                 }
             }
         }
