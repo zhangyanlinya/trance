@@ -47,6 +47,7 @@ import com.trance.view.TranceGame;
 import com.trance.view.actors.Building;
 import com.trance.view.actors.MapImage;
 import com.trance.view.actors.ResImage;
+import com.trance.view.config.Config;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.DialogArmyStage;
@@ -649,6 +650,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 	
 	private long levelExp;
+//
+//	private static int hitCount = 0;
+//	private static long hitTime = System.currentTimeMillis();
 	
 	private void initPlayerInfo(){
 		float side = width / 5f;
@@ -664,6 +668,23 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		ResImage foods = new ResImage(ResUtil.getInstance().getUi(UiType.FOODS),font, playerDto, 4);
 		foods.setBounds(side * 4, height - length, length, length);
 		stage.addActor(foods);
+
+//		foods.addListener(new ClickListener() {
+//
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				if (System.currentTimeMillis() - hitTime > 10000) {
+//					hitCount = 0;
+//					hitTime = System.currentTimeMillis();
+//				}
+//
+//				hitCount++;
+//				if (hitCount > 5) {
+//					Config.debug = true;
+//					MsgUtil.getInstance().showLog("debug mode open!");
+//				}
+//			}
+//		});
 	}
 	
 	public void refreshPlayerDtoData(){
@@ -735,7 +756,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
     private Gird calculateIndex(float x, float y) {
         int i = ARR_HEIGHT_SIZE - 1 - (int) ((y - control_height) / length);
-        int j = (int) ((x - menu_width )/ length);
+        int j = (int) ((x - menu_width)/ length);
 
 
         if(i >= 0  && j >= 0 && i < ARR_HEIGHT_SIZE && j < ARR_WIDTH_SIZE ){
@@ -959,11 +980,11 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
 		float y = vector3.y;
-		
+
 		if(y < 0){
 			a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showLog(1);
+			MsgUtil.getInstance().showLog(1 +" = "+ x + " - " + y);
 			return false;
 		}
 		
@@ -972,14 +993,16 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			System.out.println("gird = null");
 			a.setPosition(oldx, oldy);//暂时不做移除
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showLog(2);
+			MsgUtil.getInstance().showLog(2  +" = "+ x + " - " + y);
 			return false;
 		}
+
+		MsgUtil.getInstance().showLog(gird.toString());
 
 		if(!checkXy(gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showLog(3);
+			MsgUtil.getInstance().showLog(3 +" = "+ x + " - " + y);
             return false;
         }
 
@@ -987,7 +1010,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         if(!isBlank(map, oldi, oldj, gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showLog(4);
+			MsgUtil.getInstance().showLog(4 +" = "+ x + " - " + y);
             return false;
         }
 
@@ -996,14 +1019,14 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			if(gird.id != 0){
 				a.setPosition(oldx, oldy);//不覆盖已经占坑的
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
-				MsgUtil.getInstance().showLog(5);
+				MsgUtil.getInstance().showLog(5 +" = "+ x + " - " + y);
 				return false;
 			}
 
 			if(a.getLeftNum() <= 0){
 				a.setPosition(oldx, oldy);
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
-				MsgUtil.getInstance().showLog(6);
+				MsgUtil.getInstance().showLog(6 +" = "+ x + " - " + y);
 				return false;
 			}
 

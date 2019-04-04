@@ -337,7 +337,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 		fixed.setBounds(width - side - 20 , 10, side, side);
 		
 		//itembox
-		Image dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
+		final Image dailyReward = new Image(ResUtil.getInstance().getUi(UiType.ITEMBOX));
 		int x = RandomUtil.betweenValue(20, (int)sw -20);
 		int y = RandomUtil.betweenValue(20, (int)sh -20);
 		dailyReward.setBounds(x, y, dailyReward.getWidth() + dailyReward.getWidth()/2, dailyReward.getHeight() + dailyReward.getHeight()/2);
@@ -367,6 +367,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 					ValueResultSet valueResultSet = JSON.parseObject(reward.toString(), ValueResultSet.class);
 					RewardService.executeRewards(valueResultSet);
 				}
+				stage.getActors().removeValue(dailyReward, true);
 			}
 			
 		});

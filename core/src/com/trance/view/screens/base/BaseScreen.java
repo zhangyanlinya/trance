@@ -51,7 +51,7 @@ public abstract class BaseScreen extends ScreenAdapter{
 
 
     private long showTime;
-    private long delayShow = 3000;
+    private long delayShow = 2000;
     private float fontHeight;
 
     @Override
@@ -70,7 +70,6 @@ public abstract class BaseScreen extends ScreenAdapter{
                 msg = null;
                 showTime = now;
                 fontHeight = height / 2;
-                return;
             }
         }
 

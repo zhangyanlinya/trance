@@ -4,14 +4,20 @@ package com.trance.view.utils;
 import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.trance.common.delay.DelayItem;
+import com.trance.common.delay.DelayService;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.CodeJson;
 import com.trance.view.TranceGame;
 import com.trance.view.config.Config;
+import com.trance.view.delaytask.MsgShowTask;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.DelayQueue;
 
 public class MsgUtil {
 
@@ -219,7 +225,7 @@ public class MsgUtil {
 		}
 		return  msg;
 	}
-	
+
 	public void showMsg(final Object  obj){
 		final String msg = getLocalMsg(obj + "");
 		Gdx.app.postRunnable(new Runnable() {
@@ -228,13 +234,16 @@ public class MsgUtil {
 				tranceGame.showMsg(msg);
 			}
 		});
+
 	}
 
 	public void showLog(final Object  obj){
 		if(!Config.debug){
 			return;
 		}
-		showMsg(obj);
+
+		final String msg = getLocalMsg(obj + "");
+		DelayService.getIntance().submit(new DelayItem<Runnable>(new MsgShowTask(tranceGame, msg), 3000));
 	}
 
 	public void showLoading(){

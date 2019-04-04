@@ -28,4 +28,15 @@ public class Gird {
         this.i = i;
         this.j = j;
     }
+
+    @Override
+    public String toString() {
+        return "Gird{" +
+                "id=" + id +
+                ", i=" + i +
+                ", j=" + j +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
