@@ -67,6 +67,11 @@ public class DelayService {
         if (blockingQueue.contains(item)) {
             return;
         }
+
+        if(blockingQueue.size() == 0){ //first
+            item.setExpire(0);
+        }
+
         blockingQueue.offer(item);
     }
 
