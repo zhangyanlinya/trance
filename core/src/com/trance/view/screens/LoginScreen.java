@@ -2,6 +2,7 @@ package com.trance.view.screens;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -206,12 +207,13 @@ public class LoginScreen extends BaseScreen {
 
 		Object wobj = result.get("worldPlayers");
 		if (wobj != null) {
-			Map<String, Object> players = (Map<String, Object>) wobj;
-			for (Entry<String, Object> e : players.entrySet()) {
-				String dto = JSON.toJSONString(e.getValue());
-				PlayerDto value = JSON.parseObject(dto, PlayerDto.class);
-				WorldScreen.playerDtos.put(e.getKey(), value);
-			}
+			WorldScreen.playerDtos = JSON.parseObject(wobj.toString(), new TypeReference<Map<String, PlayerDto>>() {
+			});
+//			for (Entry<String, PlayerDto> e : players.entrySet()) {
+//				String dto = JSON.toJSONString(e.getValue());
+//				PlayerDto value = JSON.parseObject(dto, PlayerDto.class);
+//				WorldScreen.playerDtos.put(e.getKey(), value);
+//			}
 		}
 
 		Object aobj = result.get("armys");
