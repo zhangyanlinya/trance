@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -747,38 +748,90 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         Building block = new Building();
         int n = ARR_HEIGHT_SIZE - 1 - i;
         float px = menu_width + j * length;
-        float py = control_height + n * length;
+        float py = length * 2  + i * length;
+        py = height -1 - py;
 
         block.setIndex(i, j);
         block.init(null, dto.getMid(), px, py, length, length, shapeRenderer, dto);
         stage.addActor(block);
     }
 
+    /***
+     * ┌───┐   ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┐
+     * │Esc│   │ F1│ F2│ F3│ F4│ │ F5│ F6│ F7│ F8│ │ F9│F10│F11│F12│ │P/S│S L│P/B│  ┌┐    ┌┐    ┌┐
+     * └───┘   └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┘  └┘    └┘    └┘
+     * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐ ┌───┬───┬───┐ ┌───┬───┬───┬───┐
+     * │~ `│! 1│@ 2│# 3│$ 4│% 5│^ 6│& 7│* 8│( 9│) 0│_ -│+ =│ BacSp │ │Ins│Hom│PUp│ │N L│ / │ * │ - │
+     * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤ ├───┼───┼───┤ ├───┼───┼───┼───┤
+     * │ Tab │ Q │ W │ E │ R │ T │ Y │ U │ I │ O │ P │{ [│} ]│ | \ │ │Del│End│PDn│ │ 7 │ 8 │ 9 │   │
+     * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴─────┤ └───┴───┴───┘ ├───┼───┼───┤ + │
+     * │ Caps │ A │ S │ D │ F │ G │ H │ J │ K │ L │: ;│" '│ Enter  │               │ 4 │ 5 │ 6 │   │
+     * ├──────┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴────────┤     ┌───┐     ├───┼───┼───┼───┤
+     * │ Shift  │ Z │ X │ C │ V │ B │ N │ M │< ,│> .│? /│  Shift   │     │ ↑ │     │ 1 │ 2 │ 3 │   │
+     * ├─────┬──┴─┬─┴──┬┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤ ┌───┼───┼───┐ ├───┴───┼───┤ E││
+     * │ Ctrl│    │Alt │         Space         │ Alt│    │    │Ctrl│ │ ← │ ↓ │ → │ │   0   │ . │←─┘│
+     * └─────┴────┴────┴───────────────────────┴────┴────┴────┴────┘ └───┴───┴───┘ └───────┴───┴───┘
+     * 键盘给你,你来
+     */
     private Gird calculateIndex(float x, float y) {
-        int i = ARR_HEIGHT_SIZE - 1 - (int) ((y - control_height) / length);
-        int j = (int) ((x - menu_width)/ length);
+//        int i = ARR_HEIGHT_SIZE - 1 - (int) ((y - control_height) / length);
+//        int j = (int) ((x - menu_width)/ length);
+//
+//
+//        if(i >= 0  && j >= 0 && i < ARR_HEIGHT_SIZE && j < ARR_WIDTH_SIZE ){
+//            int code = playerDto.getMap()[i][j];
+//            if(code > BASE_NUMBER){ //表示占了不止一个格子
+//                Gird temp = parseCode(code);
+//                i = temp.i;
+//                j = temp.j;
+//            }
+//
+//            int id = 0;
+//            BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
+//            if(dto != null){
+//                id = dto.getMid();
+//            }
+//
+//            float n = ARR_HEIGHT_SIZE - 1 - i;
+//            float cx = menu_width + j * length;
+//            float cy = control_height + n * length;
+//            return new Gird(id, i, j, cx, cy);
+//        }
+//        return null;
+
+//		y = height - 1 - y;
+
+		x -= menu_width;
+		y -= length * 2;
+
+		if(x < 0 || y < 0){
+			return null;
+		}
+
+		int i = (int) (y / length);
+		int j = (int) (x / length);
+
+		if(i >= ARR_WIDTH_SIZE || j >= ARR_HEIGHT_SIZE){
+			return null;
+		}
+		int id = playerDto.getMap()[i][j];
+		if(id > BASE_NUMBER){ //表示占了不止一个格子
+			Gird temp = parseCode(id);
+			i = temp.i;
+			j = temp.j;
+		}
+
+		BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
+		if(dto != null){
+			id = dto.getMid();
+		}
 
 
-        if(i >= 0  && j >= 0 && i < ARR_HEIGHT_SIZE && j < ARR_WIDTH_SIZE ){
-            int code = playerDto.getMap()[i][j];
-            if(code > BASE_NUMBER){ //表示占了不止一个格子
-                Gird temp = parseCode(code);
-                i = temp.i;
-                j = temp.j;
-            }
 
-            int id = 0;
-            BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
-            if(dto != null){
-                id = dto.getMid();
-            }
+		float cx = menu_width + j * length ;
+		float cy = menu_width + i * length ;
 
-            float n = ARR_HEIGHT_SIZE - 1 - i;
-            float cx = menu_width + j * length;
-            float cy = control_height + n * length;
-            return new Gird(id, i, j, cx, cy);
-        }
-        return null;
+		return new Gird(id,i,j, cx, cy);
     }
 
     private int toOccupyCode(int i, int j){
@@ -929,7 +982,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
 		float y = vector3.y;
-		
+
 		if(y < 0){
 			return false;
 		}
@@ -977,7 +1030,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return false;
 		}
 		Vector3 vector3 = new Vector3(screenX, screenY, 0);
-		camera.unproject(vector3); // 坐标转化  
+		camera.unproject(vector3); // 坐标转化
 		float x = vector3.x;
 		float y = vector3.y;
 
@@ -1007,7 +1060,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         int[][] map = playerDto.getMap();
-        if(!isBlank(map, oldi, oldj, gird.i, gird.j, oldType)){
+        if(!isBlank(map, oldj, oldi, gird.j, gird.i, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
 			MsgUtil.getInstance().showLog(4 +" = "+ x + " - " + y);

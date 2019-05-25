@@ -31,6 +31,7 @@ import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.empire.modules.world.handler.WorldCmd;
 import com.trance.view.TranceGame;
+import com.trance.view.actors.Bullet;
 import com.trance.view.actors.WorldImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;

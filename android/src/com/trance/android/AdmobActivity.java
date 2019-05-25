@@ -2,10 +2,10 @@
 
 package com.trance.android;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,13 +14,15 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.trance.android.util.UpdateManager;
 
 
 public class AdmobActivity extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,8 +33,8 @@ public class AdmobActivity extends AppCompatActivity {
 //        UpdateManager update = new UpdateManager(this , new Handler.Callback(){
 //            @Override
 //            public boolean handleMessage(Message message) {
-////                int delay = message.what;
-////                new TimeThread(delay).start();
+//                int delay = message.what;
+//                new TimeThread(delay).start();
 //                return false;
 //            }
 //        });
@@ -40,9 +42,8 @@ public class AdmobActivity extends AppCompatActivity {
 
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
+        new TimeThread(4).start();
 
-        // 5秒后跳转
-        new TimeThread(1).start();
     }
 
 
@@ -75,13 +76,14 @@ public class AdmobActivity extends AppCompatActivity {
     private void showInterstitial() {
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        } else {
-           Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
-        }
+        }  //       Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
+
     }
 
     private void loadInterstitial() {
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        mInterstitialAd.loadAd(adRequest);
     }
 
     private boolean start;
@@ -92,17 +94,11 @@ public class AdmobActivity extends AppCompatActivity {
         }
         start = true;
         Intent intent = new Intent(AdmobActivity.this, AndroidLauncher.class);
-        startActivityForResult(intent, 0);
-//        this.finish();
-
+        startActivity(intent);
+        AdmobActivity.this.finish();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        showInterstitial();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
+    @SuppressLint("HandlerLeak")
     public Handler handler = new Handler(){
 
         public void handleMessage(android.os.Message msg) {
@@ -114,13 +110,13 @@ public class AdmobActivity extends AppCompatActivity {
         }
     };
 
-   private class TimeThread extends Thread{
+    class TimeThread extends Thread{
         private int delay;
-        private TimeThread(int delay){
+        TimeThread(int delay){
             this.delay = delay;
         }
         public void run(){
-            while(true){
+            do {
                 try {
                     handler.sendEmptyMessage(delay);
                     Thread.sleep(1000);
@@ -128,10 +124,7 @@ public class AdmobActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 delay--;
-                if(delay < 0){
-                    break;
-                }
-            }
+            } while (delay >= 0);
         }
     }
 }

@@ -115,3 +115,7 @@ idea {
         }
     }
 }
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:25.0.0'
+}

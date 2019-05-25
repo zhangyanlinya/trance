@@ -1,5 +1,5 @@
 package com.trance.view.config;
 
 public class Config {
-    public static boolean debug ;
+    public static boolean debug = true ;
 }
