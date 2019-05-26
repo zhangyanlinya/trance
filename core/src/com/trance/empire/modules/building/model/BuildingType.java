@@ -70,11 +70,6 @@ public enum BuildingType {
     }
 
     public static BuildingType valueOf(int id){
-        for(BuildingType type : BuildingType.values()){
-            if(type.id == id){
-                return type;
-            }
-        }
-        return null;
+        return BuildingType.values()[id];
     }
 }

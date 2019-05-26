@@ -1,5 +1,6 @@
 package com.trance.view.delaytask;
 
+import com.badlogic.gdx.Gdx;
 import com.trance.view.TranceGame;
 
 public class MsgShowTask implements Runnable{
@@ -15,7 +16,12 @@ public class MsgShowTask implements Runnable{
 
     @Override
     public void run() {
-        tranceGame.showMsg(msg);
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                tranceGame.showMsg(msg);
+            }
+        });
     }
 
     @Override

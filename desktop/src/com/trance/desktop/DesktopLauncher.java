@@ -17,7 +17,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.width = 380;
 		cfg.height = 700;
-        cfg.x = 955;
+        cfg.x = 855;
         cfg.y = 55;
 
 		// 全屏
@@ -42,7 +42,7 @@ public class DesktopLauncher {
         System.out.println(h);
 
 //       lwjgl.getGraphics().setDisplayMode(1280, 720, false);
-        Gdx.graphics.setDisplayMode(380, 600, false);
+        Gdx.graphics.setDisplayMode(390, 600, false);
 
         //lwjgl.getGraphics().setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, false);
 

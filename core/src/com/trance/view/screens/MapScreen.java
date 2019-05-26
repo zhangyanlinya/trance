@@ -1033,6 +1033,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		camera.unproject(vector3); // 坐标转化
 		float x = vector3.x;
 		float y = vector3.y;
+        y = height -1 - y;
 
 		if(y < 0){
 			a.setPosition(oldx, oldy);
@@ -1060,7 +1061,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         int[][] map = playerDto.getMap();
-        if(!isBlank(map, oldj, oldi, gird.j, gird.i, oldType)){
+        if(!isBlank(map, oldi, oldj, gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
 			MsgUtil.getInstance().showLog(4 +" = "+ x + " - " + y);
