@@ -106,7 +106,7 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
     /**
      * 中间游戏区域的百分比
      */
-    private static double percent = 0.9;
+    private static double percent = 0.8;
     /**
      * 每格的边长
      */
@@ -217,6 +217,7 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
         CELL_LENGHT = width / 10;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
+        spriteBatch.setProjectionMatrix(camera.combined);
 //		debugRenderer = new Box2DDebugRenderer();
         stage.getViewport().setCamera(camera);
 
@@ -520,9 +521,11 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
             int i = dto.getX();
             int j = dto.getY();
             Building building = new Building();
-            int n = map.length - 1 - i;
+//            int n = map.length - 1 - i;
+//            float px = menu_width + j * length;
+//            float py = control_height + n * length;
             float px = menu_width + j * length;
-            float py = control_height + n * length;
+            float py = control_height + i * length;
 
             building.setIndex(i, j);
             building.init(world, dto.getMid(), px, py, length, length, shapeRenderer, dto);

@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -48,9 +48,9 @@ import com.trance.view.TranceGame;
 import com.trance.view.actors.Building;
 import com.trance.view.actors.MapImage;
 import com.trance.view.actors.ResImage;
-import com.trance.view.config.Config;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
+import com.trance.view.controller.GestureController;
 import com.trance.view.dialog.DialogArmyStage;
 import com.trance.view.dialog.DialogAttackInfoStage;
 import com.trance.view.dialog.DialogOperateStage;
@@ -94,7 +94,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private final int ARR_HEIGHT_SIZE = 20;
 	
 	/** 中间游戏区域的百分比 */
-	private final  double percent = 0.9;
+	private final  double percent = 0.8;
 	/** 每格的边长 */
 	private  float length = 45;
 	/** 游戏区域宽 */
@@ -127,8 +127,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	private PlayerDto playerDto;
 	private OrthographicCamera camera;
 	private Image bg;
-//	private GestureController controller;
-//	private GestureDetector gestureHandler;
+	private GestureController controller;
+	private GestureDetector gestureHandler;
 
 	private Stage stage;
 	private FreeBitmapFont font;
@@ -167,9 +167,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		camera = new OrthographicCamera(width, height);
 		camera.setToOrtho(false, width, height);
+
 		stage = new Stage(new StretchViewport(width,height,camera));
 
 		spriteBatch = new SpriteBatch();
+		// Create a full screen sprite renderer and use the above camera
+		spriteBatch.setProjectionMatrix(camera.combined);
+
 		shapeRenderer = new ShapeRenderer();
 		
 		dialogArmyStage = new DialogArmyStage(tranceGame);
@@ -257,7 +261,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			init();
 			init = true;
 		}
-		
+
 		MapData.gamerunning = false;
 		//文字 
 
@@ -309,155 +313,22 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //		toWorld.draw(spriteBatch);
 		stage.addActor(label_world);
 
-//		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+		controller = new GestureController(camera, 0, width * 2, 0, height * 2);
 		camera.position.set(width/2f, height/2f, 0);
-//		controller.setCanPan(false);
+		controller.setCanPan(false);
 
 		inputMultiplexer = new InputMultiplexer();
-//		gestureHandler = new GestureDetector(controller);
+		gestureHandler = new GestureDetector(controller);
 		initInputProcessor();
 	}
 
 	private void initInputProcessor(){
-//		inputMultiplexer.addProcessor(gestureHandler);
+		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
-
-	/**
-	 *  地图是否可编辑
-	 * @return
-	 */
-	private boolean isEdit(){
-		return(playerDto.isMyself());//
-	}
-	
-	
-	/**
-	 * attack other player
-	 */
-	private void attack(){
-		Map<Integer,ArmyDto> armys = Player.player.getArmys();
-		if(armys == null || armys.isEmpty()){
-			return;
-		}
-
-		boolean deadAll = true;
-		for(ArmyDto dto : armys.values()){
-			if(dto.getAmout() > 0){
-				deadAll = false;
-				break;
-			}
-		}
-		if(deadAll){
-			MsgUtil.getInstance().showMsg(Module.BATTLE,-10003);
-			return;
-		}
-		
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("x", playerDto.getX());
-		params.put("y", playerDto.getY());
-		Request request = Request.valueOf(Module.BATTLE, BattleCmd.START_BATTLE, params);
-		Response response = SocketUtil.send(request, true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			return;
-		}
-		
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-		Object codeObject = result.get("result");
-		int code = Integer.valueOf(String.valueOf(codeObject));
-		if(code != Result.SUCCESS){
-			MsgUtil.getInstance().showMsg(Module.BATTLE, code);
-			return;
-		}
-		
-		Object o = result.get("content");
-		if(o != null){
-			ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
-			RewardService.executeRewards(valueResultSet);
-		}
-		
-		GameScreen.playerDto = playerDto;
-		tranceGame.setScreen(tranceGame.gameScreen);
-	}
-	
-	/**
-	 * change player
-	 */
-	private void change(){
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("x", playerDto.getX());
-		params.put("y", playerDto.getY());
-		Request request = Request.valueOf(Module.WORLD, WorldCmd.CHANGE_PLAYER, params);
-		Response response = SocketUtil.send(request, true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			return;
-		}
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-		Object codeObject = result.get("result");
-		int code = Integer.valueOf(String.valueOf(codeObject));
-		if(code != Result.SUCCESS){
-			MsgUtil.getInstance().showMsg(Module.WORLD, code);
-			return;
-		}
-		
-		Object pobj = result.get("content");
-		if(pobj != null){
-			PlayerDto newPlayerDto = JSON.parseObject(pobj.toString(), PlayerDto.class);
-			newPlayerDto.setX(playerDto.getX());
-			newPlayerDto.setY(playerDto.getY());
-			WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
-			playerDto = newPlayerDto;
-			int[][] map;
-			Object mobj = result.get("mapdata");
-			if (mobj == null) {
-				map = MapData.clonemap();
-			}else{
-				map = JSON.parseObject(mobj.toString(), int[][].class);
-			}
-			playerDto.setMap(map);
-
-            Object bobj = result.get("buildings");
-            if(bobj != null){
-                List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
-                for(BuildingDto dto : buildings){
-                    playerDto.addBuilding(dto);
-                }
-            }
-
-			FontUtil.getFont().appendText(playerDto.getPlayerName());
-			show();
-			Sound sound = ResUtil.getInstance().getSound(8);
-			sound.play();
-		}
-	}
-
-	private void train(){
-		setArmyDailog(true);
-	}
-	
-//	private void upBuilding(){
-//		setBuildingDailog(true);
-//	}
-	private void attackInfo(){
-		setAttackInfoDailog(true);
-	}
-
-	private void rankUp(){
-		setRankUpDailog(true);
-	}
-	
-	private void toWorld(){
-		this.tranceGame.setScreen(tranceGame.worldScreen);
-	}
 
 	@Override
 	public void render(float delta) {
@@ -505,150 +376,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		super.render(delta);
 	}
 
-	private Queue<RangeInfo> rangeQueue = new ArrayBlockingQueue<RangeInfo>(10);
 
-	private void renderRange(float delta){
-		for (RangeInfo info :rangeQueue) {
-			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-			shapeRenderer.setColor(Color.GREEN);
-			shapeRenderer.circle(info.getX(), info.getY(), info.getRange());
-			shapeRenderer.end();
-			info.setShowTime(info.getShowTime() + delta);
-			if(info.getShowTime() > 2){
-				rangeQueue.poll();
-			}
-		}
-	}
-	
-	public void setRankUpDailog(boolean visible) {
-		if(visible){
-			dialogRankUpStage.show();
-			inputMultiplexer.addProcessor(dialogRankUpStage);
-			inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
-		}else{
-			dialogRankUpStage.hide();
-			inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-			inputMultiplexer.removeProcessor(dialogRankUpStage);
-		}
-	}
-	
-	public void setArmyDailog(boolean visible) {
-		if(visible){
-			dialogArmyStage.show();
-			inputMultiplexer.addProcessor(dialogArmyStage);
-			inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
-		}else{
-			dialogArmyStage.hide();
-			inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-			inputMultiplexer.removeProcessor(dialogArmyStage);
-		}
-	}
-	
-//	public void setBuildingDailog(boolean visible) {
-//		if(visible){
-//			dialogBuildingStage.show();
-//			inputMultiplexer.addProcessor(dialogBuildingStage);
-//			inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
-//		}else{
-//			dialogBuildingStage.hide();
-//			inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-//			inputMultiplexer.removeProcessor(dialogBuildingStage);
-//		}
-//	}
-
-	public void setAttackInfoDailog(boolean visible) {
-		if(visible){
-			dialogAttackInfoStage.show();
-			inputMultiplexer.addProcessor(dialogAttackInfoStage);
-			inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
-		}else{
-			dialogAttackInfoStage.hide();
-			inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-			inputMultiplexer.removeProcessor(dialogAttackInfoStage);
-		}
-	}
-
-	public void setOperateStageDailog(boolean visible, float x, float y) {
-		if(visible){
-            dialogOperateStage.show(x, y);
-			inputMultiplexer.addProcessor(dialogOperateStage);
-			inputMultiplexer.removeProcessor(stage);
-		}else{
-            dialogOperateStage.hide();
-			inputMultiplexer.addProcessor(stage);
-			inputMultiplexer.removeProcessor(dialogOperateStage);
-		}
-	}
-
-	private long huoseTime; //收割临时时间
-	private long barracksTime; //收割临时时间
-
-	/**
-	 * harvist
-	 */
-	private void harvist(BuildingDto dto){
-        if(dto == null){
-            return;
-        }
-        int buildingId = dto.getMid();
-		if(buildingId != BuildingType.HOUSE.getId() && buildingId != BuildingType.BARRACKS.getId()){
-			return;
-		}
-
-		long now = System.currentTimeMillis();
-		long diffTime;
-		if(buildingId == BuildingType.HOUSE.getId()){
-			diffTime = now - huoseTime;
-		}else{
-			diffTime = now - barracksTime;
-		}
-
-		if(diffTime <= 100000 ){
-			MsgUtil.getInstance().showMsg(Module.BUILDING, -10005);
-			return;
-		}
-
-		Map<String,Object> params = new HashMap<String,Object>();
-        params.put("x", dto.getX());
-        params.put("y", dto.getY());
-		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, params),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
-			return;
-		}
-		
-		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
-		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
-			if(code != Result.SUCCESS){
-				MsgUtil.getInstance().showMsg(Module.BUILDING,code);
-				return ;
-			}
-			Object valueResult = result.get("content");
-			if(valueResult != null){
-				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
-				RewardService.executeRewards(valueResultSet);
-			}
-			Sound sound = ResUtil.getInstance().getSound(5);
-			sound.play();
-
-			if(buildingId == BuildingType.HOUSE.getId()){
-				huoseTime = System.currentTimeMillis();
-			}else{
-				barracksTime = now - barracksTime;
-			}
-		}
-	}
 	
 	private long levelExp;
 //
@@ -746,93 +474,56 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         int i = dto.getX();
         int j = dto.getY();
         Building block = new Building();
-        int n = ARR_HEIGHT_SIZE - 1 - i;
         float px = menu_width + j * length;
-        float py = length * 2  + i * length;
-        py = height -1 - py;
+        float py = control_height + i * length;
+
+
+//		int n = ARR_HEIGHT_SIZE - 1 - i;
+//		float px = menu_width + j * length;
+//		float py = control_height + n * length;
 
         block.setIndex(i, j);
         block.init(null, dto.getMid(), px, py, length, length, shapeRenderer, dto);
         stage.addActor(block);
     }
 
-    /***
-     * ┌───┐   ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┐
-     * │Esc│   │ F1│ F2│ F3│ F4│ │ F5│ F6│ F7│ F8│ │ F9│F10│F11│F12│ │P/S│S L│P/B│  ┌┐    ┌┐    ┌┐
-     * └───┘   └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┘  └┘    └┘    └┘
-     * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐ ┌───┬───┬───┐ ┌───┬───┬───┬───┐
-     * │~ `│! 1│@ 2│# 3│$ 4│% 5│^ 6│& 7│* 8│( 9│) 0│_ -│+ =│ BacSp │ │Ins│Hom│PUp│ │N L│ / │ * │ - │
-     * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤ ├───┼───┼───┤ ├───┼───┼───┼───┤
-     * │ Tab │ Q │ W │ E │ R │ T │ Y │ U │ I │ O │ P │{ [│} ]│ | \ │ │Del│End│PDn│ │ 7 │ 8 │ 9 │   │
-     * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴─────┤ └───┴───┴───┘ ├───┼───┼───┤ + │
-     * │ Caps │ A │ S │ D │ F │ G │ H │ J │ K │ L │: ;│" '│ Enter  │               │ 4 │ 5 │ 6 │   │
-     * ├──────┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴────────┤     ┌───┐     ├───┼───┼───┼───┤
-     * │ Shift  │ Z │ X │ C │ V │ B │ N │ M │< ,│> .│? /│  Shift   │     │ ↑ │     │ 1 │ 2 │ 3 │   │
-     * ├─────┬──┴─┬─┴──┬┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤ ┌───┼───┼───┐ ├───┴───┼───┤ E││
-     * │ Ctrl│    │Alt │         Space         │ Alt│    │    │Ctrl│ │ ← │ ↓ │ → │ │   0   │ . │←─┘│
-     * └─────┴────┴────┴───────────────────────┴────┴────┴────┴────┘ └───┴───┴───┘ └───────┴───┴───┘
-     * 键盘给你,你来
-     */
+
     private Gird calculateIndex(float x, float y) {
-//        int i = ARR_HEIGHT_SIZE - 1 - (int) ((y - control_height) / length);
-//        int j = (int) ((x - menu_width)/ length);
-//
-//
-//        if(i >= 0  && j >= 0 && i < ARR_HEIGHT_SIZE && j < ARR_WIDTH_SIZE ){
-//            int code = playerDto.getMap()[i][j];
-//            if(code > BASE_NUMBER){ //表示占了不止一个格子
-//                Gird temp = parseCode(code);
-//                i = temp.i;
-//                j = temp.j;
-//            }
-//
-//            int id = 0;
-//            BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
-//            if(dto != null){
-//                id = dto.getMid();
-//            }
-//
-//            float n = ARR_HEIGHT_SIZE - 1 - i;
-//            float cx = menu_width + j * length;
-//            float cy = control_height + n * length;
-//            return new Gird(id, i, j, cx, cy);
-//        }
-//        return null;
-
-//		y = height - 1 - y;
-
 		x -= menu_width;
-		y -= length * 2;
+		y -= control_height;
 
-		if(x < 0 || y < 0){
+		if (x < 0 || y < 0) {
+			return null;
+		}
+
+		int j = (int) (x / length);
+		if (j >= ARR_WIDTH_SIZE) {
 			return null;
 		}
 
 		int i = (int) (y / length);
-		int j = (int) (x / length);
-
-		if(i >= ARR_WIDTH_SIZE || j >= ARR_HEIGHT_SIZE){
+		if (i >= ARR_HEIGHT_SIZE) {
 			return null;
 		}
+
 		int id = playerDto.getMap()[i][j];
-		if(id > BASE_NUMBER){ //表示占了不止一个格子
+
+		if (id > BASE_NUMBER) { //表示占了不止一个格子
 			Gird temp = parseCode(id);
 			i = temp.i;
 			j = temp.j;
 		}
 
 		BuildingDto dto = playerDto.getBuildings().get(PlayerDto.getKey(i, j));
-		if(dto != null){
+		if (dto != null) {
 			id = dto.getMid();
 		}
 
+		float cx = menu_width + j * length;
+		float cy = control_height + i * length;
 
-
-		float cx = menu_width + j * length ;
-		float cy = menu_width + i * length ;
-
-		return new Gird(id,i,j, cx, cy);
-    }
+		return new Gird(id, i, j, cx, cy);
+	}
 
     private int toOccupyCode(int i, int j){
         return  (i+1) * BASE_NUMBER + (j+1);
@@ -881,81 +572,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 	}
 
-    private void tochTaskButton(int screenX, int screenY, int pointer, int button){
-        float side = width/8f;
-        float y =  height - screenY;
-        if(y > side){
-            return;
-        }
-
-        int buttionId = (int)(screenX / side);
-        ButtonType buttonType = ButtonType.valueOf(buttionId);
-        if(buttonType == null){
-            return;
-        }
-
-        if(!isEdit() && buttonType != ButtonType.WORLD){
-            return;
-        }
-
-        switch (buttonType){//
-            case WORLD:
-                toWorld();
-                break;
-            case RENAME:
-                Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
-                break;
-            case TRAIN:
-                train();
-                break;
-//            case UPGRADE:
-//                upBuilding();
-//                break;
-            case RANKING:
-                rankUp();
-                break;
-            case ATTACKINFO:
-                attackInfo();
-                break;
-        }
-    }
-
-    //各种点击事件
-    private void handleBuildingOnClick(Building building, float x, float y){
-        BuildingType bType = BuildingType.valueOf(building.type);
-        if(bType == null){
-            return;
-        }
-        switch (bType){
-            case OFFICE:
-                break;
-            case CANNON:
-            case ROCKET:
-            case FLAME:
-            case GUN:
-            case TOWER:
-            case MORTAR:
-                RangeInfo e = new RangeInfo(x,y,building.range);
-                rangeQueue.offer(e);
-                break;
-
-            case HOUSE:
-            case BARRACKS:
-                if(isEdit()){
-                    harvist(building.getDto());
-                }
-                break;
-            default:
-                break;
-        }
-        if(building.type > 0) {
-            // 弹出操作面板
-            toastOperator(building.getDto(), x, y);
-        }else {
-//            setOperateStageDailog(false, x, y);
-        }
-    }
-
     private void toastOperator(BuildingDto dto, float x, float y){
         dialogOperateStage.setBuildingDto(dto);
         setOperateStageDailog(true, x ,y);
@@ -971,6 +587,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		MsgUtil.getInstance().showLog("screenY=" + screenY);
         isNew = false;
 		tochTaskButton(screenX, screenY,pointer, button);
 
@@ -982,6 +599,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
 		float y = vector3.y;
+		MsgUtil.getInstance().showLog("y=" + y);
 
 		if(y < 0){
 			return false;
@@ -1033,7 +651,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		camera.unproject(vector3); // 坐标转化
 		float x = vector3.x;
 		float y = vector3.y;
-        y = height -1 - y;
 
 		if(y < 0){
 			a.setPosition(oldx, oldy);
@@ -1051,7 +668,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			return false;
 		}
 
-		MsgUtil.getInstance().showLog(gird.toString());
+//		MsgUtil.getInstance().showLog(gird.toString());
 
 		if(!checkXy(gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
@@ -1262,6 +879,359 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
         return true;
+    }
+
+    private void tochTaskButton(int screenX, int screenY, int pointer, int button){
+        float side = width/8f;
+        float y =  height - screenY;
+        if(y > side){
+            return;
+        }
+
+        int buttionId = (int)(screenX / side);
+        ButtonType buttonType = ButtonType.valueOf(buttionId);
+        if(buttonType == null){
+            return;
+        }
+
+        if(!isEdit() && buttonType != ButtonType.WORLD){
+            return;
+        }
+
+        switch (buttonType){//
+            case WORLD:
+                toWorld();
+                break;
+            case RENAME:
+                Gdx.input.getTextInput(listener, newNameMsg, Player.player.getPlayerName(),"");
+                break;
+            case TRAIN:
+                train();
+                break;
+//            case UPGRADE:
+//                upBuilding();
+//                break;
+            case RANKING:
+                rankUp();
+                break;
+            case ATTACKINFO:
+                attackInfo();
+                break;
+        }
+    }
+
+    //各种点击事件
+    private void handleBuildingOnClick(Building building, float x, float y){
+        BuildingType bType = BuildingType.valueOf(building.type);
+        if(bType == null){
+            return;
+        }
+        switch (bType){
+            case OFFICE:
+                break;
+            case CANNON:
+            case ROCKET:
+            case FLAME:
+            case GUN:
+            case TOWER:
+            case MORTAR:
+                RangeInfo e = new RangeInfo(x,y,building.range);
+                rangeQueue.offer(e);
+                break;
+
+            case HOUSE:
+            case BARRACKS:
+                if(isEdit()){
+                    harvist(building.getDto());
+                }
+                break;
+            default:
+                break;
+        }
+        if(building.type > 0) {
+            // 弹出操作面板
+            toastOperator(building.getDto(), x, y);
+        }else {
+//            setOperateStageDailog(false, x, y);
+        }
+    }
+
+    private Queue<RangeInfo> rangeQueue = new ArrayBlockingQueue<RangeInfo>(10);
+
+    private void renderRange(float delta){
+        for (RangeInfo info :rangeQueue) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.GREEN);
+            shapeRenderer.circle(info.getX(), info.getY(), info.getRange());
+            shapeRenderer.end();
+            info.setShowTime(info.getShowTime() + delta);
+            if(info.getShowTime() > 2){
+                rangeQueue.poll();
+            }
+        }
+    }
+
+    public void setRankUpDailog(boolean visible) {
+        if(visible){
+            dialogRankUpStage.show();
+            inputMultiplexer.addProcessor(dialogRankUpStage);
+            inputMultiplexer.removeProcessor(stage);
+//			inputMultiplexer.removeProcessor(this);
+        }else{
+            dialogRankUpStage.hide();
+            inputMultiplexer.addProcessor(stage);
+//			inputMultiplexer.addProcessor(this);
+            inputMultiplexer.removeProcessor(dialogRankUpStage);
+        }
+    }
+
+    public void setArmyDailog(boolean visible) {
+        if(visible){
+            dialogArmyStage.show();
+            inputMultiplexer.addProcessor(dialogArmyStage);
+            inputMultiplexer.removeProcessor(stage);
+//			inputMultiplexer.removeProcessor(this);
+        }else{
+            dialogArmyStage.hide();
+            inputMultiplexer.addProcessor(stage);
+//			inputMultiplexer.addProcessor(this);
+            inputMultiplexer.removeProcessor(dialogArmyStage);
+        }
+    }
+
+//	public void setBuildingDailog(boolean visible) {
+//		if(visible){
+//			dialogBuildingStage.show();
+//			inputMultiplexer.addProcessor(dialogBuildingStage);
+//			inputMultiplexer.removeProcessor(stage);
+//			inputMultiplexer.removeProcessor(this);
+//		}else{
+//			dialogBuildingStage.hide();
+//			inputMultiplexer.addProcessor(stage);
+//			inputMultiplexer.addProcessor(this);
+//			inputMultiplexer.removeProcessor(dialogBuildingStage);
+//		}
+//	}
+
+    public void setAttackInfoDailog(boolean visible) {
+        if(visible){
+            dialogAttackInfoStage.show();
+            inputMultiplexer.addProcessor(dialogAttackInfoStage);
+            inputMultiplexer.removeProcessor(stage);
+//			inputMultiplexer.removeProcessor(this);
+        }else{
+            dialogAttackInfoStage.hide();
+            inputMultiplexer.addProcessor(stage);
+//			inputMultiplexer.addProcessor(this);
+            inputMultiplexer.removeProcessor(dialogAttackInfoStage);
+        }
+    }
+
+    public void setOperateStageDailog(boolean visible, float x, float y) {
+        if(visible){
+            dialogOperateStage.show(x, y);
+            inputMultiplexer.addProcessor(dialogOperateStage);
+            inputMultiplexer.removeProcessor(stage);
+        }else{
+            dialogOperateStage.hide();
+            inputMultiplexer.addProcessor(stage);
+            inputMultiplexer.removeProcessor(dialogOperateStage);
+        }
+    }
+
+    private long huoseTime; //收割临时时间
+    private long barracksTime; //收割临时时间
+
+    /**
+     * harvist
+     */
+    private void harvist(BuildingDto dto){
+        if(dto == null){
+            return;
+        }
+        int buildingId = dto.getMid();
+        if(buildingId != BuildingType.HOUSE.getId() && buildingId != BuildingType.BARRACKS.getId()){
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        long diffTime;
+        if(buildingId == BuildingType.HOUSE.getId()){
+            diffTime = now - huoseTime;
+        }else{
+            diffTime = now - barracksTime;
+        }
+
+        if(diffTime <= 100000 ){
+            MsgUtil.getInstance().showMsg(Module.BUILDING, -10005);
+            return;
+        }
+
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("x", dto.getX());
+        params.put("y", dto.getY());
+        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, params),true);
+        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+            return;
+        }
+
+        byte[] bytes = response.getValueBytes();
+        String text = new String(bytes);
+        @SuppressWarnings("unchecked")
+        HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+        if(result != null){
+            int code = Integer.valueOf(String.valueOf(result.get("result")));
+            if(code != Result.SUCCESS){
+                MsgUtil.getInstance().showMsg(Module.BUILDING,code);
+                return ;
+            }
+            Object valueResult = result.get("content");
+            if(valueResult != null){
+                ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+                RewardService.executeRewards(valueResultSet);
+            }
+            Sound sound = ResUtil.getInstance().getSound(5);
+            sound.play();
+
+            if(buildingId == BuildingType.HOUSE.getId()){
+                huoseTime = System.currentTimeMillis();
+            }else{
+                barracksTime = now - barracksTime;
+            }
+        }
+    }
+
+    /**
+     *  地图是否可编辑
+     * @return
+     */
+    private boolean isEdit(){
+        return(playerDto.isMyself());//
+    }
+
+
+    /**
+     * attack other player
+     */
+    private void attack(){
+        Map<Integer,ArmyDto> armys = Player.player.getArmys();
+        if(armys == null || armys.isEmpty()){
+            return;
+        }
+
+        boolean deadAll = true;
+        for(ArmyDto dto : armys.values()){
+            if(dto.getAmout() > 0){
+                deadAll = false;
+                break;
+            }
+        }
+        if(deadAll){
+            MsgUtil.getInstance().showMsg(Module.BATTLE,-10003);
+            return;
+        }
+
+        HashMap<String,Object> params = new HashMap<String,Object>();
+        params.put("x", playerDto.getX());
+        params.put("y", playerDto.getY());
+        Request request = Request.valueOf(Module.BATTLE, BattleCmd.START_BATTLE, params);
+        Response response = SocketUtil.send(request, true);
+        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+            return;
+        }
+
+        byte[] bytes = response.getValueBytes();
+        String text = new String(bytes);
+        @SuppressWarnings("unchecked")
+        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+        Object codeObject = result.get("result");
+        int code = Integer.valueOf(String.valueOf(codeObject));
+        if(code != Result.SUCCESS){
+            MsgUtil.getInstance().showMsg(Module.BATTLE, code);
+            return;
+        }
+
+        Object o = result.get("content");
+        if(o != null){
+            ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
+            RewardService.executeRewards(valueResultSet);
+        }
+
+        GameScreen.playerDto = playerDto;
+        tranceGame.setScreen(tranceGame.gameScreen);
+    }
+
+    /**
+     * change player
+     */
+    private void change(){
+        HashMap<String,Object> params = new HashMap<String,Object>();
+        params.put("x", playerDto.getX());
+        params.put("y", playerDto.getY());
+        Request request = Request.valueOf(Module.WORLD, WorldCmd.CHANGE_PLAYER, params);
+        Response response = SocketUtil.send(request, true);
+        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+            return;
+        }
+        byte[] bytes = response.getValueBytes();
+        String text = new String(bytes);
+        @SuppressWarnings("unchecked")
+        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+        Object codeObject = result.get("result");
+        int code = Integer.valueOf(String.valueOf(codeObject));
+        if(code != Result.SUCCESS){
+            MsgUtil.getInstance().showMsg(Module.WORLD, code);
+            return;
+        }
+
+        Object pobj = result.get("content");
+        if(pobj != null){
+            PlayerDto newPlayerDto = JSON.parseObject(pobj.toString(), PlayerDto.class);
+            newPlayerDto.setX(playerDto.getX());
+            newPlayerDto.setY(playerDto.getY());
+            WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
+            playerDto = newPlayerDto;
+            int[][] map;
+            Object mobj = result.get("mapdata");
+            if (mobj == null) {
+                map = MapData.clonemap();
+            }else{
+                map = JSON.parseObject(mobj.toString(), int[][].class);
+            }
+            playerDto.setMap(map);
+
+            Object bobj = result.get("buildings");
+            if(bobj != null){
+                List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+                for(BuildingDto dto : buildings){
+                    playerDto.addBuilding(dto);
+                }
+            }
+
+            FontUtil.getFont().appendText(playerDto.getPlayerName());
+            show();
+            Sound sound = ResUtil.getInstance().getSound(8);
+            sound.play();
+        }
+    }
+
+    private void train(){
+        setArmyDailog(true);
+    }
+
+    //	private void upBuilding(){
+//		setBuildingDailog(true);
+//	}
+    private void attackInfo(){
+        setAttackInfoDailog(true);
+    }
+
+    private void rankUp(){
+        setRankUpDailog(true);
+    }
+
+    private void toWorld(){
+        this.tranceGame.setScreen(tranceGame.worldScreen);
     }
 
     /**
