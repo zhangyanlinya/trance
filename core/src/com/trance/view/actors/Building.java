@@ -46,7 +46,7 @@ public class Building extends GameActor {
 		if(font == null){
 			font = FreeFont.getBitmapFont("building");
 			font.setSize(15);
-			font.appendText("1234567890levelcount-");
+			font.appendText("1234567890levelcount");
 		}
 	}
 
@@ -273,7 +273,7 @@ public class Building extends GameActor {
 
 
 		if(dto != null){
-			font.draw(batch,  dto.getX() + "-" + dto.getY() , getX() + hw/2 , getY() + getHeight());
+			font.draw(batch,  dto.getLvl() + "" , getX() + hw/2 , getY() + getHeight());
             float current = dto.getEtime() -  System.currentTimeMillis() ;
             if(current > 0){
                 current = dto.getCdtime() - current;

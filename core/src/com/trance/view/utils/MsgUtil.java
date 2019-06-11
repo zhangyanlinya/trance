@@ -243,6 +243,7 @@ public class MsgUtil {
 		}
 
 		final String msg = getLocalMsg(obj + "");
+		Gdx.app.log("showlog",msg);
 		DelayService.getIntance().submit(new DelayItem<Runnable>(new MsgShowTask(tranceGame, msg), 3000));
 	}
 

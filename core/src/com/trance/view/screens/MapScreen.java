@@ -323,7 +323,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	}
 
 	private void initInputProcessor(){
-		inputMultiplexer.addProcessor(gestureHandler);
+//		inputMultiplexer.addProcessor(gestureHandler);
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -587,7 +587,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		MsgUtil.getInstance().showLog("screenY=" + screenY);
+//		MsgUtil.getInstance().showLog("screenY=" + screenY);
         isNew = false;
 		tochTaskButton(screenX, screenY,pointer, button);
 
@@ -599,7 +599,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		camera.unproject(vector3); // 坐标转化  
 		float x = vector3.x;
 		float y = vector3.y;
-		MsgUtil.getInstance().showLog("y=" + y);
+//		MsgUtil.getInstance().showLog("y=" + y);
 
 		if(y < 0){
 			return false;
@@ -681,7 +681,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         if(!isBlank(map, oldi, oldj, gird.i, gird.j, oldType)){
             a.setPosition(oldx, oldy);
             a.setTouchable(Touchable.enabled);//比较后就可以点了
-			MsgUtil.getInstance().showLog(4 +" = "+ x + " - " + y);
+//			MsgUtil.getInstance().showLog(4 +" = "+ x + " - " + y);
             return false;
         }
 
@@ -732,7 +732,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 			return false;
 		}
-		if(oldi > 0) {
+		if(oldi >= 0) {
             if (gird.i == oldi && gird.j == oldj) { //没有移动
                 a.setPosition(oldx, oldy);
                 a.setTouchable(Touchable.enabled);//比较后就可以点了
@@ -741,42 +741,42 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         }
 
 		////替换
-        int targetType = 0;
-        Building b = compute(x, y);
-        if(b != null){
-            if(oldi == -1){
-                a.setPosition(oldx, oldy);
-                a.setTouchable(Touchable.enabled);//比较后就可以点了
-                return false;
-            }
-            targetType = b.type;
-        }
+//        int targetType = 0;
+//        Building b = compute(x, y);
+//        if(b != null){
+//            if(oldi == -1){
+//                a.setPosition(oldx, oldy);
+//                a.setTouchable(Touchable.enabled);//比较后就可以点了
+//                return false;
+//            }
+//            targetType = b.type;
+//        }
+//
+//        if(targetType == 0){//add
+//            if(!isBlank( map, -1, -1, gird.i, gird.j, targetType)){
+//                a.setPosition(oldx, oldy);
+//                a.setTouchable(Touchable.enabled);//比较后就可以点了
+//                return false;
+//            }
+//        }else {
+//            if (!canChange(oldType, targetType)) {
+//                a.setPosition(oldx, oldy);
+//                a.setTouchable(Touchable.enabled);//比较后就可以点了
+//                return false;
+//            }
+//        }
+//
+//        if(b != null){
+//            b.setPosition(oldx, oldy);
+//            b.setIndex(oldi, oldj);
+//        }
 
-        if(targetType == 0){//add
-            if(!isBlank( map, -1, -1, gird.i, gird.j, targetType)){
-                a.setPosition(oldx, oldy);
-                a.setTouchable(Touchable.enabled);//比较后就可以点了
-                return false;
-            }
-        }else {
-            if (!canChange(oldType, targetType)) {
-                a.setPosition(oldx, oldy);
-                a.setTouchable(Touchable.enabled);//比较后就可以点了
-                return false;
-            }
-        }
-
-        if(b != null){
-            b.setPosition(oldx, oldy);
-            b.setIndex(oldi, oldj);
-        }
-
-        if(targetType == 0){//add
-            moveToBlank(map, oldi, oldj, gird.i, gird.j, gird.id);
-        }else{
-            map[oldi][oldj] = targetType;
-            map[gird.i][gird.j] = oldType;
-        }
+//        if(targetType == 0){//add
+            moveToBlank(map, oldi, oldj, gird.i, gird.j, oldType);
+//        }else{
+//            map[oldi][oldj] = targetType;
+//            map[gird.i][gird.j] = oldType;
+//        }
 
 //        playerDto.getMap()[oldi][oldj] = targetType;
 
@@ -790,7 +790,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		StringBuilder from = new StringBuilder();
 		from.append(oldi).append("|").append(oldj).append("|").append(oldType);
 		StringBuilder to = new StringBuilder();
-		to.append(gird.i).append("|").append(gird.j).append("|").append(targetType);
+		to.append(gird.i).append("|").append(gird.j).append("|").append(0);
 		saveMaptoServer(from.toString(),to.toString());
         a.setTouchable(Touchable.enabled);//比较后就可以点了
 		return false;
@@ -815,6 +815,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	 * @return
 	 */
 	private boolean isBlank(int[][] map, int fx, int fy, int tx, int ty, int id) {
+		MsgUtil.getInstance().showLog(  fx +"_" + fy +"_"+ tx +"_"+ ty );
 		BuildingType buildingType = BuildingType.valueOf(id);
 		if (buildingType == null) {
 			return false;
@@ -823,16 +824,18 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		int occupy = buildingType.getOccupy();
 		int limitX = tx + occupy;
 		if (limitX > ARR_HEIGHT_SIZE) {
+			MsgUtil.getInstance().showLog(7  + " limitX = " + limitX);
 			return false;
 		}
 
 		int limitY = ty + occupy;
 		if (limitY > ARR_WIDTH_SIZE) {
+			MsgUtil.getInstance().showLog(8  + " limitY = " + limitY);
 			return false;
 		}
 
 		Set<Integer> codes = new HashSet<Integer>(); //old occupy
-		if( fx > 0 && fy > 0){
+		if( fx >= 0 || fy >= 0){
 			for (int i = fx; i < fx + occupy; i++) {
 				for (int j = fy; j < fy + occupy; j++) {
 					codes.add(toOccupyCode(i, j));
@@ -840,11 +843,13 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 			}
 		}
 
+//		MsgUtil.getInstance().showLog(9  + " codes = " + codes);
 		for (int i = tx; i < limitX; i++) {
 			for (int j = ty; j < limitY; j++) {
 				if (map[i][j] != 0) {
 					int code = toOccupyCode(i, j);
 					if(!codes.contains(code)){ // 目标范围里不是完全空地
+						MsgUtil.getInstance().showLog(9  + " code = " + code);
 						return false;
 					}
 				}

@@ -82,7 +82,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     private final static int ARR_HEIGHT_SIZE = 20;
 
     /** 中间游戏区域的百分比 */
-    private static double percent = 0.9;
+    private static double percent = 0.8;
     /** 每格的边长 */
     private static float length = 32;
     /** 游戏区域宽 */
