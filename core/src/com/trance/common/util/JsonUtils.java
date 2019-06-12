@@ -1,3 +1,4 @@
+/*
 package com.trance.common.util;
 
 
@@ -12,31 +13,39 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
+*/
 /**
  * json工具类
  * 
  * @author zhangyl
- */
+ *//*
+
 public abstract class JsonUtils {
 
 
 	private static Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
-	/**
+	*/
+/**
 	 * jackson ObjectMapper
-	 */
+	 *//*
+
 	private static final ObjectMapper mapper = new ObjectMapper();
 	
-	/**
+	*/
+/**
 	 * jackson TypeFactory
-	 */
+	 *//*
+
 	private static final TypeFactory typeFactory = TypeFactory.defaultInstance();
 	
-	/**
+	*/
+/**
 	 * 对象转换成json字符串
 	 * @param obj Object
 	 * @return String
-	 */
+	 *//*
+
 	public static String object2JsonString(Object obj) {
 		try {
 //			return mapper.writeValueAsString(obj);
@@ -49,12 +58,14 @@ public abstract class JsonUtils {
 		}
 	}
 	
-	/**
+	*/
+/**
 	 * json字符串转换成对象
 	 * @param jsonString String
 	 * @param valueType 对象类型
 	 * @return T
-	 */
+	 *//*
+
 	public static <T> T jsonString2Object(String jsonString, Class<T> valueType) {
 		try {
 //			return mapper.readValue(jsonString, valueType);
@@ -67,12 +78,14 @@ public abstract class JsonUtils {
 		}
 	}
 	
-	/**
+	*/
+/**
 	 * json字符串转换成对象
 	 * @param jsonString String
 	 * @param valueTypeRef 对象类型
 	 * @return T
-	 */
+	 *//*
+
 	public static <T> T jsonString2Object(String jsonString, TypeReference<T> valueTypeRef) {
 		try {
 			return mapper.readValue(jsonString, valueTypeRef);
@@ -84,11 +97,13 @@ public abstract class JsonUtils {
 		} 
 	}
 	
-	/**
+	*/
+/**
 	 * 对象转换成字节数组
 	 * @param obj Object
 	 * @return byte[]
-	 */
+	 *//*
+
 	public static byte[] object2Bytes(Object obj) {
 		try {
 //			return mapper.writeValueAsBytes(obj);
@@ -101,12 +116,14 @@ public abstract class JsonUtils {
 		}
 	}
 	
-	/**
+	*/
+/**
 	 * 字节数组转换成对象
 	 * @param data  字节数组
 	 * @param valueType JavaType
 	 * @return Object
-	 */
+	 *//*
+
 	public static Object bytes2Object(byte[] data, JavaType valueType) {
 		if (data == null) {
 			return null;
@@ -122,12 +139,14 @@ public abstract class JsonUtils {
 		}		
 	}
 	
-	/**
+	*/
+/**
 	 * 字节数组转换成对象
 	 * @param data 字节数组
 	 * @param valueType Type
 	 * @return Object
-	 */
+	 *//*
+
 	public static Object bytes2Object(byte[] data, Type valueType) {
 		if (data == null) {
 			return null;
@@ -143,12 +162,14 @@ public abstract class JsonUtils {
 		}		
 	}
 	
-	/**
+	*/
+/**
 	 * 字节数组转换成对象
 	 * @param data 字节数组
 	 * @param valueTypeRef TypeReference
 	 * @return Object
-	 */
+	 *//*
+
 	public static <T> T bytes2Object(byte[] data, TypeReference<T> valueTypeRef) {
 		if (data == null) {
 			return null;
@@ -165,3 +186,4 @@ public abstract class JsonUtils {
 	}
 	
 }
+*/

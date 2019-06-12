@@ -18,7 +18,7 @@ public class ClientServiceImpl implements ClientService{
 	/**
 	 * logger
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
 	
 	
 	/**
@@ -78,7 +78,7 @@ public class ClientServiceImpl implements ClientService{
 			Response response = this.socketClient.send(request);
 			return response;
 		} catch (Exception ex) {
-			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
+//			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}finally{
 			if(showDialog){
 				MsgUtil.getInstance().hideLoading();
@@ -96,7 +96,7 @@ public class ClientServiceImpl implements ClientService{
 		try {
 			this.socketClient.sendAsync(request);
 		} catch (Exception ex) {
-			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
+//			logger.error("发送信息到远程服务器错误：{}", ex.getMessage());
 		}
 		
 	}
@@ -130,10 +130,10 @@ public class ClientServiceImpl implements ClientService{
 			if(session == null){
 				return false;
 			}
-			logger.info("连接远程服务器[ip: {}, port: {}]成功！", this.ip, this.port);
+//			logger.info("连接远程服务器[ip: {}, port: {}]成功！", this.ip, this.port);
 			
 		} catch (Exception ex) {
-			logger.error("初始化远程服务器[ip: {}, port: {}] 连接错误：{}", this.ip, this.port, ex.getMessage());
+//			logger.error("初始化远程服务器[ip: {}, port: {}] 连接错误：{}", this.ip, this.port, ex.getMessage());
 			return false;
 		}
 		

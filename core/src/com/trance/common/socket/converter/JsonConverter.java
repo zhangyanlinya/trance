@@ -1,10 +1,8 @@
 package com.trance.common.socket.converter;
 
+import com.alibaba.fastjson.JSON;
 import com.trance.common.socket.codec.CodecFormat;
-import com.trance.common.util.JsonUtils;
 
-import org.codehaus.jackson.type.JavaType;
-import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +15,10 @@ import java.lang.reflect.Type;
  * @author zhangyl
  */
 public class JsonConverter implements ObjectConverter {
-	
+
+
 	private static final Logger logger = LoggerFactory.getLogger(JsonConverter.class);
-	
+
 	@Override
 	public CodecFormat getFormat() {
 		return CodecFormat.JSON;
@@ -31,7 +30,7 @@ public class JsonConverter implements ObjectConverter {
 			return null;
 		}
 
-		return JsonUtils.object2Bytes(obj);
+		return JSON.toJSONBytes(obj);
 	}
 
 	@Override
@@ -42,17 +41,14 @@ public class JsonConverter implements ObjectConverter {
 		if(type.equals(void.class)) {
 			return null;
 		}
-		
-		if (type instanceof TypeReference) {
-			return JsonUtils.bytes2Object(data, (TypeReference<?>)type);
-		} else if (type instanceof JavaType) {
-			return JsonUtils.bytes2Object(data, (JavaType) type);
-		} else if (type instanceof Type) {
-			return JsonUtils.bytes2Object(data, (Type) type);
+
+		if (type instanceof Type) {
+			return JSON.parseObject(data, (Type)type);
 		} else {
 			logger.error("不支持的类型参数[{}]", type);
 		}
-		
+
 		return null;
 	}
+
 }

@@ -53,7 +53,7 @@ public class SimpleSocketClient {
 	/**
 	 * SocketConnector
 	 */
-	private SocketConnector connector = null;
+	private volatile static SocketConnector connector = null;
 	
 	/**
 	 * Socket session
@@ -99,40 +99,42 @@ public class SimpleSocketClient {
 		if(connector != null){
 			return ;
 		}
-		//注册默认对象转换器
-		this.registerObjectConverters(new JsonConverter());
-		connector = new NioSocketConnector();
-		
-		//Session配置
-		SocketSessionConfig sessionConfig = connector.getSessionConfig();
-		sessionConfig.setReadBufferSize(2048);
-		sessionConfig.setSendBufferSize(2048);
-		sessionConfig.setTcpNoDelay(true);
-		sessionConfig.setSoLinger(0);
-		
-		connector.setConnectTimeoutMillis(10000);
-		
-		//过滤器配置
-		DefaultIoFilterChainBuilder filterChain = connector.getFilterChain();
-		
-		//编解码
-		ProtocolCodecFactory codecFactory = createCodecFactory();
-		filterChain.addLast("codec", new ProtocolCodecFilter(codecFactory));
-		//断线重连回调拦截器 
-		filterChain.addFirst("reconnection", new ReconnectionFilter());
-		
-		if (threadCount > 0) {
-			this.executorFilter = this.createExecutorFilter(threadCount, threadCount, 30000L);
-			filterChain.addLast("threadPool", executorFilter);
+		synchronized (SimpleSocketClient.class) {
+			//注册默认对象转换器
+			this.registerObjectConverters(new JsonConverter());
+			connector = new NioSocketConnector();
+
+			//Session配置
+			SocketSessionConfig sessionConfig = connector.getSessionConfig();
+			sessionConfig.setReadBufferSize(2048);
+			sessionConfig.setSendBufferSize(2048);
+			sessionConfig.setTcpNoDelay(true);
+			sessionConfig.setSoLinger(0);
+
+			connector.setConnectTimeoutMillis(10000);
+
+			//过滤器配置
+			DefaultIoFilterChainBuilder filterChain = connector.getFilterChain();
+
+			//编解码
+			ProtocolCodecFactory codecFactory = createCodecFactory();
+			filterChain.addLast("codec", new ProtocolCodecFilter(codecFactory));
+			//断线重连回调拦截器
+			filterChain.addFirst("reconnection", new ReconnectionFilter());
+
+			if (threadCount > 0) {
+				this.executorFilter = this.createExecutorFilter(threadCount, threadCount, 30000L);
+				filterChain.addLast("threadPool", executorFilter);
+			}
+
+			//注册业务响应处理器
+			intBisHandler();
+
+			//IoHandler
+			IoHandler handler = this.createClientHandler();
+			connector.setHandler(handler);
+			address = new InetSocketAddress(ip, port);
 		}
-		
-		//注册业务响应处理器
-		intBisHandler();
-		
-		//IoHandler
-		IoHandler handler = this.createClientHandler();
-		connector.setHandler(handler);
-		address = new InetSocketAddress(ip, port);
 	}
 	
 	/**
@@ -159,8 +161,8 @@ public class SimpleSocketClient {
 				return null;
 			}
 			WriteFuture writeFuture = session.write(request);
-			writeFuture.awaitUninterruptibly(15000L);
-			ctx.await(15, TimeUnit.SECONDS);
+			writeFuture.awaitUninterruptibly(10000L);
+			ctx.await(10, TimeUnit.SECONDS);
 			return ctx.getResponse();
 		} catch (Exception ex) {
 			logger.error("发起请求失败");

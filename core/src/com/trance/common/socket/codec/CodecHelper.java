@@ -212,9 +212,9 @@ public class CodecHelper {
 		response.setValueBytes(data);
 						
 		//需要压缩 
-		if (response.isCompressed()) {
-			//TODO
-		}
+//		if (response.isCompressed()) {
+//			//TODO
+//		}
 				
 		response.setResponseTime(System.currentTimeMillis());
 		byte[] resData = toByteArray(response);
