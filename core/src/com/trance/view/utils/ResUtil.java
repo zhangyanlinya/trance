@@ -105,15 +105,15 @@ public class ResUtil extends AssetManager {
 		}
 	}
 
-	private Map<ExplodeType, Animation> explodeTypeMap = new HashMap<ExplodeType, Animation>();
+	private Map<ExplodeType, Animation<TextureRegion>> explodeTypeMap = new HashMap<ExplodeType, Animation<TextureRegion>>();
 
 	/**
 	 *  ExplodeAnimation
 	 * @param type
 	 * @return
      */
-	public Animation getExplodeAnimation(ExplodeType type){
-		Animation animation = explodeTypeMap.get(type);
+	public Animation<TextureRegion> getExplodeAnimation(ExplodeType type){
+		Animation<TextureRegion> animation = explodeTypeMap.get(type);
 		if(animation != null ){
 			return animation;
 		}
@@ -128,7 +128,7 @@ public class ResUtil extends AssetManager {
 		}
 
 		float frameDuration = 0.4f;
-		animation = new Animation(frameDuration, regions);
+		animation = new Animation<TextureRegion>(frameDuration, regions);
 		explodeTypeMap.put(type, animation);
 		return animation;
 	}

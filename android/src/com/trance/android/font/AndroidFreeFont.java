@@ -30,7 +30,7 @@ public class AndroidFreeFont implements FreeListener {
     }
 
     public Pixmap getFontPixmap(String txt, FreePaint vpaint) {
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
+//        Pixmap.setFilter(Pixmap.Filter.BiLinear);
         if (paint == null) {
             paint = new Paint();
             paint.setAntiAlias(true);

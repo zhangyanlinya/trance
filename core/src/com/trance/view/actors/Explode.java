@@ -28,7 +28,7 @@ public class Explode extends GameActor {
 
     private float stateTime;
     private TextureRegion currentFrame;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     @Override
     public void draw(Batch batch, float parentAlpha){
