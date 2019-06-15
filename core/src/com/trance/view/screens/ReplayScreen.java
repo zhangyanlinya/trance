@@ -435,9 +435,12 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
             int i = dto.getX();
             int j = dto.getY();
             Building block = new Building();
-            int n = map.length - 1 - i;
+//            int n = map.length - 1 - i;
+//            float px = menu_width + j * length;
+//            float py = control_height + n * length;
+
             float px = menu_width + j * length;
-            float py = control_height + n * length;
+            float py = control_height + i * length;
 
             block.setIndex(i, j);
             block.init(world, dto.getMid(), px, py, length, length, shapeRenderer, dto);
