@@ -33,7 +33,7 @@ public class DesktopFreeFont implements FreeListener {
     }
 
     public Pixmap getFontPixmap(String txt, FreePaint vpaint) {
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
+//        Pixmap.setFilter(Pixmap.Filter.BiLinear);
         Font font = getFont(vpaint.getTextSize(), vpaint.getFakeBoldText()
                 || vpaint.getStrokeColor() != null);
         FontMetrics fm = metrics.get(vpaint.getTextSize());

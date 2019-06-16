@@ -34,15 +34,15 @@ public class DesktopLauncher {
 			}
 		},"en"), cfg);
 
-        int w = Gdx.graphics.getDesktopDisplayMode().width;
+//        int w = Gdx.graphics.getDesktopDisplayMode().width;
 //        MsgUtil.getInstance().showMsg(w);
-        int h = Gdx.graphics.getDesktopDisplayMode().height;
-//        MsgUtil.getInstance().showMsg(h);
-        System.out.println(w);
-        System.out.println(h);
+//        int h = Gdx.graphics.getDesktopDisplayMode().height;
+//        MsgUtil.getInstance().showMsg(h);z
+//        System.out.println(w);
+//        System.out.println(h);
 
 //       lwjgl.getGraphics().setDisplayMode(1280, 720, false);
-        Gdx.graphics.setDisplayMode(390, 600, false);
+//        Gdx.graphics.setDisplayMode(390, 600, false);
 
         //lwjgl.getGraphics().setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, false);
 

@@ -217,7 +217,7 @@ public class FreeBitmapFont extends BitmapFont {
             this.data.setGlyph(32, spaceGlyph);
         }
 
-        this.data.spaceXadvance = (spaceGlyph != null?spaceGlyph.xadvance + spaceGlyph.width:1);
+        this.data.spaceXadvance = spaceGlyph.xadvance + spaceGlyph.width;
         Array var13 = this.packer.getPages();
         Array regions = this.getRegions();
         int page = 0;
