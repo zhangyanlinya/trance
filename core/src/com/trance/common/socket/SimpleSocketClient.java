@@ -40,103 +40,101 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 简单的客户机实现
- * 
+ *
  * @author bingshan
  */
 public class SimpleSocketClient {
-	
+
 	/**
 	 * logger
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(SimpleSocketClient.class);
-	
+
 	/**
 	 * SocketConnector
 	 */
-	private volatile static SocketConnector connector = null;
-	
+	private SocketConnector connector = null;
+
 	/**
 	 * Socket session
 	 */
 	private IoSession session = null;
-	
+
 	/**
-     * ExecutorFilter
-     */
-    private ExecutorFilter executorFilter;
-    
-    /**
-     * InetSocketAddress
-     */
-    private InetSocketAddress address;
-	
+	 * ExecutorFilter
+	 */
+	private ExecutorFilter executorFilter;
+
+	/**
+	 * InetSocketAddress
+	 */
+	private InetSocketAddress address;
+
 	/**
 	 * 响应消息处理器集合
 	 */
 	private final ResponseProcessors responseProcessors = new ResponseProcessors();
-	
+
 	/**
 	 * 对象转换器集合
 	 */
 	private final ObjectConverters objectConverters = new ObjectConverters();
-	
-	
+
+
 	/**
 	 * 请求上下文 {sn: ClientContext}
 	 */
 	private final ConcurrentMap<Integer, ClientContext> requestContext = new ConcurrentLinkedHashMap.Builder<Integer, ClientContext>().maximumWeightedCapacity(100000).build();
-	
+
 	/**
 	 * 序列号
 	 */
 	private int sn = 0;
-	
+
 	public SimpleSocketClient(String ip, int port) {
 		this(ip, port, 0);
 	}
-	
+
 	public SimpleSocketClient(String ip, int port, int threadCount) {
 		if(connector != null){
 			return ;
 		}
-		synchronized (SimpleSocketClient.class) {
-			//注册默认对象转换器
-			this.registerObjectConverters(new JsonConverter());
-			connector = new NioSocketConnector();
+		//注册默认对象转换器
+		this.registerObjectConverters(new JsonConverter());
+		connector = new NioSocketConnector();
 
-			//Session配置
-			SocketSessionConfig sessionConfig = connector.getSessionConfig();
-			sessionConfig.setReadBufferSize(2048);
-			sessionConfig.setSendBufferSize(2048);
-			sessionConfig.setTcpNoDelay(true);
-			sessionConfig.setSoLinger(0);
+		//Session配置
+		SocketSessionConfig sessionConfig = connector.getSessionConfig();
+		sessionConfig.setReadBufferSize(2048);
+		sessionConfig.setSendBufferSize(2048);
+		sessionConfig.setTcpNoDelay(true);
+		sessionConfig.setSoLinger(0);
 
-			connector.setConnectTimeoutMillis(10000);
+		connector.setConnectTimeoutMillis(10000);
 
-			//过滤器配置
-			DefaultIoFilterChainBuilder filterChain = connector.getFilterChain();
+		//过滤器配置
+		DefaultIoFilterChainBuilder filterChain = connector.getFilterChain();
 
-			//编解码
-			ProtocolCodecFactory codecFactory = createCodecFactory();
-			filterChain.addLast("codec", new ProtocolCodecFilter(codecFactory));
-			//断线重连回调拦截器
-			filterChain.addFirst("reconnection", new ReconnectionFilter());
+		//编解码
+		ProtocolCodecFactory codecFactory = createCodecFactory();
+		filterChain.addLast("codec", new ProtocolCodecFilter(codecFactory));
+		//断线重连回调拦截器
+		filterChain.addFirst("reconnection", new ReconnectionFilter());
 
-			if (threadCount > 0) {
-				this.executorFilter = this.createExecutorFilter(threadCount, threadCount, 30000L);
-				filterChain.addLast("threadPool", executorFilter);
-			}
-
-			//注册业务响应处理器
-			intBisHandler();
-
-			//IoHandler
-			IoHandler handler = this.createClientHandler();
-			connector.setHandler(handler);
-			address = new InetSocketAddress(ip, port);
+		if (threadCount > 0) {
+			this.executorFilter = this.createExecutorFilter(threadCount, threadCount, 30000L);
+			filterChain.addLast("threadPool", executorFilter);
 		}
+
+		//注册业务响应处理器
+		intBisHandler();
+
+		//IoHandler
+		IoHandler handler = this.createClientHandler();
+		connector.setHandler(handler);
+		address = new InetSocketAddress(ip, port);
 	}
-	
+
 	/**
 	 * 注册业务响应处理器
 	 */
@@ -153,7 +151,7 @@ public class SimpleSocketClient {
 	public Response send(Request request) {
 		int sn = this.getSn();
 		ClientContext ctx = ClientContext.valueOf(sn, request.getSn(), true);
-		request.setSn(sn);	
+		request.setSn(sn);
 		this.requestContext.put(sn, ctx);
 		try {
 			IoSession session = this.getSession();
@@ -161,8 +159,8 @@ public class SimpleSocketClient {
 				return null;
 			}
 			WriteFuture writeFuture = session.write(request);
-			writeFuture.awaitUninterruptibly(10000L);
-			ctx.await(10, TimeUnit.SECONDS);
+			writeFuture.awaitUninterruptibly(15000L);
+			ctx.await(15, TimeUnit.SECONDS);
 			return ctx.getResponse();
 		} catch (Exception ex) {
 			logger.error("发起请求失败");
@@ -172,7 +170,7 @@ public class SimpleSocketClient {
 			request.setSn(ctx.getOrignSn());
 		}
 	}
-	
+
 	/**
 	 * 异步发起请求
 	 * @param request Request
@@ -180,7 +178,7 @@ public class SimpleSocketClient {
 	public void sendAsync(Request request) {
 		sendAsync(request, null);
 	}
-	
+
 	/**
 	 * 异步发起请求
 	 * @param request Request
@@ -188,21 +186,21 @@ public class SimpleSocketClient {
 	 */
 	public void sendAsync(Request request, Object message) {
 		int sn = this.getSn();
-		
+
 		ClientContext ctx = ClientContext.valueOf(sn, request.getSn(), message, false);
 		this.requestContext.put(sn, ctx);
 		request.setSn(sn);
-		
+
 		IoSession session = this.getSession();
 		if(session == null){
 			this.requestContext.remove(sn);
 			return ;
 		}
 		session.write(request);
-		
+
 		request.setSn(ctx.getOrignSn());
-	}	
-	
+	}
+
 	/**
 	 * 关闭
 	 */
@@ -214,7 +212,7 @@ public class SimpleSocketClient {
 				logger.error("关闭会话错误：" + ex.getMessage(), ex);
 			}
 		}
-		
+
 		if (this.executorFilter != null) {
 			try {
 				this.executorFilter.destroy();
@@ -222,7 +220,7 @@ public class SimpleSocketClient {
 				logger.error(ex.getMessage(), ex);
 			}
 		}
-		
+
 		if (connector != null) {
 			try {
 				connector.dispose();
@@ -230,12 +228,12 @@ public class SimpleSocketClient {
 				logger.error("Error to dispose connector: " + ex.getMessage(), ex);
 			}
 		}
-		
+
 		this.requestContext.clear();
 		this.responseProcessors.clear();
 		this.objectConverters.clear();
 	}
-	
+
 	/**
 	 * 是否是本连接的会话
 	 * @param session IoSession
@@ -244,7 +242,7 @@ public class SimpleSocketClient {
 	public boolean isSameSession(IoSession session) {
 		return this.session == session;
 	}
-	
+
 	/**
 	 * 会话是否连接上
 	 * @return boolean
@@ -252,21 +250,21 @@ public class SimpleSocketClient {
 	public boolean isConnected() {
 		return this.session != null && this.session.isConnected();
 	}
-	
+
 	/**
 	 * 取得序列号
 	 * @return int
 	 */
 	private synchronized int getSn() {
 		this.sn ++;
-		
+
 		if (this.sn >= Integer.MAX_VALUE) {
 			this.sn = 1;
 		}
-		
+
 		return this.sn;
 	}
-	
+
 	/**
 	 * 取得会话
 	 * @return IoSession
@@ -275,15 +273,15 @@ public class SimpleSocketClient {
 		if (this.session != null && this.session.isConnected()) {
 			return this.session;
 		}
-		
+
 		synchronized(this) {
 			if (this.session != null && this.session.isConnected()) {
 				return this.session;
 			}
-			
+
 			//清除之前session的请求上下文信息
 //			this.requestContext.clear();
-			
+
 			ConnectFuture future = connector.connect(address);
 			boolean complete = future.awaitUninterruptibly(10 * 1000L);
 			if(complete){
@@ -293,10 +291,10 @@ public class SimpleSocketClient {
 			}
 			this.session = future.getSession();
 		}
-		
+
 		return this.session;
 	}
-	
+
 	/**
 	 * 创建ProtocolCodecFactory
 	 * @return ProtocolCodecFactory
@@ -306,7 +304,7 @@ public class SimpleSocketClient {
 		ProtocolDecoder decoder = new ResponseDecoder();
 		return new CodecFactory(encoder, decoder);
 	}
-	
+
 	/**
 	 * 创建IoHandler
 	 * @return ClientHandler
@@ -318,7 +316,7 @@ public class SimpleSocketClient {
 		clientHandler.setRequestContext(this.requestContext);
 		return clientHandler;
 	}
-	
+
 	/**
 	 * 创建ExecutorFilter
 	 * @param corePoolSize
@@ -331,7 +329,7 @@ public class SimpleSocketClient {
 		NamedThreadFactory threadFactory = new NamedThreadFactory(group, "通信线程");
 		return new ExecutorFilter(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, threadFactory);
 	}
-	
+
 	/**
 	 * 注册对象转换器
 	 * @param converters ObjectConverter数组
@@ -340,12 +338,12 @@ public class SimpleSocketClient {
 		if (converters == null || converters.length == 0) {
 			return;
 		}
-		
+
 		for (ObjectConverter converter: converters) {
 			this.objectConverters.register(converter);
-		}		
+		}
 	}
-	
+
 	/**
 	 * 注册对象转换器
 	 * @param converters ObjectConverters
@@ -354,12 +352,12 @@ public class SimpleSocketClient {
 		if (converters == null) {
 			return;
 		}
-		
+
 		for (ObjectConverter converter: converters.getObjectConverterList()) {
 			this.registerObjectConverters(converter);
 		}
 	}
-	
+
 	/**
 	 * 注册响应消息处理器
 	 * @param processors ResponseProcessor
@@ -368,12 +366,12 @@ public class SimpleSocketClient {
 		if (processors == null || processors.length == 0) {
 			return;
 		}
-		
+
 		for (ResponseProcessor processor: processors) {
 			this.responseProcessors.registerProcessor(processor);
-		}		
+		}
 	}
-	
+
 	/**
 	 * 注册响应消息处理器
 	 * @param processors ResponseProcessors
@@ -382,7 +380,7 @@ public class SimpleSocketClient {
 		if (processors == null) {
 			return;
 		}
-		
+
 		for (ResponseProcessor processor: processors.getResponseProcessorList()) {
 			this.registerResponseProcessor(processor);
 		}

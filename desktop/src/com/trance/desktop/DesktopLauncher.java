@@ -37,7 +37,7 @@ public class DesktopLauncher {
 //        int w = Gdx.graphics.getDesktopDisplayMode().width;
 //        MsgUtil.getInstance().showMsg(w);
 //        int h = Gdx.graphics.getDesktopDisplayMode().height;
-//        MsgUtil.getInstance().showMsg(h);z
+//        MsgUtil.getInstance().showMsg(h);
 //        System.out.println(w);
 //        System.out.println(h);
 
