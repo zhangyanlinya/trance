@@ -4,6 +4,7 @@ import com.trance.common.socket.ClientContext;
 import com.trance.common.socket.converter.ObjectConverters;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
+import com.trance.common.util.GZIPUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.view.utils.SocketUtil;
@@ -60,6 +61,9 @@ public class ClientHandler extends IoHandlerAdapter {
 		
 		if (response.isCompressed()) {
 			//TODO 解压
+			//System.out.println("解压前 " + response.getValueBytes().length);
+			response.setValueBytes(GZIPUtil.uncompress(response.getValueBytes()));
+			//System.out.println("解压后 " + response.getValueBytes().length);
 		}
 		
 //		System.out.println("收到消息：module[" +response.getModule() + " ]  cmd [" +response.getCmd()+"]");

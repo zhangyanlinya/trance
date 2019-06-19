@@ -2,6 +2,7 @@ package com.trance.common.socket.codec;
 
 import com.trance.common.socket.converter.ObjectConverters;
 import com.trance.common.socket.model.Request;
+import com.trance.common.util.GZIPUtil;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -82,10 +83,18 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 		byte[] data = this.objectConverters.encode(request.getFormat(), request.getValue());
 		request.setValueBytes(data);
 				
-		//需要压缩 
-		if (request.isCompressed()) {
-			//TODO
-		}
+//		//需要压缩
+//		if (request.isCompressed()) {
+//			//TODO
+//		}
+
+//		//需要压缩
+//		if (data != null && data.length > 128) {
+//			System.out.println("压缩前 " + data.length);
+//			request.setValueBytes(GZIPUtil.compress(data));
+//			System.out.println("压缩后 " + request.getValueBytes().length);
+//			request.setCompressed(true);
+//		}
 		
 		byte[] reqData = CodecHelper.toByteArray(request);
 		if (reqData == null) {
