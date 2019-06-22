@@ -1,24 +1,24 @@
 package com.trance.common.socket.codec;
 
-import com.trance.common.socket.converter.ObjectConverters;
-import com.trance.common.socket.model.Request;
-import com.trance.common.socket.model.Response;
-import com.trance.common.socket.model.ResponseStatus;
-import com.trance.common.util.EnumUtils;
-import com.trance.common.util.HashAlgorithms;
+import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_ID;
+import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_LENGTH;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_ID;
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_LENGTH;
+import com.trance.common.socket.converter.ObjectConverters;
+import com.trance.common.socket.model.Request;
+import com.trance.common.socket.model.Response;
+import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.GZIPUtil;
+import com.trance.common.util.HashAlgorithms;
 
 
 /**
  * 编解码帮助类
  * 
- * @author zhangyl
+ * @author trance
  */
 public class CodecHelper {
 	
@@ -30,19 +30,20 @@ public class CodecHelper {
 	/**
 	 * 请求消息体的最小长度
 	 */
-	private static final int REQUEST_LEAST_LENGTH = 29;
+	private static final int REQUEST_LEAST_LENGTH = 17;
 	
 	/**
 	 * 响应消息体的最小长度
 	 */
-	private static final int RESPONSE_LEAST_LENGTH = 37;
+	private static final int RESPONSE_LEAST_LENGTH = 17;
 	
 	/**
 	 * 字节数组转换成请求消息
 	 * 
 	 * <p>
-	 * 流水号[int]|客户端请求时间[long]|消息对象类型[int]|压缩标识[byte]|验证码[int]|模块ID[int]|命令ID[int]|数据对象[byte[]]|
-	 * 
+	 * 流水号[int]|d客户端请求时间[long]|d消息对象类型[int]|压缩标识[byte]|验证码[int]|模块ID[int]|命令ID[int]|数据对象[byte[]]|
+	 * 20 + 8 + 1 = 29 ;
+	 * 16 + 1 = 17 ;
 	 * @param data byte[]
 	 * @return {@link Request}
 	 */
@@ -61,8 +62,8 @@ public class CodecHelper {
 		IoBuffer in = IoBuffer.wrap(data);
 		try {
 			int sn = in.getInt();
-			long requestTime = (long) in.getDouble();
-			int format = in.getInt();
+//			long requestTime = (long) in.getDouble();
+//			int format = in.getInt();
 			byte compress = in.get();
 			int authCode = in.getInt();
 			int module = in.getInt();
@@ -74,9 +75,8 @@ public class CodecHelper {
 				in.get(valueBytes);
 			}
 			
-			Request request = new Request(sn, module, cmd, EnumUtils.getEnum(CodecFormat.class, format),
-					compress == (byte) 1, authCode, valueBytes,
-					requestTime, System.currentTimeMillis());
+			Request request = new Request(sn, module, cmd,
+					compress == (byte) 1, authCode, valueBytes);
 			
 			return request;
 		} catch (Exception ex) {
@@ -116,14 +116,14 @@ public class CodecHelper {
 			byte[] bytes = new byte[buf.position()];
 			buf.rewind();
 			buf.get(bytes);						
-			//int authCode = HashAlgorithms.fnvHash(bytes);
+			int authCode = HashAlgorithms.fnvHash(bytes);
 			
 			buf.clear();
 			buf.putInt(request.getSn());
-			buf.putDouble(request.getRequestTime());
-			buf.putInt(request.getFormat().ordinal());
+//			buf.putDouble(request.getRequestTime());
+//			buf.putInt(request.getFormat().ordinal());
 			buf.put((byte) (request.isCompressed() ? 1 : 0));
-			buf.putInt(0);
+			buf.putInt(authCode);
 			buf.putInt(request.getModule());
 			buf.putInt(request.getCmd());			
 			if (request.getValueBytes() != null) {
@@ -148,7 +148,9 @@ public class CodecHelper {
 	 * 响应消息转换成字节数组
 	 * 
 	 * <p>
-	 * 流水号[int]|接收请求时间[long]|响应时间[long]|消息对象类型[int]|压缩标识[byte]|模块ID[int]|命令ID[int]|响应状态[int]|数据对象[byte[]]|
+	 * 流水号[int]| d接收请求时间[long]|d响应时间[long]|d消息对象类型[int]|压缩标识[byte]|模块ID[int]|命令ID[int]|响应状态[int]|数据对象[byte[]]|
+	 * 以前是 20 + 16 + 1 = 37  
+	 * 现在是 16 + 1 = 17
 	 * 
 	 * @param response Response
 	 * @return byte[]
@@ -167,9 +169,9 @@ public class CodecHelper {
 		buf.setAutoExpand(true);		
 		try {
 			buf.putInt(response.getSn());
-			buf.putDouble(response.getReceiveTime());
-			buf.putDouble(response.getResponseTime());
-			buf.putInt(response.getFormat().ordinal());
+//			buf.putDouble(response.getReceiveTime());
+//			buf.putDouble(response.getResponseTime());
+//			buf.putInt(response.getFormat().ordinal());
 			buf.put((byte) (response.isCompressed() ? 1 : 0));
 			buf.putInt(response.getModule());
 			buf.putInt(response.getCmd());
@@ -211,12 +213,20 @@ public class CodecHelper {
 		byte[] data = objectConverters.encode(response.getFormat(), response.getValue());
 		response.setValueBytes(data);
 						
-		//需要压缩 
+//		//需要压缩 
 //		if (response.isCompressed()) {
 //			//TODO
 //		}
+		
+		//需要压缩 
+		if (data != null && data.length > 512) {
+//			logger.error("压缩前 " + data.length);
+			response.setValueBytes(GZIPUtil.compress(data));
+//			logger.error("压缩后 " + response.getValueBytes().length);
+			response.setCompressed(true);
+		}
 				
-		response.setResponseTime(System.currentTimeMillis());
+//		response.setResponseTime(System.currentTimeMillis());
 		byte[] resData = toByteArray(response);
 		return resData;
 	}
@@ -241,9 +251,9 @@ public class CodecHelper {
 		IoBuffer in = IoBuffer.wrap(data);
 		try {
 			int sn = in.getInt();
-			long receiveTime = (long) in.getDouble();
-			long responseTime = (long) in.getDouble();
-			int format = in.getInt();
+//			long receiveTime = (long) in.getDouble();
+//			long responseTime = (long) in.getDouble();
+//			int format = in.getInt();
 			byte compress = in.get();
 			int module = in.getInt();
 			int cmd = in.getInt();
@@ -255,8 +265,8 @@ public class CodecHelper {
 				in.get(valueBytes);
 			}
 			
-			Response response = Response.valueOf(sn, module, cmd, EnumUtils.getEnum(CodecFormat.class, format), compress == (byte) 1,
-													valueBytes, receiveTime, responseTime, ResponseStatus.valueOf(status));
+			Response response = Response.valueOf(sn, module, cmd, compress == (byte) 1, 
+													valueBytes, ResponseStatus.valueOf(status));
 			
 			return response;
 		} catch (Exception ex) {

@@ -1,14 +1,14 @@
 package com.trance.common.socket.model;
 
-import com.trance.common.socket.codec.CodecFormat;
-
 import java.io.Serializable;
+
+import com.trance.common.socket.codec.CodecFormat;
 
 
 /**
  * 请求消息类
  * 
- * @author zhangyl
+ * @author trance
  */
 public class Request implements Serializable {
 	
@@ -55,31 +55,21 @@ public class Request implements Serializable {
 	private Object value;
 	
 	/**
-	 * 客户机发送请求时间(ms)
-	 */
-	private long requestTime = System.currentTimeMillis();
-	
-	/**
 	 * 接收请求时间(ms)
 	 */
-	private long receiveTime = requestTime;
+	private long receiveTime = System.currentTimeMillis();
 	
 	public Request() {
 		
 	}
 
-	public Request(int sn, int module, int cmd, CodecFormat format,
-			boolean isCompressed, int authCode, byte[] valueBytes,
-			long requestTime, long receiveTime) {
+	public Request(int sn, int module, int cmd, boolean isCompressed, int authCode, byte[] valueBytes) {
 		this.sn = sn;
 		this.module = module;
 		this.cmd = cmd;
-		this.format = format;
 		this.isCompressed = isCompressed;
 		this.authCode = authCode;
 		this.valueBytes = valueBytes;
-		this.requestTime = requestTime;
-		this.receiveTime = receiveTime;
 	}
 
 	public static Request valueOf(int sn, int module, int cmd, Object value) {
@@ -143,13 +133,13 @@ public class Request implements Serializable {
 		this.value = value;
 	}
 
-	public long getRequestTime() {
-		return requestTime;
-	}
-
-	public void setRequestTime(long requestTime) {
-		this.requestTime = requestTime;
-	}
+//	public long getRequestTime() {
+//		return requestTime;
+//	}
+//
+//	public void setRequestTime(long requestTime) {
+//		this.requestTime = requestTime;
+//	}
 
 	public long getReceiveTime() {
 		return receiveTime;
@@ -175,4 +165,16 @@ public class Request implements Serializable {
 		this.authCode = authCode;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("sn[").append(sn).append("] ");
+		sb.append("module[").append(module).append("] ");
+		sb.append("cmd[").append(cmd).append("] ");
+//		sb.append("[").append(DateUtil.date2String(new Date(requestTime), DatePattern.PATTERN_NORMAL)).append("] ");
+//		sb.append("receiveTime[").append(DateUtil.date2String(new Date(receiveTime), DatePattern.PATTERN_NORMAL)).append("] ");
+		return sb.toString();
+	}
+	
+	
 }

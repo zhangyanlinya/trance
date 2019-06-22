@@ -1,14 +1,14 @@
 package com.trance.common.socket.model;
 
-import com.trance.common.socket.codec.CodecFormat;
-
 import java.io.Serializable;
+
+import com.trance.common.socket.codec.CodecFormat;
 
 
 /**
  * 响应消息类
  * 
- * @author zhangyl
+ * @author trance
  */
 public class Response implements Serializable {
 	
@@ -49,15 +49,15 @@ public class Response implements Serializable {
 	 */
 	private Object value;
 	
-	/**
-	 * 接收请求时间(ms)
-	 */
-	private long receiveTime = System.currentTimeMillis();
-	
-	/**
-	 * 响应时间(ms)
-	 */
-	private long responseTime = receiveTime;
+//	/**
+//	 * 接收请求时间(ms)
+//	 */
+//	private long receiveTime = System.currentTimeMillis();
+//	
+//	/**
+//	 * 响应时间(ms)
+//	 */
+//	private long responseTime = receiveTime;
 		
 	/**
 	 * 响应标识
@@ -80,18 +80,17 @@ public class Response implements Serializable {
 		return p;
 	}
 
-	public static Response valueOf(int sn, int module, int cmd, CodecFormat format,
-								   boolean isCompressed, byte[] valueBytes, long receiveTime,
-								   long responseTime, ResponseStatus status) {
+	public static Response valueOf(int sn, int module, int cmd,
+			boolean isCompressed, byte[] valueBytes, ResponseStatus status) {
 		Response res = new Response();
 		res.sn = sn;
 		res.module = module;
 		res.cmd = cmd;
-		res.format = format;
+//		res.format = format;
 		res.isCompressed = isCompressed;
 		res.valueBytes = valueBytes;
-		res.receiveTime = receiveTime;
-		res.responseTime = responseTime;
+//		res.receiveTime = receiveTime;
+//		res.responseTime = responseTime;
 		res.status = status;
 		return res;
 	}
@@ -106,8 +105,8 @@ public class Response implements Serializable {
 		response.setSn(request.getSn());
 		response.setModule(request.getModule());
 		response.setCmd(request.getCmd());
-		response.setFormat(request.getFormat());
-		response.setReceiveTime(request.getReceiveTime());
+//		response.setFormat(request.getFormat());
+//		response.setReceiveTime(request.getReceiveTime());
 		return response;
 	}
 
@@ -167,22 +166,6 @@ public class Response implements Serializable {
 		this.value = value;
 	}
 
-	public long getReceiveTime() {
-		return receiveTime;
-	}
-
-	public void setReceiveTime(long receiveTime) {
-		this.receiveTime = receiveTime;
-	}
-
-	public long getResponseTime() {
-		return responseTime;
-	}
-
-	public void setResponseTime(long responseTime) {
-		this.responseTime = responseTime;
-	}
-
 	public ResponseStatus getStatus() {
 		return status;
 	}
@@ -190,17 +173,4 @@ public class Response implements Serializable {
 	public void setStatus(ResponseStatus status) {
 		this.status = status;
 	}
-
-	@Override
-	public String toString() {
-//		StringBuilder sb = new StringBuilder();
-//		sb.append("sn: ").append(sn).append("\n");
-//		sb.append("module: ").append(module).append("\n");
-//		sb.append("cmd: ").append(cmd).append("\n");
-//		sb.append("status: ").append(status).append("\n");
-//		sb.append("valueBytes: ").append(valueBytes).append("\n");
-		return super.toString();
-	}
-	
-	
 }
