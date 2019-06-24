@@ -116,14 +116,14 @@ public class CodecHelper {
 			byte[] bytes = new byte[buf.position()];
 			buf.rewind();
 			buf.get(bytes);						
-			int authCode = HashAlgorithms.fnvHash(bytes);
+//			int authCode = HashAlgorithms.fnvHash(bytes);
 			
 			buf.clear();
 			buf.putInt(request.getSn());
 //			buf.putDouble(request.getRequestTime());
 //			buf.putInt(request.getFormat().ordinal());
 			buf.put((byte) (request.isCompressed() ? 1 : 0));
-			buf.putInt(authCode);
+			buf.putInt(0);
 			buf.putInt(request.getModule());
 			buf.putInt(request.getCmd());			
 			if (request.getValueBytes() != null) {
