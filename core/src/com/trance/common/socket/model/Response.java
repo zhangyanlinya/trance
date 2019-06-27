@@ -10,9 +10,7 @@ import com.trance.common.socket.codec.CodecFormat;
  * 
  * @author trance
  */
-public class Response implements Serializable {
-	
-	private static final long serialVersionUID = 5789558124001408308L;
+public class Response {
 	
 	/**
 	 * 流水号

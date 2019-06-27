@@ -54,7 +54,7 @@ public class ClientServiceImpl implements ClientService{
 	private final ResponseProcessors responseProcessors = new ResponseProcessors();
 
 
-	private int threadCount = 2;
+	private int threadCount = 5;
 	
 
 	@Override

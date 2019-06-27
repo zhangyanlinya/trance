@@ -1,6 +1,8 @@
 package com.trance.common.socket.model;
 
 import java.io.Serializable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import com.trance.common.socket.codec.CodecFormat;
 
@@ -10,10 +12,8 @@ import com.trance.common.socket.codec.CodecFormat;
  * 
  * @author trance
  */
-public class Request implements Serializable {
+public class Request {
 	
-	private static final long serialVersionUID = 4976371020835423388L;
-
 	/**
 	 * 流水号
 	 */
@@ -58,6 +58,16 @@ public class Request implements Serializable {
 	 * 接收请求时间(ms)
 	 */
 	private long receiveTime = System.currentTimeMillis();
+
+	/**
+	 * CountDownLatch
+	 */
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	/**
+	 * 响应消息 {@link Response}
+	 */
+	private Response response = null;
 	
 	public Request() {
 		
@@ -83,6 +93,14 @@ public class Request implements Serializable {
 	
 	public static Request valueOf(int module, int cmd, Object value) {
 		return Request.valueOf(-1, module, cmd, value);
+	}
+
+	public void await(long timeout, TimeUnit unit) throws InterruptedException {
+		this.latch.await(timeout, unit);
+	}
+
+	public void release(){
+		this.latch.countDown();
 	}
 
 	public int getSn() {
@@ -133,14 +151,6 @@ public class Request implements Serializable {
 		this.value = value;
 	}
 
-//	public long getRequestTime() {
-//		return requestTime;
-//	}
-//
-//	public void setRequestTime(long requestTime) {
-//		this.requestTime = requestTime;
-//	}
-
 	public long getReceiveTime() {
 		return receiveTime;
 	}
@@ -163,6 +173,14 @@ public class Request implements Serializable {
 
 	public void setAuthCode(int authCode) {
 		this.authCode = authCode;
+	}
+
+	public Response getResponse() {
+		return response;
+	}
+
+	public void setResponse(Response response) {
+		this.response = response;
 	}
 
 	@Override

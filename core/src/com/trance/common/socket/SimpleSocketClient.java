@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -84,12 +85,12 @@ public class SimpleSocketClient {
 	/**
 	 * 请求上下文 {sn: ClientContext}
 	 */
-	private final ConcurrentMap<Integer, ClientContext> requestContext = new ConcurrentLinkedHashMap.Builder<Integer, ClientContext>().maximumWeightedCapacity(10000).build();
+	private final ConcurrentMap<Integer, Request> requestContext = new ConcurrentLinkedHashMap.Builder<Integer, Request>().maximumWeightedCapacity(10000).build();
 
 	/**
 	 * 序列号
 	 */
-	private int sn = 0;
+	private final AtomicInteger sn = new AtomicInteger();
 
 	public SimpleSocketClient(String ip, int port) {
 		this(ip, port, 0);
@@ -151,8 +152,8 @@ public class SimpleSocketClient {
 	public Response send(Request request) {
 		int sn = this.getSn();
 		request.setSn(sn);
-		ClientContext ctx = ClientContext.valueOf(sn,true);
-		this.requestContext.put(sn, ctx);
+//		ClientContext ctx = ClientContext.valueOf(sn,true);
+		this.requestContext.put(sn, request);
 		try {
 			IoSession session = this.getSession();
 			if(session == null){
@@ -160,8 +161,8 @@ public class SimpleSocketClient {
 			}
 			WriteFuture writeFuture = session.write(request);
 			writeFuture.awaitUninterruptibly(10000L);
-			ctx.await(11, TimeUnit.SECONDS);
-			return ctx.getResponse();
+			request.await(11, TimeUnit.SECONDS);
+			return request.getResponse();
 		} catch (Exception ex) {
 			logger.error("发起请求失败");
 			return null;
@@ -237,14 +238,8 @@ public class SimpleSocketClient {
 	 * 取得序列号
 	 * @return int
 	 */
-	private synchronized int getSn() {
-		this.sn ++;
-
-		if (this.sn >= Integer.MAX_VALUE) {
-			this.sn = 1;
-		}
-
-		return this.sn;
+	private int getSn() {
+		return sn.incrementAndGet();
 	}
 
 	/**

@@ -79,8 +79,8 @@ public class ResponseDecoder extends CumulativeProtocolDecoder {
 		
 		Response response = CodecHelper.toResponse(data);
 		if (response != null) {
-			out.write(response);				
-		}  
+			out.write(response);
+		}
 		
 		ctx.setBytesNeeded(0);
 		ctx.setState(CodecState.READY);
