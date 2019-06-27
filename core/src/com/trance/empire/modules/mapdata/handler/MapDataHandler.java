@@ -49,8 +49,7 @@ public class MapDataHandler extends HandlerSupport {
             }
 
             @Override
-            public void callback(IoSession session, Response response,
-                                 Object message) {
+            public void callback(IoSession session, Response response) {
                 ResponseStatus status = response.getStatus();
                 if (status == ResponseStatus.SUCCESS) {
                     HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
@@ -121,8 +120,7 @@ public class MapDataHandler extends HandlerSupport {
             }
 
             @Override
-            public void callback(IoSession session, Response response,
-                                 Object message) {
+            public void callback(IoSession session, Response response) {
 
             }
         });

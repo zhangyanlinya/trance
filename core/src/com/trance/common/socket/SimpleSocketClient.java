@@ -84,7 +84,7 @@ public class SimpleSocketClient {
 	/**
 	 * 请求上下文 {sn: ClientContext}
 	 */
-	private final ConcurrentMap<Integer, ClientContext> requestContext = new ConcurrentLinkedHashMap.Builder<Integer, ClientContext>().maximumWeightedCapacity(100000).build();
+	private final ConcurrentMap<Integer, ClientContext> requestContext = new ConcurrentLinkedHashMap.Builder<Integer, ClientContext>().maximumWeightedCapacity(10000).build();
 
 	/**
 	 * 序列号
@@ -122,7 +122,7 @@ public class SimpleSocketClient {
 		filterChain.addFirst("reconnection", new ReconnectionFilter());
 
 		if (threadCount > 0) {
-			this.executorFilter = this.createExecutorFilter(threadCount, threadCount, 30000L);
+			this.executorFilter = this.createExecutorFilter(threadCount, threadCount, 15000L);
 			filterChain.addLast("threadPool", executorFilter);
 		}
 
@@ -150,8 +150,8 @@ public class SimpleSocketClient {
 	 */
 	public Response send(Request request) {
 		int sn = this.getSn();
-		ClientContext ctx = ClientContext.valueOf(sn, request.getSn(), true);
 		request.setSn(sn);
+		ClientContext ctx = ClientContext.valueOf(sn,true);
 		this.requestContext.put(sn, ctx);
 		try {
 			IoSession session = this.getSession();
@@ -159,46 +159,28 @@ public class SimpleSocketClient {
 				return null;
 			}
 			WriteFuture writeFuture = session.write(request);
-			writeFuture.awaitUninterruptibly(15000L);
-			ctx.await(15, TimeUnit.SECONDS);
+			writeFuture.awaitUninterruptibly(10000L);
+			ctx.await(11, TimeUnit.SECONDS);
 			return ctx.getResponse();
 		} catch (Exception ex) {
 			logger.error("发起请求失败");
 			return null;
 		} finally {
 			this.requestContext.remove(sn);
-			request.setSn(ctx.getOrignSn());
 		}
 	}
+
 
 	/**
 	 * 异步发起请求
 	 * @param request Request
 	 */
 	public void sendAsync(Request request) {
-		sendAsync(request, null);
-	}
-
-	/**
-	 * 异步发起请求
-	 * @param request Request
-	 * @param message 需要回调接口回传的对象
-	 */
-	public void sendAsync(Request request, Object message) {
-		int sn = this.getSn();
-
-		ClientContext ctx = ClientContext.valueOf(sn, request.getSn(), message, false);
-		this.requestContext.put(sn, ctx);
-		request.setSn(sn);
-
 		IoSession session = this.getSession();
 		if(session == null){
-			this.requestContext.remove(sn);
 			return ;
 		}
 		session.write(request);
-
-		request.setSn(ctx.getOrignSn());
 	}
 
 	/**
@@ -280,10 +262,10 @@ public class SimpleSocketClient {
 			}
 
 			//清除之前session的请求上下文信息
-//			this.requestContext.clear();
+			this.requestContext.clear();
 
 			ConnectFuture future = connector.connect(address);
-			boolean complete = future.awaitUninterruptibly(10 * 1000L);
+			boolean complete = future.awaitUninterruptibly(15 * 1000L);
 			if(complete){
 				if(!future.isConnected()){
 					return null;

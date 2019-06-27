@@ -57,7 +57,7 @@ public class ResponseProcessorAdapter implements ResponseProcessor {
 	}
 
 	@Override
-	public void callback(IoSession session, Response response, Object message) {
+	public void callback(IoSession session, Response response) {
 		
 	}
 

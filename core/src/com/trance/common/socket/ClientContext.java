@@ -18,16 +18,6 @@ public class ClientContext {
 	private int sn;
 	
 	/**
-	 * 源请求sn
-	 */
-	private int orignSn;
-	
-	/**
-	 * 回调回传对象信息
-	 */
-	private Object message;
-	
-	/**
 	 * 响应消息 {@link Response}
 	 */
 	private Response response = null;
@@ -40,27 +30,29 @@ public class ClientContext {
 	/**
 	 * 是否同步返回
 	 */
-	private boolean isSync = true;
+	private boolean sync = true;
 	
 	public ClientContext() {
 		
 	}
-	
-	public static ClientContext valueOf(int sn, int orignSn, boolean isSync) {
-		return valueOf(sn, orignSn, null, isSync);
-	}
-	
-	public static ClientContext valueOf(int sn, int orignSn, Object message, boolean isSync) {
+
+	public static ClientContext valueOf(int sn, boolean sync) {
 		ClientContext ctx = new ClientContext();
 		ctx.sn = sn;
-		ctx.orignSn = orignSn;
-		ctx.message = message;
-		ctx.isSync = isSync;
+		ctx.sync = sync;
 		return ctx;
 	}
 	
 	public void await(long timeout, TimeUnit unit) throws InterruptedException {
 		this.latch.await(timeout, unit);
+	}
+
+	public boolean isSync() {
+		return sync;
+	}
+
+	public void setSync(boolean sync) {
+		this.sync = sync;
 	}
 
 	public void release(){
@@ -87,28 +79,4 @@ public class ClientContext {
 		this.sn = sn;
 	}
 
-	public int getOrignSn() {
-		return orignSn;
-	}
-
-	public void setOrignSn(int orignSn) {
-		this.orignSn = orignSn;
-	}
-
-	public Object getMessage() {
-		return message;
-	}
-
-	public void setMessage(Object message) {
-		this.message = message;
-	}
-
-	public boolean isSync() {
-		return isSync;
-	}
-
-	public void setSync(boolean isSync) {
-		this.isSync = isSync;
-	}
-	
 }

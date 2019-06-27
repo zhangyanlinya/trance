@@ -169,9 +169,6 @@ public class CodecHelper {
 		buf.setAutoExpand(true);		
 		try {
 			buf.putInt(response.getSn());
-//			buf.putDouble(response.getReceiveTime());
-//			buf.putDouble(response.getResponseTime());
-//			buf.putInt(response.getFormat().ordinal());
 			buf.put((byte) (response.isCompressed() ? 1 : 0));
 			buf.putInt(response.getModule());
 			buf.putInt(response.getCmd());
@@ -251,9 +248,6 @@ public class CodecHelper {
 		IoBuffer in = IoBuffer.wrap(data);
 		try {
 			int sn = in.getInt();
-//			long receiveTime = (long) in.getDouble();
-//			long responseTime = (long) in.getDouble();
-//			int format = in.getInt();
 			byte compress = in.get();
 			int module = in.getInt();
 			int cmd = in.getInt();
@@ -282,7 +276,6 @@ public class CodecHelper {
 	
 	/**
 	 * 消息体字节数组封装成IoBuffer
-	 * @param responseBytes 响应消息转换成的字节数
 	 * @return IoBuffer
 	 */
 	public static IoBuffer body2IoBuffer(byte[] bodyBytes) {

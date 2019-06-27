@@ -76,8 +76,6 @@ public class ClientHandler extends IoHandlerAdapter {
 		
 		ClientContext ctx = this.requestContext.remove(response.getSn());
 		if (ctx != null) {
-			response.setSn(ctx.getOrignSn());
-			
 			//同步返回
 			if (ctx.isSync()) {
 				ctx.setResponse(response);
@@ -88,7 +86,7 @@ public class ClientHandler extends IoHandlerAdapter {
 					logger.error("没有对应的响应消息处理器[module:"+response.getModule()+", cmd:"+response.getCmd()+"]！");
 				} else {
 					//响应回调
-					processor.callback(session, response, ctx.getMessage());
+					processor.callback(session, response);
 				}
 			}			
 		} else {//没有sn
@@ -96,7 +94,7 @@ public class ClientHandler extends IoHandlerAdapter {
 				logger.error("没有对应的响应消息处理器[module:"+response.getModule()+", cmd:"+response.getCmd()+"]！");
 			} else {
 				//响应回调
-				processor.callback(session, response, null);
+				processor.callback(session, response);
 			}
 		}
 	}

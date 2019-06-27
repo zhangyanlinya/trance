@@ -34,8 +34,7 @@ public interface ResponseProcessor {
 	 * 响应消息回调
 	 * @param session {@link IoSession}
 	 * @param response {@link Response}
-	 * @param message 回调回传对象信息
 	 */
-	void callback(IoSession session, Response response, Object message);
+	void callback(IoSession session, Response response);
 	
 }
