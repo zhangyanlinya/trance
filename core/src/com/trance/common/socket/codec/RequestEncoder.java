@@ -1,9 +1,5 @@
 package com.trance.common.socket.codec;
 
-import com.trance.common.socket.converter.ObjectConverters;
-import com.trance.common.socket.model.Request;
-import com.trance.common.util.GZIPUtil;
-
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
@@ -11,11 +7,14 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trance.common.socket.converter.ObjectConverters;
+import com.trance.common.socket.model.Request;
+
 
 /**
  * 请求消息编码器
  * 
- * @author zhangyl
+ * @author trance
  */
 public class RequestEncoder extends ProtocolEncoderAdapter {
 	
@@ -54,7 +53,7 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 			byte[] data = (byte[]) message;			
 			buffer = CodecHelper.toIoBuffer(data);
 			
-		} else if (message instanceof Request) {
+		} else if (message instanceof Request) {			
 			Request request = (Request) message;
 			buffer = toIoBuffer(request);
 			
@@ -83,16 +82,11 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 		byte[] data = this.objectConverters.encode(request.getFormat(), request.getValue());
 		request.setValueBytes(data);
 				
-//		//需要压缩
-//		if (request.isCompressed()) {
-//			//TODO
-//		}
-
-//		//需要压缩
+//		//需要压缩 
 //		if (data != null && data.length > 128) {
-//			System.out.println("压缩前 " + data.length);
+//			logger.error("压缩前 " + data.length);
 //			request.setValueBytes(GZIPUtil.compress(data));
-//			System.out.println("压缩后 " + request.getValueBytes().length);
+//			logger.error("压缩后 " + request.getValueBytes().length);
 //			request.setCompressed(true);
 //		}
 		

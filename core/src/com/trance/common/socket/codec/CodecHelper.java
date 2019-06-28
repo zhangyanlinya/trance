@@ -12,7 +12,6 @@ import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.GZIPUtil;
-import com.trance.common.util.HashAlgorithms;
 
 
 /**
@@ -120,8 +119,6 @@ public class CodecHelper {
 			
 			buf.clear();
 			buf.putInt(request.getSn());
-//			buf.putDouble(request.getRequestTime());
-//			buf.putInt(request.getFormat().ordinal());
 			buf.put((byte) (request.isCompressed() ? 1 : 0));
 			buf.putInt(0);
 			buf.putInt(request.getModule());
@@ -276,6 +273,7 @@ public class CodecHelper {
 	
 	/**
 	 * 消息体字节数组封装成IoBuffer
+	 * @param responseBytes 响应消息转换成的字节数
 	 * @return IoBuffer
 	 */
 	public static IoBuffer body2IoBuffer(byte[] bodyBytes) {
@@ -283,10 +281,11 @@ public class CodecHelper {
 			return null;
 		}
 		
-		int capacity = bodyBytes.length + PACKAGE_HEADER_LENGTH;
+//		int capacity = bodyBytes.length + PACKAGE_HEADER_LENGTH;
+		int capacity = bodyBytes.length + 4;
 		IoBuffer buffer = IoBuffer.allocate(capacity);
 		buffer.setAutoExpand(true);
-		buffer.putInt(PACKAGE_HEADER_ID);
+//		buffer.putInt(PACKAGE_HEADER_ID);
 		buffer.putInt(bodyBytes.length);
 		buffer.put(bodyBytes);
 		buffer.flip();

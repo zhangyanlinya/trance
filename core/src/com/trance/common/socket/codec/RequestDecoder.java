@@ -10,15 +10,15 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_BODY_MAX_LENGTH;
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_ID;
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_LENGTH;
+import java.util.Arrays;
+
+
 
 
 /**
  * 请求消息解码器
  * 
- * @author zhangyl
+ * @author trance
  */
 public class RequestDecoder extends CumulativeProtocolDecoder {
 
@@ -33,10 +33,10 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 	 */
 	private final AttributeKey DECODER_CONTEXT  = new AttributeKey(RequestDecoder.class, "context");
 	
-//	/**
-//	 * flash策略
-//	 */
-//	private final AttributeKey FLASH_POLICY = new AttributeKey(RequestDecoder.class, "FLASH_POLICY");
+	/**
+	 * flash策略
+	 */
+	private final AttributeKey FLASH_POLICY = new AttributeKey(RequestDecoder.class, "FLASH_POLICY");
 	
 	
 	/**
@@ -48,100 +48,99 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 	 */
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-		if (!session.isConnected() || session.isClosing()) {
-			return false;
+//		if (!session.isConnected() || session.isClosing()) {
+//			return false;
+//		}
+
+		if (in.remaining() < 4) {
+			in.reset();
+			return false;// 继续接收数据，以待数据完整
 		}
-		
-		CodecContext ctx = getContext(session);
-		
-		//新包开始
-		if (ctx.getState() == CodecState.READY) {
-			//flash 策略请求
-//			boolean continued = doIfFlashPolicyRequest(session, in, out);
-//			if (!continued) {
-//				return false;
-//			}
+
+		in.mark();// 标记当前位置，以便reset
+		int size = in.getInt();// 读取4字节判断消息长度
+
+		int remain = in.remaining();
+		if (remain < size) {// 如果消息内容不够，则重置，相当于不读取size
+			in.reset();
+			return false;// 接收新数据，以拼凑成完整数据
+		} else {
+			// 读取指定长度的字节数
+			byte[] bytes = new byte[size];
+			in.get(bytes);
 			
-			while (true) {
-				if (in.remaining() < PACKAGE_HEADER_LENGTH) {
-					return false;
-				}
-				
-				in.mark();				
-				if(in.getInt() == PACKAGE_HEADER_ID) {
-					// 已检测到数据头
-					break;
-				} else {
-					// 只略过一个字节
-					in.reset();
-					in.get();
-				}
-			}
-			
-			// 消息体长度
-			int length = in.getInt();
-			if (length <= 0 || length > PACKAGE_BODY_MAX_LENGTH) {
-				logger.error("无效的消息体长度：{}", length);
-				return true;
-			}
-			
-			ctx.setBytesNeeded(length);
-			ctx.setState(CodecState.WAITTING_FOR_DATA);
+			Request request = CodecHelper.toRequest(bytes);
+			if (request != null) {
+				out.write(request);				
+			}  
 		}
-		
-		if (in.remaining() < ctx.getBytesNeeded()) {
-			return false;
+
+		if (in.remaining() > 0) {
+			in.mark();
+			return true;// 如果读取内容后还粘了包，就让父类再给俺 一次，进行下一次解析
 		}
-		
-		byte[] data = new byte[ctx.getBytesNeeded()];
-		in.get(data);
-		
-		Request request = CodecHelper.toRequest(data);
-		if (request != null) {
-			out.write(request);				
-		}  
-		
-		ctx.setBytesNeeded(0);
-		ctx.setState(CodecState.READY);
-		return true;
-	}
+
+		return false;
+
 	
-//	/**
-//	 * flash 策略请求
-//	 * @return false-数据不足于解析  true-可以进行下一步操作
-//	 */
-//	private boolean doIfFlashPolicyRequest(IoSession session, IoBuffer in, ProtocolDecoderOutput out) {
-//		if (session.containsAttribute(FLASH_POLICY)) {
-//			return true;
+		
+		
+//		
+//		CodecContext ctx = getContext(session);
+//		
+//		//新包开始
+//		if (ctx.getState() == CodecState.READY) {
+//			//flash 策略请求
+////			boolean continued = doIfFlashPolicyRequest(session, in, out);
+////			if (!continued) {
+////				return false;
+////			}
+//			
+//			while (true) {
+//				if (in.remaining() < PACKAGE_HEADER_LENGTH) {
+//					return false;
+//				}
+//				
+//				in.mark();				
+//				if(in.getInt() == PACKAGE_HEADER_ID) {
+//					// 已检测到数据头
+//					break;
+//				} else {
+//					// 只略过一个字节
+//					in.reset();
+//					in.get();
+//				}
+//			}
+//			
+//			// 消息体长度
+//			int length = in.getInt();
+//			if (length <= 0 || length > PACKAGE_BODY_MAX_LENGTH) {
+//				logger.error("无效的消息体长度：{}", length);
+//				return true;
+//			}
+//			
+//			ctx.setBytesNeeded(length);
+//			ctx.setState(CodecState.WAITTING_FOR_DATA);
 //		}
 //		
-//		in.mark();		
-//		byte c = in.get();		
-//		in.reset();
+//		if (in.remaining() < ctx.getBytesNeeded()) {
+//			return false;
+//		}
 //		
-//		if (c == (byte) '<') {
-//			byte[] policyBytes = FLASH_POLICY_REQUEST;			
-//			int lengthOfPolicyBytes = policyBytes.length;
-//			
-//			if (in.remaining() < lengthOfPolicyBytes) {
-//				return false;
-//			}
-//			
-//			in.mark();			
-//			byte[] bt = new byte[lengthOfPolicyBytes];
-//			in.get(bt);
-//			
-//			if (Arrays.equals(bt, policyBytes)) {
-//				logger.info("向Session[ID: {}] 发送安全策略信息！", session.getId());
-//				session.write(FLASH_POLICY_RESPONSE);				
-//			} else {
-//				in.reset();	
-//			}
-//		} 
+//		byte[] data = new byte[ctx.getBytesNeeded()];
+//		in.get(data);
 //		
-//		session.setAttribute(FLASH_POLICY);
+//		Request request = CodecHelper.toRequest(data);
+//		if (request != null) {
+//			out.write(request);				
+//		}  
+//		
+//		ctx.setBytesNeeded(0);
+//		ctx.setState(CodecState.READY);
 //		return true;
-//	}
+	}
+	
+
 	
 	/**
 	 * 获取上下文

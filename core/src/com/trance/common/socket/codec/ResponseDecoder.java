@@ -1,6 +1,7 @@
 package com.trance.common.socket.codec;
 
-import com.trance.common.socket.model.Response;
+import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_ID;
+import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_LENGTH;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.AttributeKey;
@@ -10,14 +11,14 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_ID;
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_LENGTH;
+import com.trance.common.socket.model.Request;
+import com.trance.common.socket.model.Response;
 
 
 /**
  * 响应消息解码器
  * 
- * @author zhangyl
+ * @author trance
  */
 public class ResponseDecoder extends CumulativeProtocolDecoder {
 	
@@ -35,56 +36,91 @@ public class ResponseDecoder extends CumulativeProtocolDecoder {
 	 */
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-		if (!session.isConnected() || session.isClosing()) {
-			return false;
+//		if (!session.isConnected() || session.isClosing()) {
+//			return false;
+//		}
+		
+		if (in.remaining() < 4) {
+			in.reset();
+			return false;// 继续接收数据，以待数据完整
 		}
-		
-		CodecContext ctx = getContext(session);
-		
-		//新包开始
-		if (ctx.getState() == CodecState.READY) {
-			while (true) {
-				if (in.remaining() < PACKAGE_HEADER_LENGTH) {
-					return false;
-				}
-				
-				in.mark();				
-				if(in.getInt() == PACKAGE_HEADER_ID) {
-					// 已检测到数据头
-					break;
-				} else {
-					// 只略过一个字节
-					in.reset();
-					in.get();
-				}
-			}
+
+		in.mark();// 标记当前位置，以便reset
+		int size = in.getInt();// 读取4字节判断消息长度
+
+		int remain = in.remaining();
+		if (remain < size) {// 如果消息内容不够，则重置，相当于不读取size
+			in.reset();
+			return false;// 接收新数据，以拼凑成完整数据
+		} else {
+			// 读取指定长度的字节数
+			byte[] bytes = new byte[size];
+			in.get(bytes);
 			
-			// 消息体长度
-			int length = in.getInt();
-			if (length <= 0) {
-				logger.error("无效的消息体长度：{}", length);
-				return true;
-			}
-			
-			ctx.setBytesNeeded(length);
-			ctx.setState(CodecState.WAITTING_FOR_DATA);
+			Response response = CodecHelper.toResponse(bytes);
+			if (response != null) {
+				out.write(response);				
+			}  
 		}
-		
-		if (in.remaining() < ctx.getBytesNeeded()) {
-			return false;
+
+		if (in.remaining() > 0) {
+			in.mark();
+			return true;// 如果读取内容后还粘了包，就让父类再给俺 一次，进行下一次解析
 		}
+
+		return false;
+
 		
-		byte[] data = new byte[ctx.getBytesNeeded()];
-		in.get(data);
 		
-		Response response = CodecHelper.toResponse(data);
-		if (response != null) {
-			out.write(response);
-		}
 		
-		ctx.setBytesNeeded(0);
-		ctx.setState(CodecState.READY);
-		return true;
+//		
+//		
+//		CodecContext ctx = getContext(session);
+//		
+//		//新包开始
+//		if (ctx.getState() == CodecState.READY) {
+//			while (true) {
+//				if (in.remaining() < PACKAGE_HEADER_LENGTH) {
+//					return false;
+//				}
+//				
+//				in.mark();				
+//				if(in.getInt() == PACKAGE_HEADER_ID) {
+//					// 已检测到数据头
+//					break;
+//				} else {
+//					// 只略过一个字节
+//					in.reset();
+//					in.get();
+//				}
+//			}
+//			
+//			// 消息体长度
+//			int length = in.getInt();
+//			if (length <= 0) {
+//				logger.error("无效的消息体长度：{}", length);
+//				return true;
+//			}
+//			
+//			ctx.setBytesNeeded(length);
+//			ctx.setState(CodecState.WAITTING_FOR_DATA);
+//		}
+//		
+//		if (in.remaining() < ctx.getBytesNeeded()) {
+//			return false;
+//		}
+//		
+//		byte[] data = new byte[ctx.getBytesNeeded()];
+//		in.get(data);
+//		
+//		Response response = CodecHelper.toResponse(data);
+//		if (response != null) {
+//			out.write(response);				
+//		}  
+//		
+//		ctx.setBytesNeeded(0);
+//		ctx.setState(CodecState.READY);
+//		return true;
 	}
 	
 	/**
