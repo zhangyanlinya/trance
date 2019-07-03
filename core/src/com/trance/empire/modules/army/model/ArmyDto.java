@@ -3,13 +3,25 @@ package com.trance.empire.modules.army.model;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+import io.protostuff.Tag;
+
 public class ArmyDto {
-	
+
+	@Tag(1)
 	private int id;
+
+	@Tag(2)
 	private int level;
+
+	@Tag(3)
 	private int amout;
+
+	@Tag(4)
 	private int addAmount;
+
+	@Tag(5)
 	private long expireTime;
+
 	private transient TextureRegion region;
 	private transient boolean go;
 	private transient Rectangle rect;

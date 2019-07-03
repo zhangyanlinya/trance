@@ -1,10 +1,7 @@
 package com.trance.common.socket.model;
 
-import java.io.Serializable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import com.trance.common.socket.codec.CodecFormat;
 
 
 /**
@@ -28,11 +25,6 @@ public class Request {
 	 * 命令ID
 	 */
 	private int cmd;
-	
-	/**
-	 * 编解码格式
-	 */
-	private CodecFormat format = CodecFormat.JSON;
 	
 	/**
 	 * 是否压缩
@@ -125,14 +117,6 @@ public class Request {
 
 	public void setCmd(int cmd) {
 		this.cmd = cmd;
-	}
-
-	public CodecFormat getFormat() {
-		return format;
-	}
-
-	public void setFormat(CodecFormat format) {
-		this.format = format;
 	}
 
 	public byte[] getValueBytes() {

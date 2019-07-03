@@ -30,6 +30,7 @@ import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
@@ -37,13 +38,17 @@ import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
+import com.trance.empire.modules.building.model.ReqHarvist;
 import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.mapdata.handler.MapDataCmd;
+import com.trance.empire.modules.mapdata.model.ReqChangeMapData;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.empire.modules.world.handler.WorldCmd;
+import com.trance.empire.modules.world.model.ReqChangePlayer;
+import com.trance.empire.modules.world.model.ResChangePlayer;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.Building;
 import com.trance.view.actors.MapImage;
@@ -1072,27 +1077,24 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             return;
         }
 
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("x", dto.getX());
-        params.put("y", dto.getY());
-        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, params),true);
+		ReqHarvist req = new ReqHarvist();
+		req.setX(dto.getX());
+		req.setY(dto.getY());
+        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, req),true);
         if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
             return;
         }
 
         byte[] bytes = response.getValueBytes();
-        String text = new String(bytes);
-        @SuppressWarnings("unchecked")
-        HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		Result<ValueResultSet> result = ProtostuffUtil.parseObject(bytes, Result.class);
         if(result != null){
-            int code = Integer.valueOf(String.valueOf(result.get("result")));
+            int code = result.getCode();
             if(code != Result.SUCCESS){
                 MsgUtil.getInstance().showMsg(Module.BUILDING,code);
                 return ;
             }
-            Object valueResult = result.get("content");
-            if(valueResult != null){
-                ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+			ValueResultSet valueResultSet  = result.getContent();
+            if(valueResultSet != null){
                 RewardService.executeRewards(valueResultSet);
             }
             Sound sound = ResUtil.getInstance().getSound(5);
@@ -1170,44 +1172,37 @@ public class MapScreen extends BaseScreen implements InputProcessor {
      * change player
      */
     private void change(){
-        HashMap<String,Object> params = new HashMap<String,Object>();
-        params.put("x", playerDto.getX());
-        params.put("y", playerDto.getY());
-        Request request = Request.valueOf(Module.WORLD, WorldCmd.CHANGE_PLAYER, params);
+		ReqChangePlayer req = new ReqChangePlayer();
+		req.setX(playerDto.getX());
+		req.setY(playerDto.getY());
+        Request request = Request.valueOf(Module.WORLD, WorldCmd.CHANGE_PLAYER, req);
         Response response = SocketUtil.send(request, true);
         if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
             return;
         }
         byte[] bytes = response.getValueBytes();
-        String text = new String(bytes);
-        @SuppressWarnings("unchecked")
-        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-        Object codeObject = result.get("result");
-        int code = Integer.valueOf(String.valueOf(codeObject));
-        if(code != Result.SUCCESS){
+		Result<ResChangePlayer> result = ProtostuffUtil.parseObject(bytes, Result.class);
+        int code = result.getCode();
+        if(result.getCode() != Result.SUCCESS){
             MsgUtil.getInstance().showMsg(Module.WORLD, code);
             return;
         }
 
-        Object pobj = result.get("content");
-        if(pobj != null){
-            PlayerDto newPlayerDto = JSON.parseObject(pobj.toString(), PlayerDto.class);
+		ResChangePlayer res = result.getContent();
+        if(res != null){
+            PlayerDto newPlayerDto = res.getPlayerDto();
             newPlayerDto.setX(playerDto.getX());
             newPlayerDto.setY(playerDto.getY());
             WorldScreen.setWorldPlayerDto(playerDto.getX(), playerDto.getY(), newPlayerDto);
             playerDto = newPlayerDto;
-            int[][] map;
-            Object mobj = result.get("mapdata");
-            if (mobj == null) {
+            int[][] map = res.getMap();
+            if (map == null) {
                 map = MapData.clonemap();
-            }else{
-                map = JSON.parseObject(mobj.toString(), int[][].class);
             }
             playerDto.setMap(map);
 
-            Object bobj = result.get("buildings");
-            if(bobj != null){
-                List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+			List<BuildingDto> buildings = res.getBuildings();
+            if(buildings != null){
                 for(BuildingDto dto : buildings){
                     playerDto.addBuilding(dto);
                 }
@@ -1360,10 +1355,10 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 	 * save map to server
 	 */
 	private void saveMaptoServer(String from ,String to){
-		HashMap<String,Object> parms = new HashMap<String,Object>();
-		parms.put("from", from);
-		parms.put("to", to);
-		SocketUtil.sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, parms));
+		ReqChangeMapData req = new ReqChangeMapData();
+		req.setFrom(from);
+		req.setTo(to);
+		SocketUtil.sendAsync(Request.valueOf(Module.MAP_DATA, MapDataCmd.SAVE_PLAYER_MAP_DATA, req));
 	}
 	
 	@Override

@@ -1,6 +1,8 @@
 package com.trance.empire.modules.building.model;
 
 
+import io.protostuff.Tag;
+
 /**
  * 主城建筑DTO
  * 
@@ -9,22 +11,25 @@ package com.trance.empire.modules.building.model;
  */
 public class BuildingDto{
 
-
-    // 配置表id
+    @Tag(1)
     private int mid;
 
+    @Tag(2)
     private int x;
 
+    @Tag(3)
     private int y;
 
-    private int lvl = 1;
+    @Tag(4)
+    private int lvl;
 
+    @Tag(5)
     private long htime;
 
-    // cd
+    @Tag(6)
     private long cdtime;
 
-    // 到期时间
+    @Tag(7)
     private long etime;
 
     public String getKey(){

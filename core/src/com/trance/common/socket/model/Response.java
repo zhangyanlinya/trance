@@ -1,10 +1,5 @@
 package com.trance.common.socket.model;
 
-import java.io.Serializable;
-
-import com.trance.common.socket.codec.CodecFormat;
-
-
 /**
  * 响应消息类
  * 
@@ -28,11 +23,6 @@ public class Response {
 	private int cmd;
 	
 	/**
-	 * 编解码格式
-	 */
-	private CodecFormat format = CodecFormat.JSON;
-	
-	/**
 	 * 是否压缩
 	 */
 	private boolean isCompressed = false;
@@ -46,17 +36,7 @@ public class Response {
 	 * 请求对象信息
 	 */
 	private Object value;
-	
-//	/**
-//	 * 接收请求时间(ms)
-//	 */
-//	private long receiveTime = System.currentTimeMillis();
-//	
-//	/**
-//	 * 响应时间(ms)
-//	 */
-//	private long responseTime = receiveTime;
-		
+
 	/**
 	 * 响应标识
 	 */
@@ -130,14 +110,6 @@ public class Response {
 
 	public void setCmd(int cmd) {
 		this.cmd = cmd;
-	}
-
-	public CodecFormat getFormat() {
-		return format;
-	}
-
-	public void setFormat(CodecFormat format) {
-		this.format = format;
 	}
 
 	public boolean isCompressed() {

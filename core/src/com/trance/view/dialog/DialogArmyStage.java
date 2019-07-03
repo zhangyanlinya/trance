@@ -12,10 +12,14 @@ import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.handler.ArmyCmd;
 import com.trance.empire.modules.army.model.ArmyDto;
+import com.trance.empire.modules.army.model.ReqArmyTrain;
+import com.trance.empire.modules.army.model.ResArmyTrain;
+import com.trance.empire.modules.army.model.ResArmyUp;
 import com.trance.empire.modules.army.model.basedb.ArmyTrain;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.coolqueue.model.CoolQueueType;
@@ -175,31 +179,28 @@ public class DialogArmyStage extends BaseStage {
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		Result<ResArmyUp> result = ProtostuffUtil.parseObject(bytes, Result.class);
 		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			int code = result.getCode();
 			if(code != Result.SUCCESS){
 				MsgUtil.getInstance().showMsg(Module.ARMY,code);
 				return ;
 			}
 			
+			ResArmyUp res = result.getContent();
 			ArmyDto armyDto = Player.player.getArmys().get(armyId);
 			if(armyDto != null){
 				armyDto.setLevel(armyDto.getLevel() + 1);
 			}
 			
-			Object cobj = result.get("content");
-			if(cobj != null){
-				CoolQueueDto coolQueueDto = JSON.parseObject(JSON.toJSON(cobj).toString(), CoolQueueDto.class);
+			CoolQueueDto coolQueueDto = res.getCoolDto();
+			if(coolQueueDto != null){
 				Player.player.getCoolQueues().put(coolQueueDto.getId(),coolQueueDto);
 				showTimer(coolQueueDto.getExpireTime());
 			}
 			
-			Object valueResult = result.get("valueResultSet");
-			if(valueResult != null){
-				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+			ValueResultSet valueResultSet = res.getValueSet();
+			if(valueResultSet != null){
 				RewardService.executeRewards(valueResultSet);
 			}
 			
@@ -210,32 +211,31 @@ public class DialogArmyStage extends BaseStage {
 
     
     private void trainArmy(int armyId){
-		Map<String, Object> params = new HashMap<String, Object>();
+		ReqArmyTrain req = new ReqArmyTrain();
 		int addAmount = 1;
-		params.put("armyId", armyId);
-		params.put("amount", addAmount);
-		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.TRAIN_ARMY, params),true);
+		req.setArmyId(armyId);
+		req.setAmount(addAmount);
+		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.TRAIN_ARMY, req),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		Result<ResArmyTrain> result = ProtostuffUtil.parseObject(bytes, Result.class);
 		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			int code = result.getCode();
 			if(code != Result.SUCCESS){
 				MsgUtil.getInstance().showMsg(Module.ARMY,code);
 				return ;
 			}
-			Object valueResult = result.get("content");
-			if(valueResult != null){
-				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+			
+			ResArmyTrain res = result.getContent();
+			ValueResultSet valueResultSet = res.getValueSet();
+			if(valueResultSet != null){
 				RewardService.executeRewards(valueResultSet);
 			}
 			
-			long expireTime = (Long) result.get("expireTime");
+			long expireTime = res.getExpireTime();
 			ConcurrentMap<Integer, ArmyDto> army_map = Player.player.getArmys();
 			ArmyDto armyDto = army_map.get(armyId);
 			if(armyDto != null){
@@ -249,28 +249,25 @@ public class DialogArmyStage extends BaseStage {
 	}
 	
 	private void obtainArmy(int armyId) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("armyId", armyId);
-		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, params),true);
+		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, armyId),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> result = JSON.parseObject(text, HashMap.class);
+		Result<ArmyDto> result = ProtostuffUtil.parseObject(bytes, Result.class);
 		if(result != null){
-			int code = Integer.valueOf(String.valueOf(result.get("result")));
+			int code = result.getCode();
 			if(code != Result.SUCCESS){
 				MsgUtil.getInstance().showMsg(Module.ARMY,code);
 				return ;
 			}
-			Object valueResult = result.get("content");
+
+/*			Object valueResult = result.get("content");
 			if(valueResult != null){
 				ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
 				RewardService.executeRewards(valueResultSet);
-			}
+			}*/
 			ConcurrentMap<Integer, ArmyDto> army_map = Player.player.getArmys();
 			ArmyDto armyDto = army_map.get(armyId);
 			if(armyDto != null){

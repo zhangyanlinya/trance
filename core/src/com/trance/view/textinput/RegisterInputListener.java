@@ -6,10 +6,14 @@ import com.badlogic.gdx.Input.TextInputListener;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
+import com.trance.empire.modules.player.model.PlayerDto;
+import com.trance.empire.modules.player.model.ResCreatePlayer;
+import com.trance.empire.modules.player.model.ResLogin;
 import com.trance.view.screens.callback.LoginCallback;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
@@ -55,16 +59,17 @@ public class RegisterInputListener implements TextInputListener {
 		}
 
 		byte[] bytes = response.getValueBytes();
-		String str = new String(bytes);
-		Result result = JSON.parseObject(str, Result.class);
-		Object codeObject = result.get("result");
-		int code = Integer.valueOf(String.valueOf(codeObject));
+		Result<ResCreatePlayer> result = ProtostuffUtil.parseObject(bytes, Result.class);
+		int code = result.getCode();
 		if(code != Result.SUCCESS){
 			MsgUtil.getInstance().showMsg(Module.PLAYER, code);
 			return;
 		}
 
-		callback.handleMessage(result);
+		Result<ResLogin> login = new Result<ResLogin>()	;
+		ResLogin resLogin = new ResLogin();
+		resLogin.setPlayerDto(result.getContent().getPlayerDto());
+		callback.handleMessage(login);
 
 		Gdx.app.postRunnable(new Runnable() {
 			@Override

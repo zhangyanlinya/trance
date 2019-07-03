@@ -52,12 +52,12 @@ public class MapDataHandler extends HandlerSupport {
             public void callback(IoSession session, Response response) {
                 ResponseStatus status = response.getStatus();
                 if (status == ResponseStatus.SUCCESS) {
-                    HashMap<?, ?> result = (HashMap<?, ?>) response.getValue();
-                    int code = (Integer) result.get("result");
+                    Result<String> result = (Result<String>) response.getValue();
+                    int code = result.getCode();
                     if (code != Result.SUCCESS) {
                         MsgUtil.getInstance().showMsg(Module.MAP_DATA, code);
                     }
-                    String changePos = (String) result.get("content");
+                    String changePos = result.getContent();
                     if (changePos != null && !changePos.equals("")) {// 交换
                         String[] ary = changePos.split("#");
                         String from = ary[0];

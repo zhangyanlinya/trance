@@ -3,7 +3,7 @@ package com.trance.empire.modules.reward.result;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import io.protostuff.Tag;
 /**
  * 奖励结果集
  * 
@@ -14,6 +14,7 @@ public class ValueResultSet {
 	/**
 	 * 结果集
 	 */
+	@Tag(1)
 	private List<RewardResult<?>> results = new ArrayList<RewardResult<?>>();
 	
 	

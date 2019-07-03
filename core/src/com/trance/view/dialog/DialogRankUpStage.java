@@ -10,6 +10,7 @@ import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.building.model.BuildingDto;
@@ -18,6 +19,7 @@ import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.ranking.handler.RankingCmd;
 import com.trance.empire.modules.world.handler.WorldCmd;
+import com.trance.empire.modules.world.model.ResSpyAnyOne;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.RankImage;
 import com.trance.view.constant.UiType;
@@ -122,25 +124,22 @@ public class DialogRankUpStage extends BaseStage {
 						return;
 					}
 					byte[] bytes = response.getValueBytes();
-					String text = new String(bytes);
-					@SuppressWarnings("unchecked")
-					HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
-					int code = (Integer) result.get("result");
+					Result<ResSpyAnyOne> result = ProtostuffUtil.parseObject(bytes,Result.class);
+					int code = result.getCode();
 					if(code != Result.SUCCESS){
 						MsgUtil.getInstance().showMsg(Module.WORLD, code);
 						return;
 					}
-					Object mobj = result.get("content");
-					if (mobj != null) {
-						int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
-						dto.setMap(map);
+
+					ResSpyAnyOne res = result.getContent();
+					if (res.getMap() != null) {
+						dto.setMap(res.getMap());
 					}else{
 						dto.setMap(MapData.clonemap());
 					}
 
-					Object bobj = result.get("buildings");
-					if(bobj != null){
-						List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+					List<BuildingDto> buildings  = res.getBuildings();
+					if(buildings != null){
 						for(BuildingDto bto : buildings){
 							dto.addBuilding(bto);
 						}
@@ -163,23 +162,18 @@ public class DialogRankUpStage extends BaseStage {
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		String text = new String(bytes);
-		HashMap result = JSON.parseObject(text, HashMap.class);
+		Result<List<PlayerDto>> result = ProtostuffUtil.parseObject(bytes, Result.class);
 		if(result == null){
 			return null;
 			
 		}
-		int code = Integer.valueOf(String.valueOf(result.get("result")));
+		int code = result.getCode();
 		if(code != Result.SUCCESS){
 			MsgUtil.getInstance().showMsg(Module.RANKING,code);
 			return null;
 		}
 		
-		Object cobj = result.get("content");
-		if(cobj != null){
-			return JSON.parseArray(JSON.toJSON(cobj).toString(), PlayerDto.class);
-		}
-		return null;
+		return result.getContent();
 	}
 	
 	public void dispose(){

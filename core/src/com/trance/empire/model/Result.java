@@ -1,29 +1,23 @@
 package com.trance.empire.model;
 
-import java.util.HashMap;
+import io.protostuff.Tag;
 
 /**
  * 返回给客户端的结果对象
  * 
- * @author zhangyl
+ * @author Along
  * 
  */
-public class Result<T> extends HashMap<String, Object> {
+public class Result<T> {
 
-	private static final long serialVersionUID = -3300736853474422074L;
+	public static final int SUCCESS = 0 ;
 
-	/**
-	 * 状态码
-	 */
-	public static final String CODE = "result";
-
-	/**
-	 * 返回的内容对象
-	 */
-	public static final String CONTENT = "content";
+	@Tag(1)
+	private int code;
 	
-	public static final int SUCCESS = 0;
-
+	@Tag(2)
+	private T content;
+	
 	/**
 	 * 返回成功结果
 	 * 
@@ -33,7 +27,6 @@ public class Result<T> extends HashMap<String, Object> {
 	 */
 	public static <T> Result<T> Success(T content) {
 		Result<T> result = new Result<T>();
-		result.setCode(SUCCESS);
 		result.setContent(content);
 		return result;
 	}
@@ -47,7 +40,7 @@ public class Result<T> extends HashMap<String, Object> {
 	 */
 	public static <T> Result<T> Error(int code) {
 		Result<T> result = new Result<T>();
-		result.setCode(code);
+		result.code = code;
 		return result;
 	}
 
@@ -62,8 +55,8 @@ public class Result<T> extends HashMap<String, Object> {
 	 */
 	public static <T> Result<T> ValueOf(int code, T content) {
 		Result<T> result = new Result<T>();
-		result.setCode(code);
-		result.setContent(content);
+		result.code = code;
+		result.content = content;
 		return result;
 	}
 
@@ -77,11 +70,11 @@ public class Result<T> extends HashMap<String, Object> {
 	 * @return
 	 */
 	public boolean addContent(String key, Object value) {
-		if (CODE.equalsIgnoreCase(key)
-				|| CONTENT.equalsIgnoreCase(key)) {
-			return false;
-		}
-		this.put(key, value);
+//		if (CODE.equalsIgnoreCase(key)
+//				|| CONTENT.equalsIgnoreCase(key)) {
+//			return false;
+//		}
+//		this.values.put(key, value);
 		return true;
 	}
 
@@ -92,7 +85,7 @@ public class Result<T> extends HashMap<String, Object> {
 	 *            错误码
 	 */
 	private void setCode(int code) {
-		this.put(CODE, code);
+		this.code = code;
 	}
 	
 	/**
@@ -100,7 +93,7 @@ public class Result<T> extends HashMap<String, Object> {
 	 * @return
 	 */
 	public int getCode() {
-		return (Integer) this.get(CODE);
+		return code;
 	}
 
 	/**
@@ -109,17 +102,19 @@ public class Result<T> extends HashMap<String, Object> {
 	 * @param content
 	 *            内容对象
 	 */
-	private void setContent(Object content) {
-		this.put(CONTENT, content);
+	private void setContent(T content) {
+		this.content = content;
 	}
 	
 	/**
 	 * 返回内容对象
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public T getContent() {
-		return (T) this.get(CONTENT);
+		return content;
 	}
-	
+
+    public Object get(String content) {
+	    return null;
+    }
 }

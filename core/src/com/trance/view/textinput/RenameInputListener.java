@@ -5,7 +5,9 @@ import com.badlogic.gdx.Input.TextInputListener;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
+import com.trance.empire.model.Result;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.view.config.Config;
@@ -45,9 +47,7 @@ public class RenameInputListener implements TextInputListener {
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
-		byte[] bytes = response.getValueBytes();
-		String str = new String(bytes);
-		Integer code = JSON.parseObject(str, Integer.class);
+		int code = ProtostuffUtil.parseObject(response.getValueBytes(), Integer.class);
 		if(code == 0){
 			Player.player.setPlayerName(text);
 			FontUtil.getFont().appendText(text);

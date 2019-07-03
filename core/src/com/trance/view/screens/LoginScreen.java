@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
@@ -31,6 +32,8 @@ import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
+import com.trance.empire.modules.player.model.ReqLogin;
+import com.trance.empire.modules.player.model.ResLogin;
 import com.trance.view.TranceGame;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
@@ -44,6 +47,7 @@ import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,8 +127,8 @@ public class LoginScreen extends BaseScreen {
 		String newName = CharUtil.getRandomName();
 		Input.TextInputListener listener = new RegisterInputListener(new LoginCallback(){
 			@Override
-			public void handleMessage(Result result) {
-				loginAction(result);
+			public void handleMessage(Result<ResLogin> result) {
+				loginAction(result.getContent());
 			}
 		});
 
@@ -143,13 +147,13 @@ public class LoginScreen extends BaseScreen {
 			return;
 		}
 
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("userName", Player.userName);
+		ReqLogin reqLogin = new ReqLogin();
+		reqLogin.setServerId(1);
+		reqLogin.setUserName(Player.userName);
 //		params.put("loginKey", loginMD5); //TODO 暂时不校验
-		params.put("server", "1");
 		int module = Module.PLAYER;
 		int cmd = PlayerCmd.LOGIN;
-		Response response = SocketUtil.send(Request.valueOf(module, cmd, params),true);
+		Response response = SocketUtil.send(Request.valueOf(module, cmd, reqLogin),true);
 		if(response == null){
 			return;
 		}
@@ -157,8 +161,8 @@ public class LoginScreen extends BaseScreen {
 		ResponseStatus status = response.getStatus();
 		if (status == ResponseStatus.SUCCESS) {
 			byte[] bytes = response.getValueBytes();
-			String text = new String(bytes);
-			Result result = JSON.parseObject(text, Result.class);
+//			String text = new String(bytes);
+			Result<ResLogin> result = ProtostuffUtil.parseObject(bytes, Result.class);
 			if (result == null) {
 				return;
 			}
@@ -169,87 +173,70 @@ public class LoginScreen extends BaseScreen {
 				return;
 			}
 
-			if(code != Result.SUCCESS){
+			if(code != 0){
 				MsgUtil.getInstance().showMsg(Module.PLAYER, code);
 				return;
 			}
 
-			loginAction(result);
+			loginAction(result.getContent());
 		}
 	}
 
-	private void loginAction(Result result){
-		Long serverTime = (Long) result.get("serverTime");
-		if(serverTime != null){
+	private void loginAction(ResLogin result){
+		long serverTime = result.getServerTime();
+		if(serverTime > 0){
 			TimeUtil.init(serverTime);
 		}else{
 			Gdx.app.log("trance","同步服务器时间错误");
 		}
 
-		Object pobj = result.get("content");
-		if (pobj == null) {
-			return;
-		}
-
-		PlayerDto playerDto = JSON.parseObject(pobj.toString(),
-				PlayerDto.class);
+		PlayerDto playerDto = result.getPlayerDto();				
 		playerDto.setMyself(true);
 
 
-		int[][] map;
-		Object mobj = result.get("mapdata");
-		if (mobj == null) {
+		int[][] map = result.getMapdata();
+		if (map == null) {
 			map = MapData.clonemap();
-		}else{
-			map = JSON.parseObject(mobj.toString(), int[][].class);
 		}
 		playerDto.setMap(map);
-
-		Object wobj = result.get("worldPlayers");
-		if (wobj != null) {
-			WorldScreen.playerDtos = JSON.parseObject(wobj.toString(), new TypeReference<Map<String, PlayerDto>>() {
-			});
-//			for (Entry<String, PlayerDto> e : players.entrySet()) {
-//				String dto = JSON.toJSONString(e.getValue());
-//				PlayerDto value = JSON.parseObject(dto, PlayerDto.class);
-//				WorldScreen.playerDtos.put(e.getKey(), value);
-//			}
+		
+		Map<String,PlayerDto> playerDtos = result.getWorldPlayers();
+		if (playerDtos != null){
+			WorldScreen.playerDtos = playerDtos;
 		}
 
-		Object aobj = result.get("armys");
-		if(aobj != null){
-			List<ArmyDto> armys = JSON.parseArray(aobj.toString(), ArmyDto.class);
+		List<ArmyDto> armys = result.getArmys();
+		if(armys != null){
 			for(ArmyDto dto : armys){
 				playerDto.addAmry(dto);
 			}
 		}
 
-		Object cobj = result.get("coolQueues");
-		if(cobj != null){
-			List<CoolQueueDto> coolQueues = JSON.parseArray(cobj.toString(), CoolQueueDto.class);
+		List<CoolQueueDto> coolQueues = result.getCoolQueues();
+		if(coolQueues != null){
 			for(CoolQueueDto dto : coolQueues){
 				playerDto.addCoolQueue(dto);
 			}
 		}
 
-		Object bobj = result.get("buildings");
-		if(bobj != null){
-			List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+		List<BuildingDto> buildings = result.getBuildings();
+		if(buildings != null){
 			for(BuildingDto dto : buildings){
 				playerDto.addBuilding(dto);
 			}
 		}
 
-//        playerDto.refreshWaitBudiing()
+//      playerDto.refreshWaitBudiing()
 
 		//Tech
-		Object tobj = result.get("techs");
-		if(tobj != null){
-			List<TechDto> techDtos = JSON.parseArray(tobj.toString(), TechDto.class);
-			for(TechDto dto : techDtos){
-				playerDto.addTech(dto);
-			}
-		}
+//		Object tobj = result.get("techs");
+//		if(tobj != null){
+//			List<TechDto> techDtos = JSON.parseArray(tobj.toString(), TechDto.class);
+//			for(TechDto dto : techDtos){
+//				playerDto.addTech(dto);
+//			}
+//		}
+		
 		//TEST
 		TechDto techDto = new TechDto();
 		techDto.setId(1);

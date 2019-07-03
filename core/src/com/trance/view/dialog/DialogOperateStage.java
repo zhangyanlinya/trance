@@ -11,12 +11,15 @@ import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
+import com.trance.empire.modules.building.model.ReqBuildingUp;
+import com.trance.empire.modules.building.model.ResBuildingUp;
 import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.reward.result.ValueResultSet;
@@ -161,45 +164,42 @@ public class DialogOperateStage extends BaseStage {
             return;
         }
 
-        Map<String, Object> parms = new HashMap<String, Object>();
-        parms.put("x", dto.getX());
-        parms.put("y", dto.getY());
+        ReqBuildingUp req = new ReqBuildingUp();
+        req.setX(dto.getX());
+        req.setY(dto.getY());
 
         int cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL;
         if (byGold) {
             cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL_BY_GOLD;
         }
-        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, cmd, parms), true);
+        Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, cmd, req), true);
         if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
             return;
         }
 
         byte[] bytes = response.getValueBytes();
-        String text = new String(bytes);
-        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
+        Result<ResBuildingUp> result = ProtostuffUtil.parseObject(bytes, Result.class);
         if (result != null) {
-            int code = Integer.valueOf(String.valueOf(result.get("result")));
+            int code = result.getCode();
             if (code != Result.SUCCESS) {
                 MsgUtil.getInstance().showMsg(Module.BUILDING, code);
                 return;
             }
-            Object valueResult = result.get("valueResultSet");
-            if (valueResult != null) {
-                ValueResultSet valueResultSet = JSON.parseObject(JSON.toJSON(valueResult).toString(), ValueResultSet.class);
+
+            ResBuildingUp res = result.getContent();
+            ValueResultSet valueResultSet = res.getValueResultSet();
+            if (valueResultSet != null) {
                 RewardService.executeRewards(valueResultSet);
             }
 
             ConcurrentMap<String, BuildingDto> buildings = Player.player.getBuildings();
-            Object building = result.get("content");
-            if (building != null) {
-                BuildingDto playerBuildingDto = JSON.parseObject(JSON.toJSON(building).toString(), BuildingDto.class);
-                if (playerBuildingDto != null) {
-                    BuildingDto dto = buildings.get(playerBuildingDto.getKey());
-                    if(dto != null){
-                        dto.setCdtime(playerBuildingDto.getCdtime());
-                        dto.setEtime(playerBuildingDto.getEtime());
-                        dto.setLvl(playerBuildingDto.getLvl());
-                    }
+            BuildingDto playerBuildingDto = res.getBuildingDto();
+            if (playerBuildingDto != null) {
+                BuildingDto dto = buildings.get(playerBuildingDto.getKey());
+                if (dto != null) {
+                    dto.setCdtime(playerBuildingDto.getCdtime());
+                    dto.setEtime(playerBuildingDto.getEtime());
+                    dto.setLvl(playerBuildingDto.getLvl());
                 }
             }
 
@@ -207,15 +207,12 @@ public class DialogOperateStage extends BaseStage {
 
             //如果是主城升级的话  可能有新的建筑和部队
             if (dto.getMid() == BuildingType.OFFICE.getId()) {
-                Object newArmys = result.get("newArmyDtos");
-                if (newArmys != null) {
-                    List<ArmyDto> armyDtos = JSON.parseArray(JSON.toJSON(newArmys).toString(), ArmyDto.class);
-                    if (armyDtos != null) {
-                        for (ArmyDto armyDto : armyDtos) {
-                            Player.player.addAmry(armyDto);
-                        }
-//						 dialogArmyStage.refresh();
+                List<ArmyDto> armyDtos = res.getArmyDtos();
+                if (armyDtos != null) {
+                    for (ArmyDto armyDto : armyDtos) {
+                        Player.player.addAmry(armyDto);
                     }
+//				    dialogArmyStage.refresh();
                 }
 
                 // waitBuildings

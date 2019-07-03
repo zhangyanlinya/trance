@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import io.protostuff.Tag;
+
 /**
  * PlayerDto对象
  *
@@ -20,80 +22,92 @@ import java.util.concurrent.ConcurrentMap;
 public class PlayerDto {
 
 
+
     /**
      * 玩家id
      */
+    @Tag(1)
     private long id;
 
     /**
      * 主公名称
      */
+    @Tag(2)
     private String playerName;
 
     /**
      * 等级
      */
+    @Tag(3)
     private int level = 1;
 
     /**
      * 金币
      */
+    @Tag(4)
     private long gold;
 
     /**
      * 银元
      */
+    @Tag(5)
     private long silver;
 
     /**
      * 粮草
      */
+    @Tag(6)
     private long foods;
 
     /**
      * UP
      */
+    @Tag(7)
     private long up;
 
     /**
      * 经验
      */
+    @Tag(8)
     private long experience;
 
     /**
      * 注册时间
      */
-    public long registerTime;
+    @Tag(9)
+    private long registerTime;
 
     /**
      * 最后一次登录时间
      */
-    public long loginTime;
+    @Tag(10)
+    private long loginTime;
 
     /**
      * 服标识
      */
+    @Tag(11)
     private int server;
 
     /**
      * myself
      */
-    private boolean myself;
+    private transient boolean myself;
 
-    private int[][] map;
+    private transient int[][] map;
 
-    private final ConcurrentMap<Integer, ArmyDto> armys = new ConcurrentHashMap<Integer, ArmyDto>();
+    private transient final ConcurrentMap<Integer, ArmyDto> armys = new ConcurrentHashMap<Integer, ArmyDto>();
 
-    private final ConcurrentMap<String, BuildingDto> buildings = new ConcurrentHashMap<String, BuildingDto>();
+    private transient final ConcurrentMap<String, BuildingDto> buildings = new ConcurrentHashMap<String, BuildingDto>();
 
-    private final ConcurrentMap<Integer, CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer, CoolQueueDto>();
+    private transient final ConcurrentMap<Integer, CoolQueueDto> coolQueues = new ConcurrentHashMap<Integer, CoolQueueDto>();
 
-    private final ConcurrentMap<Integer, TechDto> techs = new ConcurrentHashMap<Integer, TechDto>();
+    private transient final ConcurrentMap<Integer, TechDto> techs = new ConcurrentHashMap<Integer, TechDto>();
 
-    private final ConcurrentMap<Integer, FittingDto> fittings = new ConcurrentHashMap<Integer, FittingDto>();
-    private int x;
+    private transient final ConcurrentMap<Integer, FittingDto> fittings = new ConcurrentHashMap<Integer, FittingDto>();
+    private transient int x;
 
-    private int y;
+    private transient int y;
 
     public long getId() {
         return id;

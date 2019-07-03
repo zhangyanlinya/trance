@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.player.handler.PlayerCmd;
@@ -106,7 +107,7 @@ public class SocketUtil {
 			return false;
 		}
 		byte[] bytes = response.getValueBytes();
-		Result<?> result = JSON.parseObject(new String(bytes),Result.class);
+		Result<?> result = ProtostuffUtil.parseObject(bytes,Result.class);
 		if(result != null){
 			if(result.getCode() != Result.SUCCESS){
 				if(result.getCode() == -10005){//-10005 重连被禁止

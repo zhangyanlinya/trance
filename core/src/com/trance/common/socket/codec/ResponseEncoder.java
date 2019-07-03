@@ -7,9 +7,7 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trance.common.socket.converter.ObjectConverters;
 import com.trance.common.socket.model.Response;
-import com.trance.common.util.GZIPUtil;
 
 
 /**
@@ -23,14 +21,6 @@ public class ResponseEncoder extends ProtocolEncoderAdapter {
 	
 	public ResponseEncoder() {
 		
-	}
-	
-	/**
-	 * 响应协议编码器构造函数
-	 * @param objectConverters 对象转换器集合
-	 */
-	public ResponseEncoder(ObjectConverters objectConverters) {
-		this.objectConverters = objectConverters;
 	}
 
 	@Override
@@ -76,34 +66,13 @@ public class ResponseEncoder extends ProtocolEncoderAdapter {
 			return null;
 		}
 		
-		byte[] resData = CodecHelper.encodeAndToByteArray(response, this.objectConverters);
+		byte[] resData = CodecHelper.encodeAndToByteArray(response);
 		if (resData == null) {
 			return null;
 		}
 		
 		IoBuffer buffer = CodecHelper.body2IoBuffer(resData);
 		return buffer;
-	}
-	
-	/**
-	 * 对象转换器集合
-	 */
-	private ObjectConverters objectConverters;
-	
-	/**
-	 * 取得对象转换器集合
-	 * @return ObjectConverters
-	 */
-	public ObjectConverters getObjectConverters() {
-		return objectConverters;
-	}
-
-	/**
-	 * 设置对象转换器集合
-	 * @param objectConverters ObjectConverters
-	 */
-	public void setObjectConverters(ObjectConverters objectConverters) {
-		this.objectConverters = objectConverters;
 	}
 
 }

@@ -4,9 +4,6 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.trance.common.socket.codec.CodecFactory;
 import com.trance.common.socket.codec.RequestEncoder;
 import com.trance.common.socket.codec.ResponseDecoder;
-import com.trance.common.socket.converter.JsonConverter;
-import com.trance.common.socket.converter.ObjectConverter;
-import com.trance.common.socket.converter.ObjectConverters;
 import com.trance.common.socket.filter.ReconnectionFilter;
 import com.trance.common.socket.handler.ClientHandler;
 import com.trance.common.socket.handler.ResponseProcessor;
@@ -76,11 +73,6 @@ public class SimpleSocketClient {
 	 */
 	private final ResponseProcessors responseProcessors = new ResponseProcessors();
 
-	/**
-	 * 对象转换器集合
-	 */
-	private final ObjectConverters objectConverters = new ObjectConverters();
-
 
 	/**
 	 * 请求上下文 {sn: ClientContext}
@@ -101,7 +93,6 @@ public class SimpleSocketClient {
 			return ;
 		}
 		//注册默认对象转换器
-		this.registerObjectConverters(new JsonConverter());
 		connector = new NioSocketConnector();
 
 		//Session配置
@@ -214,7 +205,6 @@ public class SimpleSocketClient {
 
 		this.requestContext.clear();
 		this.responseProcessors.clear();
-		this.objectConverters.clear();
 	}
 
 	/**
@@ -277,7 +267,7 @@ public class SimpleSocketClient {
 	 * @return ProtocolCodecFactory
 	 */
 	private ProtocolCodecFactory createCodecFactory() {
-		ProtocolEncoder encoder = new RequestEncoder(objectConverters);
+		ProtocolEncoder encoder = new RequestEncoder();
 		ProtocolDecoder decoder = new ResponseDecoder();
 		return new CodecFactory(encoder, decoder);
 	}
@@ -288,7 +278,6 @@ public class SimpleSocketClient {
 	 */
 	private ClientHandler createClientHandler() {
 		ClientHandler clientHandler = new ClientHandler();
-		clientHandler.setObjectConverters(this.objectConverters);
 		clientHandler.setResponseProcessors(this.responseProcessors);
 		clientHandler.setRequestContext(this.requestContext);
 		return clientHandler;
@@ -307,33 +296,6 @@ public class SimpleSocketClient {
 		return new ExecutorFilter(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, threadFactory);
 	}
 
-	/**
-	 * 注册对象转换器
-	 * @param converters ObjectConverter数组
-	 */
-	public void registerObjectConverters(ObjectConverter ...converters) {
-		if (converters == null || converters.length == 0) {
-			return;
-		}
-
-		for (ObjectConverter converter: converters) {
-			this.objectConverters.register(converter);
-		}
-	}
-
-	/**
-	 * 注册对象转换器
-	 * @param converters ObjectConverters
-	 */
-	public void registerObjectConverters(ObjectConverters converters) {
-		if (converters == null) {
-			return;
-		}
-
-		for (ObjectConverter converter: converters.getObjectConverterList()) {
-			this.registerObjectConverters(converter);
-		}
-	}
 
 	/**
 	 * 注册响应消息处理器

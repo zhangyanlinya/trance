@@ -7,7 +7,8 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trance.common.socket.converter.ObjectConverters;
+import com.trance.common.socket.converter.JsonConverter;
+import com.trance.common.socket.converter.ProtostuffConverter;
 import com.trance.common.socket.model.Request;
 
 
@@ -26,17 +27,9 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 	public RequestEncoder() {
 		
 	}
-	
-	/**
-	 * 请求消息编码器构造函数
-	 * @param objectConverters 对象转换器集合
-	 */
-	public RequestEncoder(ObjectConverters objectConverters) {
-		this.objectConverters = objectConverters;
-	}
 
 	@Override
-	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
+	public void encode(IoSession session, Object message, ProtocolEncoderOutput out){
 		if (message == null) {
 			return;
 		}
@@ -79,7 +72,7 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 		}
 		
 		//对象转换
-		byte[] data = this.objectConverters.encode(request.getFormat(), request.getValue());
+		byte[] data = ProtostuffConverter.encode(request.getValue());
 		request.setValueBytes(data);
 				
 //		//需要压缩 
@@ -98,26 +91,4 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 		IoBuffer buffer = CodecHelper.body2IoBuffer(reqData);
 		return buffer;
 	}
-	
-	/**
-	 * 对象转换器集合
-	 */
-	private ObjectConverters objectConverters;
-	
-	/**
-	 * 取得对象转换器集合
-	 * @return ObjectConverters
-	 */
-	public ObjectConverters getObjectConverters() {
-		return objectConverters;
-	}
-
-	/**
-	 * 设置对象转换器集合
-	 * @param objectConverters ObjectConverters
-	 */
-	public void setObjectConverters(ObjectConverters objectConverters) {
-		this.objectConverters = objectConverters;
-	}
-
 }

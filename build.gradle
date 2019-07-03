@@ -75,13 +75,17 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 
-        compile group: 'org.apache.mina', name: 'mina-core', version: '2.0.21'
+        compile group: 'org.apache.mina', name: 'mina-core', version: '2.0.4'
         compile group: 'com.alibaba', name: 'fastjson', version: '1.1.54.android'
 //        compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.5'
 //        compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.5'
 //        compile group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'
 //        compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
         compile group: 'com.googlecode.concurrentlinkedhashmap', name: 'concurrentlinkedhashmap-lru', version: '1.2'
+        compile group: 'io.protostuff', name: 'protostuff-runtime', version: '1.6.0'
+        compile group: 'io.protostuff', name: 'protostuff-core', version: '1.6.0'
+
+
     }
 }
 

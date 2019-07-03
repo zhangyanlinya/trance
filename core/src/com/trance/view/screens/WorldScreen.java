@@ -1,6 +1,5 @@
 package com.trance.view.screens;
 
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -16,22 +15,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.trance.common.basedb.BasedbService;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.building.model.BuildingDto;
-import com.trance.empire.modules.building.model.basedb.CityElement;
 import com.trance.empire.modules.dailyreward.handler.DailyRewardCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
 import com.trance.empire.modules.world.handler.WorldCmd;
+import com.trance.empire.modules.world.model.ReqAllocation;
+import com.trance.empire.modules.world.model.ReqSpy;
+import com.trance.empire.modules.world.model.ResAllocation;
+import com.trance.empire.modules.world.model.ResSpy;
 import com.trance.view.TranceGame;
-import com.trance.view.actors.Bullet;
 import com.trance.view.actors.WorldImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.UiType;
@@ -46,7 +47,6 @@ import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,33 +239,29 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 								location.setColor(255, 0, 0, 1);
 								gotoHome();
 							}else{//spy get the map
-								HashMap<String,Object> params = new HashMap<String,Object>();
-								params.put("x", ox);
-								params.put("y", oy);
-								Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY, params),true);
+                                ReqSpy req = new ReqSpy();
+                                req.setX(ox);
+                                req.setY(oy);
+								Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY, req),true);
 								if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 									return;
 								}
 								byte[] bytes = response.getValueBytes();
-								String text = new String(bytes);
-								@SuppressWarnings("unchecked")
-								HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
-								int code = (Integer) result.get("result");
+								Result<ResSpy> result = ProtostuffUtil.parseObject(bytes,Result.class);
+								int code = result.getCode();
 								if(code != Result.SUCCESS){
 									MsgUtil.getInstance().showMsg(Module.WORLD, code);
 									return;
 								}
-								Object mobj = result.get("content");
-								if (mobj != null) {
-									int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
-									dto.setMap(map);
+								ResSpy res = result.getContent();
+								if (res.getMap() != null) {
+									dto.setMap(res.getMap());
 								}else{
 									dto.setMap(MapData.clonemap());
 								}
 
-								Object bobj = result.get("buildings");
-								if(bobj != null){//defalut;
-									List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+								List<BuildingDto> buildings = res.getBuildings();
+								if(buildings != null){
 									for(BuildingDto bto : buildings){
 										dto.addBuilding(bto);
 									}
@@ -281,39 +277,35 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 								tranceGame.setScreen(tranceGame.mapScreen);
 							}
 						}else{
-							HashMap<String,Object> params = new HashMap<String,Object>();
-							params.put("x", ox);
-							params.put("y", oy);
-							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, params),true);
+                            ReqAllocation req = new ReqAllocation();
+                            req.setX(ox);
+                            req.setY(oy);
+							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, req),true);
 							if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 								return;
 							}
 							byte[] bytes = response.getValueBytes();
-							String text = new String(bytes);
-							@SuppressWarnings("unchecked")
-							HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
-							int code = (Integer) result.get("result");
+							Result<ResAllocation> result = ProtostuffUtil.parseObject(bytes,Result.class);
+							int code = result.getCode();
 							if(code != Result.SUCCESS){
 								MsgUtil.getInstance().showMsg(Module.WORLD, code);
 								return;
 							}
-							
-							Object pobj = result.get("content");
-							dto = JSON.parseObject(pobj.toString(), PlayerDto.class);
+
+							ResAllocation res = result.getContent();
+							dto = res.getPlayerDto();
 							dto.setX(ox);
 							dto.setY(oy);
 
-							Object mobj = result.get("map");
-							if (mobj != null) {
-								int[][] map = JSON.parseObject(	mobj.toString(),int[][].class);
+							int[][] map = res.getMap();
+							if (map != null) {
 								dto.setMap(map);
 							}else{
 								dto.setMap(MapData.clonemap());
 							}
 
-							Object bobj = result.get("buildings");
-							if(bobj != null){
-								List<BuildingDto> buildings = JSON.parseArray(bobj.toString(), BuildingDto.class);
+							List<BuildingDto> buildings = res.getBuildings();
+							if(buildings != null){
 								for(BuildingDto bto : buildings){
 									dto.addBuilding(bto);
 								}
@@ -354,18 +346,15 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 				}
 				
 				byte[] bytes = response.getValueBytes();
-				String text = new String(bytes);
-				@SuppressWarnings("unchecked")
-				HashMap<String, Object> result = JSON.parseObject(text,HashMap.class);
-				int code = (Integer) result.get("result");
+				Result<ValueResultSet> result = ProtostuffUtil.parseObject(bytes,Result.class);
+				int code = result.getCode();
 				if(code != Result.SUCCESS){
 					MsgUtil.getInstance().showMsg(Module.DAILY_REWARD, code);
 					return;
 				}
-				
-				Object reward = result.get("content");
-				if(reward != null){
-					ValueResultSet valueResultSet = JSON.parseObject(reward.toString(), ValueResultSet.class);
+
+				ValueResultSet valueResultSet = result.getContent();
+				if(valueResultSet != null){
 					RewardService.executeRewards(valueResultSet);
 				}
 				stage.getActors().removeValue(dailyReward, true);

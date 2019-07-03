@@ -1,8 +1,8 @@
 package com.trance.common.socket.handler;
 
 import com.badlogic.gdx.Gdx;
-import com.trance.common.socket.ClientContext;
-import com.trance.common.socket.converter.ObjectConverters;
+import com.trance.common.socket.converter.JsonConverter;
+import com.trance.common.socket.converter.ProtostuffConverter;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.util.GZIPUtil;
@@ -75,7 +75,7 @@ public class ClientHandler extends IoHandlerAdapter {
         ResponseProcessor processor = this.responseProcessors.getProcessor(response.getModule(), response.getCmd());
         if (processor != null && processor.getType() != null) {
             //对象转换
-            Object obj = this.objectConverters.decode(response.getFormat(), response.getValueBytes(), processor.getType());
+            Object obj = ProtostuffConverter.decode(response.getValueBytes(), processor.getType());
             response.setValue(obj);
         }
 
@@ -99,10 +99,6 @@ public class ClientHandler extends IoHandlerAdapter {
      */
     private ResponseProcessors responseProcessors;
 
-    /**
-     * 对象转换器集合
-     */
-    private ObjectConverters objectConverters;
 
     /**
      * 请求上下文 {sn: ClientContext}
@@ -127,23 +123,6 @@ public class ClientHandler extends IoHandlerAdapter {
         this.responseProcessors = responseProcessors;
     }
 
-    /**
-     * 取得对象转换器集合
-     *
-     * @return ObjectConverters
-     */
-    public ObjectConverters getObjectConverters() {
-        return objectConverters;
-    }
-
-    /**
-     * 设置对象转换器集合
-     *
-     * @param objectConverters ObjectConverters
-     */
-    public void setObjectConverters(ObjectConverters objectConverters) {
-        this.objectConverters = objectConverters;
-    }
 
     public Map<Integer, Request> getRequestContext() {
         return requestContext;

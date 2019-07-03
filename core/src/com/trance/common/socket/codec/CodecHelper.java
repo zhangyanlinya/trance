@@ -1,17 +1,15 @@
 package com.trance.common.socket.codec;
 
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_ID;
-import static com.trance.common.socket.constant.CodecConstant.PACKAGE_HEADER_LENGTH;
-
-import org.apache.mina.core.buffer.IoBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.trance.common.socket.converter.ObjectConverters;
+import com.trance.common.socket.converter.JsonConverter;
+import com.trance.common.socket.converter.ProtostuffConverter;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.GZIPUtil;
+
+import org.apache.mina.core.buffer.IoBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -192,19 +190,15 @@ public class CodecHelper {
 	/**
 	 * 响应消息编码和转换成字节数组
 	 * @param response Response
-	 * @param objectConverters 对象转换器集合
 	 * @return byte[]
 	 */
-	public static byte[] encodeAndToByteArray(Response response, ObjectConverters objectConverters) {
+	public static byte[] encodeAndToByteArray(Response response) {
 		if (response == null) {
 			return null;
 		}
-		if (objectConverters == null) {
-			return null;
-		}
-		
+
 		//对象转换
-		byte[] data = objectConverters.encode(response.getFormat(), response.getValue());
+		byte[] data = ProtostuffConverter.encode(response.getValue());
 		response.setValueBytes(data);
 						
 //		//需要压缩 
@@ -273,7 +267,6 @@ public class CodecHelper {
 	
 	/**
 	 * 消息体字节数组封装成IoBuffer
-	 * @param responseBytes 响应消息转换成的字节数
 	 * @return IoBuffer
 	 */
 	public static IoBuffer body2IoBuffer(byte[] bodyBytes) {
