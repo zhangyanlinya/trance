@@ -1,7 +1,6 @@
 package com.trance.view.dialog;
 
 
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -18,6 +17,8 @@ import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.handler.ArmyCmd;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ReqArmyTrain;
+import com.trance.empire.modules.army.model.ReqArmyUp;
+import com.trance.empire.modules.army.model.ReqObtainArmy;
 import com.trance.empire.modules.army.model.ResArmyTrain;
 import com.trance.empire.modules.army.model.ResArmyUp;
 import com.trance.empire.modules.army.model.basedb.ArmyTrain;
@@ -37,8 +38,6 @@ import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -173,7 +172,9 @@ public class DialogArmyStage extends BaseStage {
 
 
     private void levelup(int armyId) {
-		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.UPGRADE_LEVEL, armyId),true);
+    	ReqArmyUp req = new ReqArmyUp();
+    	req.setArmyId(armyId);
+		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.UPGRADE_LEVEL, req),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
@@ -249,7 +250,9 @@ public class DialogArmyStage extends BaseStage {
 	}
 	
 	private void obtainArmy(int armyId) {
-		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, armyId),true);
+		ReqObtainArmy req = new ReqObtainArmy();
+		req.setArmyId(armyId);
+		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, req),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}

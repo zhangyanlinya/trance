@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -38,11 +37,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ArmyType;
-import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.replay.entity.Report;
 import com.trance.empire.modules.replay.model.Click;
+import com.trance.empire.modules.replay.model.ReportDto;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.Army;
 import com.trance.view.actors.Building;
@@ -52,7 +51,6 @@ import com.trance.view.actors.GameActor;
 import com.trance.view.actors.MapImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.ExplodeType;
-import com.trance.view.controller.GestureController;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.particle.ParticleService;
@@ -102,7 +100,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
 
 //    private Box2DDebugRenderer debugRenderer;
 
-    public static Report report;
+    public static ReportDto report;
 
     public final static Array<GameActor> buildings = new Array<GameActor>();
 

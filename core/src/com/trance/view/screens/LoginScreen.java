@@ -1,8 +1,6 @@
 package com.trance.view.screens;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -26,7 +24,6 @@ import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
-import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.player.handler.PlayerCmd;
@@ -47,12 +44,8 @@ import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
-import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 
 
 public class LoginScreen extends BaseScreen {

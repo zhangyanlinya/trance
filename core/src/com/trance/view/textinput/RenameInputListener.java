@@ -10,6 +10,7 @@ import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
+import com.trance.empire.modules.player.model.ReqRename;
 import com.trance.view.config.Config;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
@@ -43,7 +44,9 @@ public class RenameInputListener implements TextInputListener {
 			return;
 		}
 		
-		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.RENAME, text),true);
+		ReqRename req = new ReqRename();
+		req.setName(text);
+		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.RENAME, req),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}

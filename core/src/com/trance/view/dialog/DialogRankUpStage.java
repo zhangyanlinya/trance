@@ -19,6 +19,7 @@ import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.ranking.handler.RankingCmd;
 import com.trance.empire.modules.world.handler.WorldCmd;
+import com.trance.empire.modules.world.model.ReqSpyAnyOne;
 import com.trance.empire.modules.world.model.ResSpyAnyOne;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.RankImage;
@@ -119,7 +120,10 @@ public class DialogRankUpStage extends BaseStage {
 					if(Player.player.getId() == dto.getId()){
 						return;
 					}
-					Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY_ANYONE, dto.getId()),true);
+					
+					ReqSpyAnyOne req = new ReqSpyAnyOne();
+					req.setTargetId(dto.getId());
+					Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY_ANYONE, req),true);
 					if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 						return;
 					}

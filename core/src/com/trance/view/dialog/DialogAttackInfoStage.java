@@ -10,23 +10,21 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
-import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.battle.model.AttackInfoDto;
-import com.trance.empire.modules.building.model.BuildingDto;
-import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.replay.entity.Report;
 import com.trance.empire.modules.replay.handler.ReplayCmd;
+import com.trance.empire.modules.replay.model.ReportDto;
+import com.trance.empire.modules.replay.model.ReqReport;
 import com.trance.empire.modules.reward.service.RewardService;
-import com.trance.empire.modules.world.handler.WorldCmd;
 import com.trance.view.TranceGame;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;
-import com.trance.view.mapdata.MapData;
 import com.trance.view.screens.ReplayScreen;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
@@ -35,7 +33,6 @@ import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
@@ -48,7 +45,7 @@ public class DialogAttackInfoStage extends BaseStage {
 	private List<AttackInfoDto> attackInfos;
 	private static final int MAX_RANKING = 10;
     private boolean init;
-    private final ConcurrentMap<String, Report> report_map = new ConcurrentLinkedHashMap.Builder<String, Report>()
+    private final ConcurrentMap<String, ReportDto> report_map = new ConcurrentLinkedHashMap.Builder<String, ReportDto>()
             .maximumWeightedCapacity(20).build();
 
     public DialogAttackInfoStage(TranceGame tranceGame) {
@@ -141,32 +138,29 @@ public class DialogAttackInfoStage extends BaseStage {
 	}
 
     private void watchReplay(String reportId){
-        Report report = report_map.get(reportId);
+		ReportDto report = report_map.get(reportId);
         if(report == null) {
-
-            Request request = Request.valueOf(Module.REPLAY, ReplayCmd.GET_PLAYER_REPLAY, reportId);
+        	ReqReport req = new ReqReport();
+        	req.setReportId(reportId);
+            Request request = Request.valueOf(Module.REPLAY, ReplayCmd.GET_PLAYER_REPLAY, req);
             Response response = SocketUtil.send(request, true);
             if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
                 return;
             }
 
             byte[] bytes = response.getValueBytes();
-            String text = new String(bytes);
-            @SuppressWarnings("unchecked")
-            HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-            Object codeObject = result.get("result");
-            int code = Integer.valueOf(String.valueOf(codeObject));
+            Result<ReportDto> result = ProtostuffUtil.parseObject(bytes, Result.class);
+            int code = result.getCode();
             if (code != Result.SUCCESS) {
                 MsgUtil.getInstance().showMsg(Module.REPLAY, code);
                 return;
             }
 
-            Object o = result.get("content");
-            if (o == null) {
+            ReportDto report = result.getContent();
+            if (report == null) {
                 return;
             }
 
-            report = JSON.parseObject(o.toString(), Report.class);
             report_map.put(reportId, report);
         }
 

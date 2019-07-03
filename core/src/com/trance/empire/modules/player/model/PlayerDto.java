@@ -1,7 +1,6 @@
 package com.trance.empire.modules.player.model;
 
 import com.trance.empire.modules.army.model.ArmyDto;
-import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;

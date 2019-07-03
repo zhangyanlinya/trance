@@ -1,7 +1,7 @@
-package com.trance.empire.modules.replay.entity;
+
+ackage com.trance.empire.modules.replay.entity;
 
 import com.trance.empire.modules.army.model.ArmyDto;
-import com.trance.empire.modules.army.model.TechDto;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.replay.model.Click;
 
