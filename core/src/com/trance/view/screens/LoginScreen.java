@@ -31,6 +31,7 @@ import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.player.model.ReqLogin;
 import com.trance.empire.modules.player.model.ResLogin;
+import com.trance.empire.modules.tech.model.TechDto;
 import com.trance.view.TranceGame;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.freefont.FreeFont;

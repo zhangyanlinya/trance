@@ -1,6 +1,5 @@
 package com.trance.view.screens;
 
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
@@ -35,6 +34,7 @@ import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.battle.handler.BattleCmd;
+import com.trance.empire.modules.battle.model.ReqBattle;
 import com.trance.empire.modules.building.handler.BuildingCmd;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
@@ -1138,29 +1138,25 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             return;
         }
 
-        HashMap<String,Object> params = new HashMap<String,Object>();
-        params.put("x", playerDto.getX());
-        params.put("y", playerDto.getY());
-        Request request = Request.valueOf(Module.BATTLE, BattleCmd.START_BATTLE, params);
+       	ReqBattle req = new ReqBattle();
+       	req.setX(playerDto.getX());
+       	req.setY(playerDto.getY());
+        Request request = Request.valueOf(Module.BATTLE, BattleCmd.START_BATTLE, req);
         Response response = SocketUtil.send(request, true);
         if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
             return;
         }
 
         byte[] bytes = response.getValueBytes();
-        String text = new String(bytes);
-        @SuppressWarnings("unchecked")
-        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-        Object codeObject = result.get("result");
-        int code = Integer.valueOf(String.valueOf(codeObject));
+        Result<ValueResultSet> result = ProtostuffUtil.parseObject(bytes, Result.class);
+        int code = result.getCode();
         if(code != Result.SUCCESS){
             MsgUtil.getInstance().showMsg(Module.BATTLE, code);
             return;
         }
 
-        Object o = result.get("content");
-        if(o != null){
-            ValueResultSet valueResultSet =  JSON.parseObject(o.toString(), ValueResultSet.class);
+        ValueResultSet valueResultSet = result.getContent();
+        if(valueResultSet != null){
             RewardService.executeRewards(valueResultSet);
         }
 

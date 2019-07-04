@@ -5,6 +5,7 @@ import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.coolqueue.model.CoolQueueDto;
 import com.trance.empire.modules.fitting.model.FittingDto;
+import com.trance.empire.modules.tech.model.TechDto;
 
 import java.util.HashMap;
 import java.util.Map;

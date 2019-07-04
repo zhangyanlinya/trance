@@ -1,7 +1,13 @@
 package com.trance.empire.modules.army.model;
 
+import io.protostuff.Tag;
+
 public class ArmyVo {
+	
+	@Tag(1)
 	private int id;
+	
+	@Tag(2)
 	private int amout;
 	
 	public static ArmyVo valueOf(ArmyDto armyDto){

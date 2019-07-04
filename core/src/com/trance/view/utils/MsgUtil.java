@@ -15,9 +15,6 @@ import com.trance.view.delaytask.MsgShowTask;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.DelayQueue;
 
 public class MsgUtil {
 

@@ -1,6 +1,5 @@
 package com.trance.view.textinput;
 
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.trance.common.socket.model.Request;
@@ -11,7 +10,6 @@ import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
-import com.trance.empire.modules.player.model.PlayerDto;
 import com.trance.empire.modules.player.model.ResCreatePlayer;
 import com.trance.empire.modules.player.model.ResLogin;
 import com.trance.view.screens.callback.LoginCallback;

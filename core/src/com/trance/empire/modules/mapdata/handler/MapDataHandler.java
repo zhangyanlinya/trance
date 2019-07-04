@@ -1,6 +1,5 @@
 package com.trance.empire.modules.mapdata.handler;
 
-import com.alibaba.fastjson.JSON;
 import com.trance.common.socket.SimpleSocketClient;
 import com.trance.common.socket.handler.HandlerSupport;
 import com.trance.common.socket.handler.ResponseProcessorAdapter;

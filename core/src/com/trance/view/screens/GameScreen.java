@@ -1,6 +1,5 @@
 package com.trance.view.screens;
 
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -39,20 +38,24 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
+import com.trance.common.util.ProtostuffUtil;
 import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ArmyType;
 import com.trance.empire.modules.army.model.ArmyVo;
 import com.trance.empire.modules.battle.handler.BattleCmd;
+import com.trance.empire.modules.battle.model.ReqFinishBattle;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
 import com.trance.empire.modules.player.model.PlayerDto;
+import com.trance.empire.modules.player.model.ReqUp;
 import com.trance.empire.modules.replay.model.Click;
 import com.trance.empire.modules.reward.result.ValueResultSet;
 import com.trance.empire.modules.reward.service.RewardService;
+import com.trance.empire.modules.tech.model.TechDto;
 import com.trance.view.TranceGame;
 import com.trance.view.actors.Army;
 import com.trance.view.actors.Building;
@@ -247,9 +250,9 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (playerDto != null) {
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("targetId", playerDto.getId());
-                    SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, params));
+                    ReqUp req = new ReqUp();
+                    req.setTargetId(playerDto.getId());
+                    SocketUtil.sendAsync(Request.valueOf(Module.PLAYER, PlayerCmd.UP, req));
                 }
             }
         });
@@ -328,14 +331,13 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
         }
 
         finishBattle = true;
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("armys", vos);
-        params.put("x", playerDto.getX());
-        params.put("y", playerDto.getY());
-        params.put("state", finishType == BattleFinishType.WIN ? 0 : 1);
-        params.put("sign", "");//TODO
-        params.put("clicks", clicks);
-        Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, params);
+        ReqFinishBattle req = new ReqFinishBattle();
+        req.setArmys(vos);
+        req.setX(playerDto.getX());
+        req.setY(playerDto.getY());
+        req.setState(finishType == BattleFinishType.WIN ? 0 : 1);
+        req.setClicks(clicks);
+        Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, req);
         Response response = SocketUtil.send(request, true);
         if (response == null) {
             return;
@@ -347,19 +349,15 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
         }
 
         byte[] bytes = response.getValueBytes();
-        String text = new String(bytes);
-        @SuppressWarnings("unchecked")
-        HashMap<String, Object> result = JSON.parseObject(text, HashMap.class);
-        Object codeObject = result.get("result");
-        int code = Integer.valueOf(String.valueOf(codeObject));
+        Result<ValueResultSet> result = ProtostuffUtil.parseObject(bytes, Result.class);
+        int code = result.getCode();
         if (code != Result.SUCCESS) {
             MsgUtil.getInstance().showMsg(Module.BATTLE, code);
             return;
         }
 
-        Object o = result.get("content");
-        if (o != null) {
-            ValueResultSet valueResultSet = JSON.parseObject(o.toString(), ValueResultSet.class);
+        ValueResultSet valueResultSet= result.getContent();
+        if (valueResultSet != null) {
             RewardService.executeRewards(valueResultSet);
         }
 

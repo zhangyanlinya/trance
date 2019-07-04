@@ -1,7 +1,6 @@
 package com.trance.view.dialog;
 
 
-import com.alibaba.fastjson.JSON;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -15,11 +14,11 @@ import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.battle.handler.BattleCmd;
 import com.trance.empire.modules.battle.model.AttackInfoDto;
-import com.trance.empire.modules.replay.entity.Report;
 import com.trance.empire.modules.replay.handler.ReplayCmd;
 import com.trance.empire.modules.replay.model.ReportDto;
 import com.trance.empire.modules.replay.model.ReqReport;
 import com.trance.empire.modules.reward.service.RewardService;
+import com.trance.empire.modules.tech.model.TechDto;
 import com.trance.view.TranceGame;
 import com.trance.view.constant.UiType;
 import com.trance.view.dialog.base.BaseStage;
@@ -130,11 +129,8 @@ public class DialogAttackInfoStage extends BaseStage {
 		}
 		
 		byte[] bytes = response.getValueBytes();
-		if(bytes != null){
-			String text = new String(bytes);
-			return JSON.parseArray(text, AttackInfoDto.class);
-		}
-		return null;
+		Result<List<AttackInfoDto>> result = ProtostuffUtil.parseObject(bytes, Result.class);
+		return result.getContent();
 	}
 
     private void watchReplay(String reportId){
@@ -156,7 +152,7 @@ public class DialogAttackInfoStage extends BaseStage {
                 return;
             }
 
-            ReportDto report = result.getContent();
+            report = result.getContent();
             if (report == null) {
                 return;
             }

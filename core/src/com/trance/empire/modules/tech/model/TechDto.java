@@ -3,15 +3,22 @@ package com.trance.empire.modules.tech.model;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+import io.protostuff.Tag;
+
 /**
  * Created by Administrator on 2016/12/30 0030.
  */
 
 public class TechDto {
+	
+	@Tag(1)
     private int id;
+	
+	@Tag(2)
     private int level;
-    private int amout;
-    private int useAmount;
+	
+    private transient int amout;
+    private transient int useAmount;
     private transient TextureRegion region;
     private transient Rectangle rect;
 
