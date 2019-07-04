@@ -35,8 +35,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.trance.empire.modules.army.model.ArmyDto;
 import com.trance.empire.modules.army.model.ArmyType;
+import com.trance.empire.modules.army.model.ArmyVo;
 import com.trance.empire.modules.building.model.BuildingDto;
 import com.trance.empire.modules.building.model.BuildingType;
 import com.trance.empire.modules.replay.model.Click;
@@ -213,13 +213,13 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     private int chooseTechId;
     private void initArmy(){
         armys.clear();
-        List<ArmyDto> amrysList = report.getArmys();
+        List<ArmyVo> amrysList = report.getArmys();
         if(amrysList == null || amrysList.isEmpty()){
             return;
         }
 
         int i = 0;
-        for(ArmyDto dto : amrysList){
+        for(ArmyVo dto : amrysList){
             if(dto.getAmout() == 0){
                 continue;
             }
@@ -454,7 +454,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     }
 
     private void renderKeeps(Batch batch){
-        for(ArmyDto dto :report.getArmys()){
+        for(ArmyVo dto :report.getArmys()){
             if(dto.getAmout() == 0){
                 continue;
             }
@@ -527,7 +527,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
 
     private void checkArmyStatus(float delta) {
         if(armys.size == 0){ // 是否已经派完
-            for(ArmyDto dto : report.getArmys()){
+            for(ArmyVo dto : report.getArmys()){
                 if(dto.getAmout() > 0) {
                     if (!dto.isGo()) {
                         return;
@@ -627,7 +627,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     }
 
     private Integer hitKeepArmy(float x, float y){
-        for(ArmyDto dto : report.getArmys()){
+        for(ArmyVo dto : report.getArmys()){
             if(dto.getAmout() == 0){
                 continue;
             }
@@ -715,7 +715,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         if(actor != null){
             return false;
         }
-        for(ArmyDto army : report.getArmys()){
+        for(ArmyVo army : report.getArmys()){
             if(army.isGo() || army.getAmout() == 0){
                 continue;
             }
@@ -735,7 +735,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         }
 
         //for the next choose type;
-        for(ArmyDto army : report.getArmys()){
+        for(ArmyVo army : report.getArmys()){
             if(army.isGo() || army.getAmout() == 0){
                 continue;
             }
@@ -845,10 +845,5 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         armys.clear();
         connons.clear();
         Bullet.bulletPool.clear();
-
-        ParticleService.getInstance().disponse();
-
     }
-
-
 }

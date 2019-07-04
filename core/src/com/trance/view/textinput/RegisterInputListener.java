@@ -10,15 +10,13 @@ import com.trance.empire.config.Module;
 import com.trance.empire.model.Result;
 import com.trance.empire.modules.player.handler.PlayerCmd;
 import com.trance.empire.modules.player.model.Player;
-import com.trance.empire.modules.player.model.ResCreatePlayer;
+import com.trance.empire.modules.player.model.ReqCreatePlayer;
 import com.trance.empire.modules.player.model.ResLogin;
 import com.trance.view.screens.callback.LoginCallback;
 import com.trance.view.utils.FontUtil;
 import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.SocketUtil;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -45,29 +43,26 @@ public class RegisterInputListener implements TextInputListener {
 		
 		final String playerName = removeEmoji(text);
 
-		Map<String, Object> parms = new HashMap<String, Object>();
-		parms.put("userName", Player.userName);
-		parms.put("playerName",text);
-		parms.put("server",1);
+		ReqCreatePlayer req = new ReqCreatePlayer();
+		req.setUserName(Player.userName);
+		req.setPlayerName(text);
+		req.setServer(1);
 //		parms.put("loginKey","");
 
-		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.CREATE_PLAYER, parms),true);
+		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.CREATE_PLAYER, req),true);
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
 
 		byte[] bytes = response.getValueBytes();
-		Result<ResCreatePlayer> result = ProtostuffUtil.parseObject(bytes, Result.class);
+		Result<ResLogin> result = ProtostuffUtil.parseObject(bytes, Result.class);
 		int code = result.getCode();
 		if(code != Result.SUCCESS){
 			MsgUtil.getInstance().showMsg(Module.PLAYER, code);
 			return;
 		}
 
-		Result<ResLogin> login = new Result<ResLogin>()	;
-		ResLogin resLogin = new ResLogin();
-		resLogin.setPlayerDto(result.getContent().getPlayerDto());
-		callback.handleMessage(login);
+		callback.handleMessage(result);
 
 		Gdx.app.postRunnable(new Runnable() {
 			@Override

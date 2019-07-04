@@ -2,6 +2,7 @@ package com.trance.empire.modules.tech.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.trance.empire.modules.army.model.ArmyVo;
 
 import io.protostuff.Tag;
 
@@ -9,7 +10,7 @@ import io.protostuff.Tag;
  * Created by Administrator on 2016/12/30 0030.
  */
 
-public class TechDto {
+public class TechDto implements Cloneable {
 	
 	@Tag(1)
     private int id;
@@ -21,7 +22,16 @@ public class TechDto {
     private transient int useAmount;
     private transient TextureRegion region;
     private transient Rectangle rect;
-
+    
+    @Override
+	public TechDto clone(){
+		try {
+			return (TechDto) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
     public int getId() {
         return id;

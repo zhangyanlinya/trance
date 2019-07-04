@@ -161,7 +161,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId();
 		Player.userName =  getDeviceId.getUniquePsuedoID();
-		Player.userName =  "ffffffffc61540e7ffffffffa1150133";
+		Player.userName =  "TEST2";
 
 		isInit = true;
 	}
@@ -214,8 +214,8 @@ public class AndroidLauncher extends AndroidApplication {
                             tranceGame.getScreen().dispose();
                             tranceGame.setScreen(tranceGame.mapScreen);
                         }else{
-							tranceGame.setScreen(tranceGame.worldScreen);
-							GameScreen.finishBattle(BattleFinishType.CANCEL);
+//							tranceGame.setScreen(tranceGame.worldScreen);
+//							GameScreen.finishBattle(BattleFinishType.CANCEL);
 						}
 					}
 				});

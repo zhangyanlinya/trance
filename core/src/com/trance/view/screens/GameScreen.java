@@ -1,6 +1,7 @@
 package com.trance.view.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
@@ -300,20 +301,29 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
         }
     }
 
-    public static void finishBattle(BattleFinishType finishType) {
+    public static synchronized void finishBattle(BattleFinishType finishType) {
         MapData.gamerunning = false;
-        if (finishType == BattleFinishType.CANCEL) {
-            Click click = new Click();
-            click.setT((int) (System.currentTimeMillis() - startTime));
-            clicks.add(click);
-        }
-        if (finishBattle || !gobattle) {
+        if (finishBattle) {
             return;
         }
-
+        
+        if(!gobattle){
+        	finishType = BattleFinishType.CANCEL;
+        }
+        
         Sound sound = ResUtil.getInstance().getSound(5);
         sound.play();
-
+        
+        ReqFinishBattle req = new ReqFinishBattle();
+        req.setState(finishType.ordinal());
+        req.setX(playerDto.getX());
+        req.setY(playerDto.getY());
+        if (finishType == BattleFinishType.CANCEL) {
+        	Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, req);
+            SocketUtil.send(request, true);
+            return;
+        }
+        
         Map<Integer, ArmyDto> myArmys = Player.player.getArmys();
         for (GameActor actor : armys) {
             Army army = (Army) actor;
@@ -331,11 +341,7 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
         }
 
         finishBattle = true;
-        ReqFinishBattle req = new ReqFinishBattle();
         req.setArmys(vos);
-        req.setX(playerDto.getX());
-        req.setY(playerDto.getY());
-        req.setState(finishType == BattleFinishType.WIN ? 0 : 1);
         req.setClicks(clicks);
         Request request = Request.valueOf(Module.BATTLE, BattleCmd.FINISH_BATTLE, req);
         Response response = SocketUtil.send(request, true);
@@ -600,10 +606,23 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
         for (int i = 0; i < bodies.size; i++) {
             destoryBody(bodies.get(i));
         }
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            onBackPressed();
+        }
 
         super.render(delta);
     }
-
+    
+    public void onBackPressed(){
+    	if (MapData.gamerunning) {
+    		finishBattle(BattleFinishType.LOSE);
+    		return;
+    	} 
+    	dispose();
+    	tranceGame.setScreen(tranceGame.worldScreen);
+    }
+    
     private float sendDelta = 0;
 
     private void checkArmyStatus(float delta) {
@@ -736,7 +755,6 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
     }
 
     private static boolean gobattle;
-
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -943,10 +961,5 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
         armys.clear();
         connons.clear();
         Bullet.bulletPool.clear();
-
-        ParticleService.getInstance().disponse();
-
     }
-
-
 }

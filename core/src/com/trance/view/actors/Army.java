@@ -43,7 +43,7 @@ public class Army extends GameActor {
 	private Fitting left;
 	private Fitting right;
 
-
+	// TODO level未实现
 	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer){
 		super.init(x, y, width, height);
 		this.armyType = armyType;

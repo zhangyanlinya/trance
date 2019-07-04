@@ -42,7 +42,7 @@ public class MapData {
 	/**
 	 * game over
 	 */
-	public static boolean gamerunning;
+	public static volatile boolean gamerunning;
 	
 	public static int[][] clonemap() {//
 		int raw = base.length;

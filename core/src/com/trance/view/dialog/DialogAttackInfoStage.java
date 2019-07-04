@@ -174,7 +174,7 @@ public class DialogAttackInfoStage extends BaseStage {
         lampDto.setLevel(5);
         report.getTechs().add(lampDto);
 
-        ReplayScreen.report = report;
+        ReplayScreen.report = report.deepClone();
 
         tranceGame.setScreen(tranceGame.replayScreen);
     }
