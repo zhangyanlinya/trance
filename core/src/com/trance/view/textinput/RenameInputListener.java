@@ -50,7 +50,9 @@ public class RenameInputListener implements TextInputListener {
 		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
 			return;
 		}
-		int code = ProtostuffUtil.parseObject(response.getValueBytes(), Integer.class);
+		
+		Result<String> result = ProtostuffUtil.parseObject(response.getValueBytes(), Result.class);
+		int code = result.getCode();
 		if(code == 0){
 			Player.player.setPlayerName(text);
 			FontUtil.getFont().appendText(text);
