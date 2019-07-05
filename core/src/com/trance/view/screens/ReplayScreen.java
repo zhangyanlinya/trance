@@ -339,7 +339,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         Action[] sAction = new Action[size + 1];
         // 使用action实现
         float pre = 0;
-        for (int i = 0; i < sAction.length; i++) {
+        for (int i = 0; i < size; i++) {
             final Click click = report.getClicks().get(i);
             Action delayedAction = Actions.run(new Runnable() {
 
