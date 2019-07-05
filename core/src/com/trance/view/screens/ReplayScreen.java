@@ -159,20 +159,8 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         initInputProcessor();
         initClickDelay();
         
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            onBackPressed();
-        }
     }
     
-    public void onBackPressed(){
-    	if (MapData.gamerunning) {
-    		finishBattle();
-    		return;
-    	} 
-    	dispose();
-    	tranceGame.setScreen(tranceGame.mapScreen);
-    }
-
     private void initInputProcessor(){
         inputMultiplexer.addProcessor(gestureHandler);
 //        inputMultiplexer.addProcessor(stage);
@@ -266,7 +254,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
 
     public static void finishBattle(){
         MapData.gamerunning = false;
-        if(finishBattle || !gobattle){
+        if(finishBattle){
             return;
         }
 
@@ -347,7 +335,8 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     }
 
     private void initClickDelay() {
-        Action[] sAction = new Action[report.getClicks().size()];
+    	int size = report.getClicks().size();
+        Action[] sAction = new Action[size + 1];
         // 使用action实现
         float pre = 0;
         for (int i = 0; i < sAction.length; i++) {
@@ -355,12 +344,8 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
             Action delayedAction = Actions.run(new Runnable() {
 
                 @Override
-                public void run() {
-                    if(click.getX() == 0 && click.getY() == 0){ // 表示结束了
-                        finishBattle();
-                    }else {
-                        touchDown(click.getX(), click.getY(), 0, 0);
-                    }
+                public void run() {                   
+                     touchDown(click.getX(), click.getY(), 0, 0);           
                 }
             });
             // 延迟后执行delayedAction
@@ -369,6 +354,17 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
             Action action = Actions.delay(delay, delayedAction);
             sAction[i] = action;
         }
+        
+        Action overAction = Actions.run(new Runnable() {
+
+            @Override
+            public void run() {
+                 finishBattle();
+            }
+        });
+        Action over = Actions.delay(2, overAction);
+        sAction[size] = over;
+        
         stage.addAction(Actions.sequence(sAction));
     }
 
@@ -535,9 +531,22 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         for(int i = 0 ; i < bodies.size ; i++){
             destoryBody(bodies.get(i));
         }
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+			onBackPressed();
+		}
 
         super.render(delta);
     }
+    
+	public void onBackPressed() {
+        if(!finishBattle){
+            finishBattle();
+        }else {
+            dispose();
+            tranceGame.setScreen(tranceGame.mapScreen);
+		}
+	}
 
     private float sendDelta = 0;
 
