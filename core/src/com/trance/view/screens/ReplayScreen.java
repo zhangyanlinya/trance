@@ -1,6 +1,7 @@
 package com.trance.view.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -51,6 +53,7 @@ import com.trance.view.actors.GameActor;
 import com.trance.view.actors.MapImage;
 import com.trance.view.constant.ControlType;
 import com.trance.view.constant.ExplodeType;
+import com.trance.view.controller.GestureController;
 import com.trance.view.freefont.FreeBitmapFont;
 import com.trance.view.mapdata.MapData;
 import com.trance.view.particle.ParticleService;
@@ -127,7 +130,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     private static boolean finishBattle;
 
     private InputMultiplexer inputMultiplexer;
-//    private GestureDetector gestureHandler;
+    private GestureDetector gestureHandler;
 
     public ReplayScreen(TranceGame tranceGame) {
         super(tranceGame);
@@ -151,14 +154,27 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         initMap();
         initArmy();
         inputMultiplexer = new InputMultiplexer();
-//        GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
-//        gestureHandler = new GestureDetector(controller);
+        GestureController controller = new GestureController(camera, 0, width * 2, 0, height * 2);
+        gestureHandler = new GestureDetector(controller);
         initInputProcessor();
         initClickDelay();
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            onBackPressed();
+        }
+    }
+    
+    public void onBackPressed(){
+    	if (MapData.gamerunning) {
+    		finishBattle();
+    		return;
+    	} 
+    	dispose();
+    	tranceGame.setScreen(tranceGame.mapScreen);
     }
 
     private void initInputProcessor(){
-//        inputMultiplexer.addProcessor(gestureHandler);
+        inputMultiplexer.addProcessor(gestureHandler);
 //        inputMultiplexer.addProcessor(stage);
 //        inputMultiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -248,7 +264,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
         }
     }
 
-    public static void finishBattle(BattleFinishType finishType){
+    public static void finishBattle(){
         MapData.gamerunning = false;
         if(finishBattle || !gobattle){
             return;
@@ -341,7 +357,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
                 @Override
                 public void run() {
                     if(click.getX() == 0 && click.getY() == 0){ // 表示结束了
-                        finishBattle(BattleFinishType.CANCEL);
+                        finishBattle();
                     }else {
                         touchDown(click.getX(), click.getY(), 0, 0);
                     }
@@ -534,7 +550,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
                     }
                 }
             }
-            finishBattle(BattleFinishType.LOSE);
+            finishBattle();
         }else{//监听是否有要派出
             for(GameActor ga :armys){
                 Army a = (Army) ga;

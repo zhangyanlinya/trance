@@ -1,6 +1,7 @@
 package com.trance.view.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -82,6 +83,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
@@ -145,6 +147,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     public DialogRankUpStage dialogRankUpStage;
     public DialogAttackInfoStage dialogAttackInfoStage;
     public DialogOperateStage dialogOperateStage;
+    
+    public Stack<Stage> dialogs = new Stack<Stage>();
 
 	private String msg;
 
@@ -362,26 +366,27 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
 		spriteBatch.end();
 		
-		if(dialogArmyStage.isVisible()){
-			dialogArmyStage.act();
-			dialogArmyStage.draw();
+		for(Stage s : dialogs){
+			s.act();
+			s.draw();
 		}
-		if(dialogRankUpStage.isVisible()){
-			dialogRankUpStage.act();
-			dialogRankUpStage.draw();
+		
+		if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+			onBackPressed();
 		}
-		if(dialogAttackInfoStage.isVisible()){
-			dialogAttackInfoStage.act();
-			dialogAttackInfoStage.draw();
-		}
-		if(dialogOperateStage.isVisible()){
-            dialogOperateStage.act();
-            dialogOperateStage.draw();
-		}
+		
 		super.render(delta);
 	}
-
-
+	
+	public void onBackPressed() {
+		hideDialog();
+		
+		if (dialogs.isEmpty()){
+		   //dispose(); //不用这样做。
+//		   tranceGame.setScreen(tranceGame.worldScreen);
+		}
+	}
+	
 	
 	private long levelExp;
 //
@@ -983,70 +988,72 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 
     public void setRankUpDailog(boolean visible) {
         if(visible){
+        	if(dialogs.size() > 0){
+        		return;
+        	}
             dialogRankUpStage.show();
+            dialogs.add(dialogRankUpStage);
             inputMultiplexer.addProcessor(dialogRankUpStage);
             inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
+			inputMultiplexer.removeProcessor(this);
         }else{
-            dialogRankUpStage.hide();
-            inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-            inputMultiplexer.removeProcessor(dialogRankUpStage);
+        	hideDialog();
         }
     }
 
     public void setArmyDailog(boolean visible) {
         if(visible){
+        	if(dialogs.size() > 0){
+        		return;
+        	}
             dialogArmyStage.show();
+            dialogs.add(dialogArmyStage);
             inputMultiplexer.addProcessor(dialogArmyStage);
             inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
+			inputMultiplexer.removeProcessor(this);
         }else{
-            dialogArmyStage.hide();
-            inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-            inputMultiplexer.removeProcessor(dialogArmyStage);
+        	hideDialog();
         }
     }
 
-//	public void setBuildingDailog(boolean visible) {
-//		if(visible){
-//			dialogBuildingStage.show();
-//			inputMultiplexer.addProcessor(dialogBuildingStage);
-//			inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
-//		}else{
-//			dialogBuildingStage.hide();
-//			inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-//			inputMultiplexer.removeProcessor(dialogBuildingStage);
-//		}
-//	}
-
     public void setAttackInfoDailog(boolean visible) {
         if(visible){
+        	if(dialogs.size() > 0){
+        		return;
+        	}
             dialogAttackInfoStage.show();
+            dialogs.add(dialogAttackInfoStage);
             inputMultiplexer.addProcessor(dialogAttackInfoStage);
             inputMultiplexer.removeProcessor(stage);
-//			inputMultiplexer.removeProcessor(this);
+			inputMultiplexer.removeProcessor(this);
         }else{
-            dialogAttackInfoStage.hide();
-            inputMultiplexer.addProcessor(stage);
-//			inputMultiplexer.addProcessor(this);
-            inputMultiplexer.removeProcessor(dialogAttackInfoStage);
+        	hideDialog();
         }
     }
 
     public void setOperateStageDailog(boolean visible, float x, float y) {
         if(visible){
+        	if(dialogs.size() > 0){
+        		return;
+        	}
+        	dialogs.add(dialogOperateStage);
             dialogOperateStage.show(x, y);
             inputMultiplexer.addProcessor(dialogOperateStage);
             inputMultiplexer.removeProcessor(stage);
+            inputMultiplexer.removeProcessor(this);
         }else{
-            dialogOperateStage.hide();
-            inputMultiplexer.addProcessor(stage);
-            inputMultiplexer.removeProcessor(dialogOperateStage);
+        	hideDialog();
         }
+    }
+    
+    public boolean hideDialog(){
+    	if(dialogs.size() > 0){
+    		Stage s = dialogs.pop();
+    		inputMultiplexer.addProcessor(stage);
+    		inputMultiplexer.addProcessor(this);
+    		inputMultiplexer.removeProcessor(s);
+    	}
+    	return dialogs.size() == 0;
     }
 
     private long huoseTime; //收割临时时间

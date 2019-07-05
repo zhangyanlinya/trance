@@ -199,26 +199,7 @@ public class AndroidLauncher extends AndroidApplication {
 	public void onBackPressed() {
 		Screen screen = tranceGame.getScreen();
 		if(screen != null){
-			if(screen.getClass() != WorldScreen.class && screen.getClass() != LoginScreen.class){
-				Gdx.app.postRunnable(new Runnable() {
-
-					@Override
-					public void run() {
-						if(tranceGame.mapScreen.dialogArmyStage.isVisible()){
-							tranceGame.mapScreen.setArmyDailog(false);
-						}else if(tranceGame.mapScreen.dialogAttackInfoStage.isVisible()){
-							tranceGame.mapScreen.setAttackInfoDailog(false);
-						}else if(tranceGame.mapScreen.dialogRankUpStage.isVisible()){
-							tranceGame.mapScreen.setRankUpDailog(false);
-						}else if(tranceGame.getScreen().getClass() == ReplayScreen.class){
-                            tranceGame.getScreen().dispose();
-                            tranceGame.setScreen(tranceGame.mapScreen);
-                        }else{
-//							tranceGame.setScreen(tranceGame.worldScreen);
-//							GameScreen.finishBattle(BattleFinishType.CANCEL);
-						}
-					}
-				});
+			if(screen.getClass() != WorldScreen.class){
 				return;
 			}
 		}

@@ -43,8 +43,7 @@ public class Army extends GameActor {
 	private Fitting left;
 	private Fitting right;
 
-	// TODO level未实现
-	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer){
+	public void init(World world, ArmyType armyType, float x, float y, float width, float height, ShapeRenderer renderer){
 		super.init(x, y, width, height);
 		this.armyType = armyType;
 		this.renderer = renderer;
@@ -59,52 +58,59 @@ public class Army extends GameActor {
 			this.setWidth(textureRegion.getRegionWidth());
 			this.setHeight(textureRegion.getRegionHeight());
 		}
+		
+		int level = 1;
+		if(dto != null && dto.getLevel() > 0){
+			level = dto.getLevel();
+		}
+		
 		switch(armyType){
 		case TANK:
 			range = RangeType.SHORT;
-			maxhp = hp = 50;
+			maxhp = hp = 50 + level;
 			break;
 		case FAT:
-			atk = 20;
+			atk = 20 + level;
 			fireDelay = 1000;
 			break;
 		case SISTER:
 			range = RangeType.SHORT;
-			maxhp = hp = 30;
+			maxhp = hp = 30 + level;
 			speed = 1.5f;
 			break;
 		case FOOT:
-			
+			maxhp += level;
 			break;
 		case FIVE:
 			fireDelay = 4000;
-			atk = 200;
+			atk = 200 + level;
 			speed = 1.5f;
 			break;
 		case SIX:
-			atk = 50;
+			atk = 50 + level;
 			range = RangeType.SHORT;
 			speed = 1;
 			break;
 		case SEVEN:
-			maxhp = hp = 40;
+			maxhp = hp = 40 + level;
 			break;
 		case EIGHT:
+			maxhp += level;
 			speed = 4;
 			range = 20;
 			break;
 		case NINE:
-			atk = 100;
+			atk = 100 + level;
 			break;
 		default:
 			break;
 		}
 		
-		FittingDto dto = Player.player.getFittings().get(armyType.id);
-		if(dto != null && dto.getLevel() > 0){
-			atk *= dto.getLevel();
-		    hp *= dto.getLevel();
-		}
+//		FittingDto dto = Player.player.getFittings().get(armyType.id);
+//		if(dto != null && dto.getLevel() > 0){
+//			atk *= dto.getLevel();
+//		    hp *= dto.getLevel();
+//		}
 
 		maxhp = hp;
 
@@ -116,13 +122,11 @@ public class Army extends GameActor {
 		body.setUserData(this);
 	}
 	
-	public void init(World world, ArmyType armyType, float x , float y, float width, float height, ShapeRenderer renderer, BitmapFont font, ArmyDto dto){
-		init(world, armyType, x, y, width, height, renderer);
+	public void init(World world, ArmyType armyType, float x, float y, float width, float height, ShapeRenderer renderer, BitmapFont font, ArmyDto dto){
 		this.dto = dto;
 		this.font = font;
+		init(world, armyType, x, y, width, height, renderer);
 	}
-	
-
 	
 	public void move() {
 		if(!MapData.gamerunning){
