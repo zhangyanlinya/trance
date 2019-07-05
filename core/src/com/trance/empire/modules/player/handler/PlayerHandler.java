@@ -40,7 +40,7 @@ public class PlayerHandler extends HandlerSupport {
 			}
 
 			@Override
-			public Object getType() {
+			public Class<?>  getType() {
 				return null;
 			}
 
@@ -71,7 +71,7 @@ public class PlayerHandler extends HandlerSupport {
 			}
 
 			@Override
-			public Object getType() {
+			public Class<?>  getType() {
 				return Integer.class;
 			}
 
@@ -98,7 +98,7 @@ public class PlayerHandler extends HandlerSupport {
 			}
 			
 			@Override
-			public Object getType() {
+			public Class<?>  getType() {
 				return Integer.class;
 			}
 			
@@ -148,8 +148,8 @@ public class PlayerHandler extends HandlerSupport {
 			}
 
 			@Override
-			public Object getType() {
-				return Integer.class;
+			public Class<?>  getType() {
+				return null;
 			}
 
 			@Override

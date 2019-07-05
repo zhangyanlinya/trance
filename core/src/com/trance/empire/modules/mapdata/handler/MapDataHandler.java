@@ -13,7 +13,6 @@ import com.trance.view.utils.MsgUtil;
 
 import org.apache.mina.core.session.IoSession;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentMap;
 
 
@@ -43,8 +42,8 @@ public class MapDataHandler extends HandlerSupport {
             }
 
             @Override
-            public Object getType() {
-                return HashMap.class;
+            public Class<?>  getType() {
+                return Result.class;
             }
 
             @Override
@@ -101,28 +100,28 @@ public class MapDataHandler extends HandlerSupport {
                 }
             }
         });
-        this.registerProcessor(new ResponseProcessorAdapter() {
-
-            @Override
-            public int getModule() {
-                return Module.MAP_DATA;
-            }
-
-            @Override
-            public int getCmd() {
-                return MapDataCmd.GET_TARGET_PLAYER_MAP_DATA;
-            }
-
-            @Override
-            public Object getType() {
-                return HashMap.class;
-            }
-
-            @Override
-            public void callback(IoSession session, Response response) {
-
-            }
-        });
+//        this.registerProcessor(new ResponseProcessorAdapter() {
+//
+//            @Override
+//            public int getModule() {
+//                return Module.MAP_DATA;
+//            }
+//
+//            @Override
+//            public int getCmd() {
+//                return MapDataCmd.GET_TARGET_PLAYER_MAP_DATA;
+//            }
+//
+//            @Override
+//            public Class<?>  getType() {
+//                return Result.class;
+//            }
+//
+//            @Override
+//            public void callback(IoSession session, Response response) {
+//
+//            }
+//        });
 
     }
 }

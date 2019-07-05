@@ -28,7 +28,7 @@ public interface ResponseProcessor {
 	 * 响应消息的对象类型, null-业务自己做转换
 	 * @return Object
 	 */
-	Object getType();
+	Class<?> getType();
 	
 	/**
 	 * 响应消息回调

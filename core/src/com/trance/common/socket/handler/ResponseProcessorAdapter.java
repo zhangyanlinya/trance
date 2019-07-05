@@ -24,7 +24,7 @@ public class ResponseProcessorAdapter implements ResponseProcessor {
 	/**
 	 * 请求参数类型
 	 */
-	private Object type = null;
+	private Class<?> type;
 	
 	public ResponseProcessorAdapter() {
 		
@@ -34,7 +34,7 @@ public class ResponseProcessorAdapter implements ResponseProcessor {
 		this(module, cmd, null);
 	}
 	
-	public ResponseProcessorAdapter(int module, int cmd, Object type) {
+	public ResponseProcessorAdapter(int module, int cmd, Class<?>  type) {
 		super();
 		this.module = module;
 		this.cmd = cmd;
@@ -52,7 +52,7 @@ public class ResponseProcessorAdapter implements ResponseProcessor {
 	}
 
 	@Override
-	public Object getType() {
+	public Class<?>  getType() {
 		return this.type;
 	}
 

@@ -55,12 +55,12 @@ public class ClientHandler extends IoHandlerAdapter {
             return;
         }
 
-        if (!(message instanceof Response)) {
-            logger.error("未能识别的响应消息类型！");
-            Gdx.app.error("socket"," 未能识别的响应消息类型！");
-            MsgUtil.getInstance().showLog("a123！");
-            return;
-        }
+//        if (!(message instanceof Response)) {
+//            logger.error("未能识别的响应消息类型！");
+//            Gdx.app.error("socket"," 未能识别的响应消息类型！");
+//            MsgUtil.getInstance().showLog("a123！");
+//            return;
+//        }
 
         Response response = (Response) message;
 
