@@ -82,6 +82,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class GameScreen extends BaseScreen implements ContactListener, InputProcessor {
@@ -423,24 +425,35 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
     }
 
     private void initClock() {
-        Action[] sAction = new Action[TOTAL_TIME];// 一共执行120次
-        // 使用action实现定时器
-        for (int i = 0; i < sAction.length; i++) {
-            Action delayedAction = Actions.run(new Runnable() {
-
-                @Override
-                public void run() {
-                    currTime--;
-                    if (currTime <= 0) {
-                        finishBattle(BattleFinishType.TIMEOUT);
-                    }
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            public void run() {
+                currTime--;
+                if (currTime <= 0) {
+                    timer.cancel();
+                    finishBattle(BattleFinishType.TIMEOUT);
                 }
-            });
-            // 延迟1s后执行delayedAction
-            Action action = Actions.delay(1f, delayedAction);
-            sAction[i] = action;
-        }
-        stage.addAction(Actions.sequence(sAction));
+            }
+        }, 0 , 1000);
+
+//        Action[] sAction = new Action[TOTAL_TIME];// 一共执行120次
+//        // 使用action实现定时器
+//        for (int i = 0; i < sAction.length; i++) {
+//            Action delayedAction = Actions.run(new Runnable() {
+//
+//                @Override
+//                public void run() {
+//                    currTime--;
+//                    if (currTime <= 0) {
+//                        finishBattle(BattleFinishType.TIMEOUT);
+//                    }
+//                }
+//            });
+//            // 延迟1s后执行delayedAction
+//            Action action = Actions.delay(1f, delayedAction);
+//            sAction[i] = action;
+//        }
+//        stage.addAction(Actions.sequence(sAction));
     }
 
     //
