@@ -522,7 +522,7 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
 //					int index = RandomUtil.nextInt(5) + 1;
 //					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
                     Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
-                    grass.setPosition(x - length, y);
+                    grass.setPosition(x - grass.getWidth()/2 - length, y);
                     stage.addActor(grass);
                 } else if (j == map[i].length - 1) {
 //					int index = RandomUtil.nextInt(5) + 1;
