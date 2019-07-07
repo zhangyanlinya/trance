@@ -47,18 +47,30 @@ public class ReportDto implements Cloneable {
 	private List<Click> clicks = new ArrayList<Click>();
 
 
-    public ReportDto deepClone() {
-        try {
-            ReportDto dto = (ReportDto) super.clone();
+	@Override
+    public ReportDto clone() {
+        ReportDto dto = new ReportDto();
+        dto.id = id;
+        dto.aName = aName;
+        dto.bId = bId;
+        dto.aId = aId;
+        dto.bName = bName;
+        dto.buildings = buildings;
+        dto.time = time;
+        dto.clicks = clicks;
+        dto.map = map;
 
-
-            return dto;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        for (ArmyVo vo : armys) {
+            dto.getArmys().add(vo.clone());
         }
-        return  null;
+
+        for (TechDto t : techs) {
+            dto.getTechs().add(t.clone());
+        }
+
+        return dto;
     }
-	
+
 	public String generateKey(long aId, long time){
 		return aId + "_" + time;
 	}

@@ -161,6 +161,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId();
 		Player.userName =  getDeviceId.getUniquePsuedoID();
+//		Player.userName =  "test10";
 //		Player.userName =  "ffffffffc61540e7ffffffffa1150133";
 
 		isInit = true;
@@ -199,7 +200,8 @@ public class AndroidLauncher extends AndroidApplication {
 	public void onBackPressed() {
 		Screen screen = tranceGame.getScreen();
 		if(screen != null){
-			if(screen.getClass() != WorldScreen.class){
+			if(screen.getClass() != WorldScreen.class && screen.getClass() !=
+                    LoginScreen.class){
 				return;
 			}
 		}

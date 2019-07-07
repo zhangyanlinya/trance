@@ -217,6 +217,8 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
     private int chooseTechId;
     private void initArmy(){
         armys.clear();
+        chooseArmyId = 0;
+        chooseTechId = 0;
         List<ArmyVo> amrysList = report.getArmys();
         if(amrysList == null || amrysList.isEmpty()){
             return;
@@ -336,7 +338,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
 
     private void initClickDelay() {
     	int size = report.getClicks().size();
-        Action[] sAction = new Action[size + 1];
+        Action[] sAction = new Action[size];
         // 使用action实现
         float pre = 0;
         for (int i = 0; i < size; i++) {
@@ -344,7 +346,11 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
             Action delayedAction = Actions.run(new Runnable() {
 
                 @Override
-                public void run() {                   
+                public void run() {
+                     if(click.getX() == -1 && click.getY() == -1){
+                         finishBattle();
+                         return;
+                     }
                      touchDown(click.getX(), click.getY(), 0, 0);           
                 }
             });
@@ -354,17 +360,7 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
             Action action = Actions.delay(delay, delayedAction);
             sAction[i] = action;
         }
-        
-        Action overAction = Actions.run(new Runnable() {
 
-            @Override
-            public void run() {
-                 finishBattle();
-            }
-        });
-        Action over = Actions.delay(2, overAction);
-        sAction[size] = over;
-        
         stage.addAction(Actions.sequence(sAction));
     }
 

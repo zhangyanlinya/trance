@@ -408,22 +408,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		foods.setBounds(side * 4, height - length, length, length);
 		stage.addActor(foods);
 
-//		foods.addListener(new ClickListener() {
-//
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				if (System.currentTimeMillis() - hitTime > 10000) {
-//					hitCount = 0;
-//					hitTime = System.currentTimeMillis();
-//				}
-//
-//				hitCount++;
-//				if (hitCount > 5) {
-//					Config.debug = true;
-//					MsgUtil.getInstance().showLog("debug mode open!");
-//				}
-//			}
-//		});
 	}
 	
 	public void refreshPlayerDtoData(){
@@ -462,7 +446,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //					int index = RandomUtil.nextInt(5) + 1;
 //					Image grass = new MapImage(ResUtil.getInstance().get("world/tree" + index +".png", Texture.class));
 					Image grass = new MapImage(ResUtil.getInstance().get("world/wall.png", Texture.class));
-					grass.setPosition(x - length, y);
+					grass.setPosition(x - grass.getWidth()/2 - length, y);
 					stage.addActor(grass);
 				}else if(j == map[i].length -1){
 //					int index = RandomUtil.nextInt(5) + 1;
@@ -995,7 +979,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             dialogs.add(dialogRankUpStage);
             inputMultiplexer.addProcessor(dialogRankUpStage);
             inputMultiplexer.removeProcessor(stage);
-			inputMultiplexer.removeProcessor(this);
+//			inputMultiplexer.removeProcessor(this);
         }else{
         	hideDialog();
         }
@@ -1010,7 +994,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             dialogs.add(dialogArmyStage);
             inputMultiplexer.addProcessor(dialogArmyStage);
             inputMultiplexer.removeProcessor(stage);
-			inputMultiplexer.removeProcessor(this);
+//			inputMultiplexer.removeProcessor(this);
         }else{
         	hideDialog();
         }
@@ -1025,7 +1009,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             dialogs.add(dialogAttackInfoStage);
             inputMultiplexer.addProcessor(dialogAttackInfoStage);
             inputMultiplexer.removeProcessor(stage);
-			inputMultiplexer.removeProcessor(this);
+//			inputMultiplexer.removeProcessor(this);
         }else{
         	hideDialog();
         }
@@ -1040,7 +1024,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
             dialogOperateStage.show(x, y);
             inputMultiplexer.addProcessor(dialogOperateStage);
             inputMultiplexer.removeProcessor(stage);
-            inputMultiplexer.removeProcessor(this);
+//            inputMultiplexer.removeProcessor(this);
         }else{
         	hideDialog();
         }
@@ -1049,8 +1033,8 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     public boolean hideDialog(){
     	if(dialogs.size() > 0){
     		Stage s = dialogs.pop();
-    		inputMultiplexer.addProcessor(stage);
-    		inputMultiplexer.addProcessor(this);
+//    		inputMultiplexer.addProcessor(stage);
+//    		inputMultiplexer.addProcessor(this);
     		inputMultiplexer.removeProcessor(s);
     	}
     	return dialogs.size() == 0;

@@ -325,7 +325,13 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
             SocketUtil.send(request, true);
             return;
         }
-        
+
+        Click click =  new Click();
+        click.setT((int) (System.currentTimeMillis() - startTime));
+        click.setX(-1);
+        click.setY(-1);
+        clicks.add(click); //结束标识
+
         Map<Integer, ArmyDto> myArmys = Player.player.getArmys();
         for (GameActor actor : armys) {
             Army army = (Army) actor;
