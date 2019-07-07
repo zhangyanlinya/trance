@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -351,7 +352,8 @@ public class ReplayScreen extends BaseScreen implements ContactListener,InputPro
                          finishBattle();
                          return;
                      }
-                     touchDown(click.getX(), click.getY(), 0, 0);           
+                     Vector2 v =  stage.stageToScreenCoordinates(new Vector2(click.getX(), click.getY()));
+                     touchDown((int)v.x, (int)v.y, 0, 0);
                 }
             });
             // 延迟后执行delayedAction

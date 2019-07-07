@@ -779,16 +779,23 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         boolean validClick; //是否有效点击
         int Y = (int) height - screenY; //y top to down
+
+        Vector3 vector3 = new Vector3(screenX, screenY, 0);
+        camera.unproject(vector3); // coordinate convert
+        float x = vector3.x;
+        float y = vector3.y;
+
+
         if (Y < (width / 10) * 2) {
             validClick = chooseArea(screenX, Y); //选择区域
         } else {
-            validClick = executeArea(screenX, screenY); //执行区域
+            validClick = executeArea(x, y); //执行区域
         }
         if (validClick) {
             Click click = new Click();
             click.setT((int) (System.currentTimeMillis() - startTime));
-            click.setX(screenX);
-            click.setY(screenY);
+            click.setX((int)x);
+            click.setY((int)y);
             clicks.add(click);
         }
 
@@ -818,12 +825,8 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
     /**
      * 执行区域事件
      */
-    private boolean executeArea(int screenX, int screenY) {
+    private boolean executeArea(float x, float y) {
         boolean validClick = false; //是否有效点击
-        Vector3 vector3 = new Vector3(screenX, screenY, 0);
-        camera.unproject(vector3); // coordinate convert
-        float x = vector3.x;
-        float y = vector3.y;
 //		if(x > -length * 2  && x < width + length * 2
 //				&& y > control_height - length * 2  && y < height + length * 2){//四面可以进攻
 //
