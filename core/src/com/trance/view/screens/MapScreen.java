@@ -75,6 +75,7 @@ import com.trance.view.utils.MsgUtil;
 import com.trance.view.utils.RandomUtil;
 import com.trance.view.utils.ResUtil;
 import com.trance.view.utils.SocketUtil;
+import com.trance.view.utils.TimeUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -1040,9 +1041,6 @@ public class MapScreen extends BaseScreen implements InputProcessor {
     	return dialogs.size() == 0;
     }
 
-    private long huoseTime; //收割临时时间
-    private long barracksTime; //收割临时时间
-
     /**
      * harvist
      */
@@ -1054,15 +1052,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
         if(buildingId != BuildingType.HOUSE.getId() && buildingId != BuildingType.BARRACKS.getId()){
             return;
         }
-
-        long now = System.currentTimeMillis();
-        long diffTime;
-        if(buildingId == BuildingType.HOUSE.getId()){
-            diffTime = now - huoseTime;
-        }else{
-            diffTime = now - barracksTime;
-        }
-
+        
+        long now = TimeUtil.getServerTime();
+        long diffTime = now - dto.getHtime();
         if(diffTime <= 100000 ){
             MsgUtil.getInstance().showMsg(Module.BUILDING, -10005);
             return;
@@ -1084,18 +1076,16 @@ public class MapScreen extends BaseScreen implements InputProcessor {
                 MsgUtil.getInstance().showMsg(Module.BUILDING,code);
                 return ;
             }
+            
 			ValueResultSet valueResultSet  = result.getContent();
             if(valueResultSet != null){
                 RewardService.executeRewards(valueResultSet);
             }
+            
+            dto.setHtime(now);
+            
             Sound sound = ResUtil.getInstance().getSound(5);
             sound.play();
-
-            if(buildingId == BuildingType.HOUSE.getId()){
-                huoseTime = System.currentTimeMillis();
-            }else{
-                barracksTime = now - barracksTime;
-            }
         }
     }
 
