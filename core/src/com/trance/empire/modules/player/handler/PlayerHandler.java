@@ -30,12 +30,12 @@ public class PlayerHandler extends HandlerSupport {
 		this.registerProcessor(new ResponseProcessorAdapter(){
 
 			@Override
-			public int getModule() {
+			public byte getModule() {
 				return Module.PLAYER;
 			}
 
 			@Override
-			public int getCmd() {
+			public byte getCmd() {
 				return PlayerCmd.HEART_BEAT;
 			}
 
@@ -61,12 +61,12 @@ public class PlayerHandler extends HandlerSupport {
 		this.registerProcessor(new ResponseProcessorAdapter(){
 
 			@Override
-			public int getModule() {
+			public byte getModule() {
 				return Module.PLAYER;
 			}
 
 			@Override
-			public int getCmd() {
+			public byte getCmd() {
 				return PlayerCmd.PUSH_LEVEL_UPGRADE;
 			}
 
@@ -88,12 +88,12 @@ public class PlayerHandler extends HandlerSupport {
 		this.registerProcessor(new ResponseProcessorAdapter(){
 			
 			@Override
-			public int getModule() {
+			public byte getModule() {
 				return Module.PLAYER;
 			}
 			
 			@Override
-			public int getCmd() {
+			public byte getCmd() {
 				return PlayerCmd.PUSH_OFF_LINE;
 			}
 			
@@ -138,12 +138,12 @@ public class PlayerHandler extends HandlerSupport {
 		this.registerProcessor(new ResponseProcessorAdapter(){
 
 			@Override
-			public int getModule() {
+			public byte getModule() {
 				return Module.PLAYER;
 			}
 
 			@Override
-			public int getCmd() {
+			public byte getCmd() {
 				return PlayerCmd.CLEAR_ANONYMOUS_SESSION;
 			}
 

@@ -168,7 +168,7 @@ public class DialogOperateStage extends BaseStage {
         req.setX(dto.getX());
         req.setY(dto.getY());
 
-        int cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL;
+        byte cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL;
         if (byGold) {
             cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL_BY_GOLD;
         }

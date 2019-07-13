@@ -1,15 +1,16 @@
 package com.trance.common.socket.handler;
 
+import org.apache.mina.core.session.IoSession;
+
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 
-import org.apache.mina.core.session.IoSession;
 
 
 /**
  * 请求处理器
  * 
- * @author zhangyl
+ * @author trance
  */
 public interface RequestProcessor {
 	
@@ -17,19 +18,21 @@ public interface RequestProcessor {
 	 * 获取模块号
 	 * @return
 	 */
-	int getModule();
+	byte getModule();
 	
 	/**
 	 * 获取命令号
 	 * @return
 	 */
-	int getCmd();
+	byte getCmd();
 	
 	/**
 	 * 对象类型, null-业务自己做转换
+	 * @param <T>
+	 * @param <T>
 	 * @return Object
 	 */
-	Object getType();
+	 Class<?> getType();
 	
 	/**
 	 * 调用请求具体处理方法

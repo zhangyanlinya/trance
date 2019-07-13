@@ -161,7 +161,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		GetDeviceId getDeviceId  = new GetDeviceId();
 		Player.userName =  getDeviceId.getUniquePsuedoID();
-//		Player.userName =  "test10";
+		Player.userName =  "test18";
 //		Player.userName =  "ffffffffc61540e7ffffffffa1150133";
 
 		isInit = true;

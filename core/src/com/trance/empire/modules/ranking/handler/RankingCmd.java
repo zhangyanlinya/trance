@@ -7,5 +7,5 @@ package com.trance.empire.modules.ranking.handler;
  */
 public interface RankingCmd {
 
-	int GET_PLAYER_UP_RANKING = 1;
+	byte GET_PLAYER_UP_RANKING = 1;
 }

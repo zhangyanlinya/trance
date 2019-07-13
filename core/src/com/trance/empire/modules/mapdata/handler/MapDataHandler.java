@@ -32,12 +32,12 @@ public class MapDataHandler extends HandlerSupport {
         this.registerProcessor(new ResponseProcessorAdapter() {
 
             @Override
-            public int getModule() {
+            public byte getModule() {
                 return Module.MAP_DATA;
             }
 
             @Override
-            public int getCmd() {
+            public byte getCmd() {
                 return MapDataCmd.SAVE_PLAYER_MAP_DATA;
             }
 
@@ -103,12 +103,12 @@ public class MapDataHandler extends HandlerSupport {
 //        this.registerProcessor(new ResponseProcessorAdapter() {
 //
 //            @Override
-//            public int getModule() {
+//            public byte getModule() {
 //                return Module.MAP_DATA;
 //            }
 //
 //            @Override
-//            public int getCmd() {
+//            public byte getCmd() {
 //                return MapDataCmd.GET_TARGET_PLAYER_MAP_DATA;
 //            }
 //

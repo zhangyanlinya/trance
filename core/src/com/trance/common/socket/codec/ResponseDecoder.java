@@ -123,24 +123,24 @@ public class ResponseDecoder extends CumulativeProtocolDecoder {
 //		return true;
 	}
 	
-	/**
-	 * 响应消息解码上下文
-	 */
-	private final AttributeKey RESPONSE_DECODER_CONTEXT = new AttributeKey(ResponseDecoder.class, "context");
-	
-	/**
-	 * 获取上下文
-	 * @param session IoSession
-	 * @return Context
-	 */
-	private CodecContext getContext(IoSession session) {
-		CodecContext ctx = (CodecContext) session.getAttribute(RESPONSE_DECODER_CONTEXT);
-		if (ctx == null) {
-			ctx = new CodecContext();
-			session.setAttribute(RESPONSE_DECODER_CONTEXT, ctx);
-		}
-		
-		return ctx;
-	}
+//	/**
+//	 * 响应消息解码上下文
+//	 */
+//	private final AttributeKey RESPONSE_DECODER_CONTEXT = new AttributeKey(ResponseDecoder.class, "context");
+//	
+//	/**
+//	 * 获取上下文
+//	 * @param session IoSession
+//	 * @return Context
+//	 */
+//	private CodecContext getContext(IoSession session) {
+//		CodecContext ctx = (CodecContext) session.getAttribute(RESPONSE_DECODER_CONTEXT);
+//		if (ctx == null) {
+//			ctx = new CodecContext();
+//			session.setAttribute(RESPONSE_DECODER_CONTEXT, ctx);
+//		}
+//		
+//		return ctx;
+//	}
 
 }

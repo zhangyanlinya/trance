@@ -8,13 +8,13 @@ package com.trance.empire.modules.world.handler;
  */
 public interface WorldCmd {
 	
-	int GET_PLAYER_WORLD = 1;
+	byte GET_PLAYER_WORLD = 1;
 	
-	int ALLOCATION = 2;
+	byte ALLOCATION = 2;
 	
-	int SPY = 3;
+	byte SPY = 3;
 	
-	int CHANGE_PLAYER= 4;
+	byte CHANGE_PLAYER= 4;
 
-	int SPY_ANYONE = 5;
+	byte SPY_ANYONE = 5;
 }

@@ -7,7 +7,7 @@ public interface BattleCmd {
 	 * @param targetId Long
 	 * @return Map {content: ValueResultSet}	
 	 */
-	int START_BATTLE = 1;
+	byte START_BATTLE = 1;
 	
 	/**
 	 * @param armys : List<ArmyDto> armys
@@ -16,7 +16,7 @@ public interface BattleCmd {
 	 * @param sign  : @link String
 	 * @return Map {content: ValueResultSet}	
 	 */
-	int FINISH_BATTLE = 2;
+	byte FINISH_BATTLE = 2;
 
-	int GET_ATTACK_INFO =3;
+	byte GET_ATTACK_INFO =3;
 }

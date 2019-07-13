@@ -15,7 +15,7 @@ public interface BuildingCmd {
 	 * 返回主城开放的建筑
  	 * @return {@link List<PlayerBuildingDto>}
 	 */
-	int GET_BUILDINGS = 1;
+	byte GET_BUILDINGS = 1;
 
 	/**
 	 * 建筑升级
@@ -28,16 +28,16 @@ public interface BuildingCmd {
 	 * 				"newPlayerBuildingDtos" : {@link List<PlayerBuildingDto>} 新建筑DTO列表
 	 * 				}
 	 */
-	int UPGRADE_BUILDING_LEVEL = 2;
+	byte UPGRADE_BUILDING_LEVEL = 2;
 
 	/**
 	 * 收割
 	 */
-	int HARVIST = 3;
+	byte HARVIST = 3;
 
     /**
      * 使用金币建筑升级
      */
-    int UPGRADE_BUILDING_LEVEL_BY_GOLD = 4;
+    byte UPGRADE_BUILDING_LEVEL_BY_GOLD = 4;
 
 }

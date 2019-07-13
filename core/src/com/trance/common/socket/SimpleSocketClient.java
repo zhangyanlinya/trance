@@ -77,12 +77,12 @@ public class SimpleSocketClient {
 	/**
 	 * 请求上下文 {sn: ClientContext}
 	 */
-	private final ConcurrentMap<Integer, Request> requestContext = new ConcurrentLinkedHashMap.Builder<Integer, Request>().maximumWeightedCapacity(10000).build();
+	private final ConcurrentMap<Short, Request> requestContext = new ConcurrentLinkedHashMap.Builder<Short, Request>().maximumWeightedCapacity(10000).build();
 
 	/**
 	 * 序列号
 	 */
-	private final AtomicInteger sn = new AtomicInteger();
+	private short sn = 0;
 
 	public SimpleSocketClient(String ip, int port) {
 		this(ip, port, 0);
@@ -141,7 +141,7 @@ public class SimpleSocketClient {
 	 * @return Response
 	 */
 	public Response send(Request request) {
-		int sn = this.getSn();
+		short sn = this.getSn();
 		request.setSn(sn);
 //		ClientContext ctx = ClientContext.valueOf(sn,true);
 		this.requestContext.put(sn, request);
@@ -228,8 +228,8 @@ public class SimpleSocketClient {
 	 * 取得序列号
 	 * @return int
 	 */
-	private int getSn() {
-		return sn.incrementAndGet();
+	private synchronized short getSn() {
+		return sn++;
 	}
 
 	/**

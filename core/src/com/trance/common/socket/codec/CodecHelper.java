@@ -1,15 +1,14 @@
 package com.trance.common.socket.codec;
 
-import com.trance.common.socket.converter.JsonConverter;
+import org.apache.mina.core.buffer.IoBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trance.common.socket.converter.ProtostuffConverter;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 import com.trance.common.socket.model.ResponseStatus;
 import com.trance.common.util.GZIPUtil;
-
-import org.apache.mina.core.buffer.IoBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -27,12 +26,12 @@ public class CodecHelper {
 	/**
 	 * 请求消息体的最小长度
 	 */
-	private static final int REQUEST_LEAST_LENGTH = 17;
+	private static final int REQUEST_LEAST_LENGTH = 9;
 	
 	/**
 	 * 响应消息体的最小长度
 	 */
-	private static final int RESPONSE_LEAST_LENGTH = 17;
+	private static final int RESPONSE_LEAST_LENGTH = 6;
 	
 	/**
 	 * 字节数组转换成请求消息
@@ -41,6 +40,9 @@ public class CodecHelper {
 	 * 流水号[int]|d客户端请求时间[long]|d消息对象类型[int]|压缩标识[byte]|验证码[int]|模块ID[int]|命令ID[int]|数据对象[byte[]]|
 	 * 20 + 8 + 1 = 29 ;
 	 * 16 + 1 = 17 ;
+	 * 现在是
+	 * 流水号[short]|压缩标识[byte]|验证码[int]|模块ID[byte]|命令ID[byte]|数据对象[byte[]]|
+	 * 2 + 1 + 4 + 1 + 1 = 9
 	 * @param data byte[]
 	 * @return {@link Request}
 	 */
@@ -58,13 +60,11 @@ public class CodecHelper {
 		
 		IoBuffer in = IoBuffer.wrap(data);
 		try {
-			int sn = in.getInt();
-//			long requestTime = (long) in.getDouble();
-//			int format = in.getInt();
+			short sn = in.getShort();
 			byte compress = in.get();
 			int authCode = in.getInt();
-			int module = in.getInt();
-			int cmd = in.getInt();
+			byte module = in.get();
+			byte cmd = in.get();
 			
 			byte[] valueBytes = null;
 			if (dataLength > leastLength) {
@@ -72,7 +72,7 @@ public class CodecHelper {
 				in.get(valueBytes);
 			}
 			
-			Request request = new Request(sn, module, cmd,
+			Request request = Request.valueOf(sn, module, cmd,
 					compress == (byte) 1, authCode, valueBytes);
 			
 			return request;
@@ -105,8 +105,8 @@ public class CodecHelper {
 		IoBuffer buf = IoBuffer.allocate(capacity);
 		buf.setAutoExpand(true);		
 		try {
-			buf.putInt(request.getModule());
-			buf.putInt(request.getCmd());
+			buf.put(request.getModule());
+			buf.put(request.getCmd());
 			if (request.getValueBytes() != null) {
 				buf.put(request.getValueBytes());
 			}
@@ -116,11 +116,11 @@ public class CodecHelper {
 //			int authCode = HashAlgorithms.fnvHash(bytes);
 			
 			buf.clear();
-			buf.putInt(request.getSn());
+			buf.putShort(request.getSn());
 			buf.put((byte) (request.isCompressed() ? 1 : 0));
 			buf.putInt(0);
-			buf.putInt(request.getModule());
-			buf.putInt(request.getCmd());			
+			buf.put(request.getModule());
+			buf.put(request.getCmd());			
 			if (request.getValueBytes() != null) {
 				buf.put(request.getValueBytes());
 			}
@@ -146,6 +146,8 @@ public class CodecHelper {
 	 * 流水号[int]| d接收请求时间[long]|d响应时间[long]|d消息对象类型[int]|压缩标识[byte]|模块ID[int]|命令ID[int]|响应状态[int]|数据对象[byte[]]|
 	 * 以前是 20 + 16 + 1 = 37  
 	 * 现在是 16 + 1 = 17
+	 * 流水号[short]|压缩标识[byte]|模块ID[byte]|命令ID[byte]|响应状态[byte]|数据对象[byte[]]|
+	 * 现在是 2 + 4 = 6
 	 * 
 	 * @param response Response
 	 * @return byte[]
@@ -163,11 +165,11 @@ public class CodecHelper {
 		IoBuffer buf = IoBuffer.allocate(capacity);
 		buf.setAutoExpand(true);		
 		try {
-			buf.putInt(response.getSn());
+			buf.putShort(response.getSn());
 			buf.put((byte) (response.isCompressed() ? 1 : 0));
-			buf.putInt(response.getModule());
-			buf.putInt(response.getCmd());
-			buf.putInt(response.getStatus().getValue());
+			buf.put(response.getModule());
+			buf.put(response.getCmd());
+			buf.put(response.getStatus().getValue());
 			
 			if (response.getValueBytes() != null) {
 				buf.put(response.getValueBytes());
@@ -190,13 +192,14 @@ public class CodecHelper {
 	/**
 	 * 响应消息编码和转换成字节数组
 	 * @param response Response
+	 * @param objectConverters 对象转换器集合
 	 * @return byte[]
 	 */
 	public static byte[] encodeAndToByteArray(Response response) {
 		if (response == null) {
 			return null;
 		}
-
+		
 		//对象转换
 		byte[] data = ProtostuffConverter.encode(response.getValue());
 		response.setValueBytes(data);
@@ -214,7 +217,6 @@ public class CodecHelper {
 			response.setCompressed(true);
 		}
 				
-//		response.setResponseTime(System.currentTimeMillis());
 		byte[] resData = toByteArray(response);
 		return resData;
 	}
@@ -238,11 +240,11 @@ public class CodecHelper {
 		
 		IoBuffer in = IoBuffer.wrap(data);
 		try {
-			int sn = in.getInt();
+			short sn = in.getShort();
 			byte compress = in.get();
-			int module = in.getInt();
-			int cmd = in.getInt();
-			int status = in.getInt();
+			byte module = in.get();
+			byte cmd = in.get();
+			byte status = in.get();
 			
 			byte[] valueBytes = null;
 			if (dataLength > leastLength) {
@@ -267,6 +269,7 @@ public class CodecHelper {
 	
 	/**
 	 * 消息体字节数组封装成IoBuffer
+	 * @param responseBytes 响应消息转换成的字节数
 	 * @return IoBuffer
 	 */
 	public static IoBuffer body2IoBuffer(byte[] bodyBytes) {

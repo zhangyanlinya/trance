@@ -3,45 +3,45 @@ package com.trance.common.socket.model;
 /**
  * 响应消息状态
  * 
- * @author zhangyl
+ * @author trance
  */
 public enum ResponseStatus {
 	
 	/**
 	 * 未知错误
 	 */
-	ERROR(-1),
+	ERROR((byte)-1),
 	
 	/**
 	 * 操作成功
 	 */
-	SUCCESS(0),
+	SUCCESS((byte)0),
 	
 	/**
 	 * 协议解析错误
 	 */
-	RESOLVE_ERROR(2),
+	RESOLVE_ERROR((byte)2),
 	
 	/**
 	 * 没有权限
 	 */
-	NO_RIGHT(3),
+	NO_RIGHT((byte)3),
 	
 	/**
 	 * 验证码错
 	 */
-	AUTH_CODE_ERROR(4);
+	AUTH_CODE_ERROR((byte)4);
 	
 	/**
 	 * 状态码
 	 */
-	final int value;
+	final byte value;
 	
-	ResponseStatus(int value) {
+	private ResponseStatus(byte value) {
 		this.value = value;
 	}
 
-	public int getValue() {
+	public byte getValue() {
 		return value;
 	}
 
@@ -50,7 +50,7 @@ public enum ResponseStatus {
 	 * @param value 状态值
 	 * @return ResponseStatus
 	 */
-	public static ResponseStatus valueOf(int value) {
+	public static ResponseStatus valueOf(byte value) {
 		for (ResponseStatus status: ResponseStatus.values()) {
 			if (status.getValue() == value) {
 				return status;

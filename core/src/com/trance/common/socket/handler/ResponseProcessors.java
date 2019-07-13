@@ -1,28 +1,29 @@
 package com.trance.common.socket.handler;
 
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 响应消息处理器集合
  * 
- * @author zhangyl
+ * @author trance
  */
 public class ResponseProcessors {
-
-	private Logger logger = LoggerFactory.getLogger(ResponseProcessor.class);
+	
+	/**
+	 * logger
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(ResponseProcessors.class);
 	
 	/**
 	 * 响应消息处理器集合 {module： {cmd：ResponseProcessor}}
 	 */
-	private final ConcurrentMap<Integer, ConcurrentMap<Integer, ResponseProcessor>> processorMap = new ConcurrentHashMap<Integer, ConcurrentMap<Integer, ResponseProcessor>>();
+	private final ConcurrentMap<Byte, ConcurrentMap<Byte, ResponseProcessor>> processorMap = new ConcurrentHashMap<Byte, ConcurrentMap<Byte, ResponseProcessor>>();
 	
 	/**
 	 * 注册响应消息处理器
@@ -33,11 +34,11 @@ public class ResponseProcessors {
 			return;
 		}
 		
-		int module = processor.getModule();
-		ConcurrentMap<Integer, ResponseProcessor> cmds = this.processorMap.get(module);
+		byte module = processor.getModule();
+		ConcurrentMap<Byte, ResponseProcessor> cmds = this.processorMap.get(module);
 		if (cmds == null) {
-			cmds = new ConcurrentHashMap<Integer, ResponseProcessor>();
-			ConcurrentMap<Integer, ResponseProcessor> existsCmds = this.processorMap.putIfAbsent(module, cmds);
+			cmds = new ConcurrentHashMap<Byte, ResponseProcessor>();
+			ConcurrentMap<Byte, ResponseProcessor> existsCmds = this.processorMap.putIfAbsent(module, cmds);
 			if (existsCmds != null) {
 				cmds = existsCmds;
 			}
@@ -46,7 +47,7 @@ public class ResponseProcessors {
 		int cmd = processor.getCmd();
 		ResponseProcessor existsProcess = cmds.put(processor.getCmd(), processor);
 		if (existsProcess != null) {
-			logger.error("响应消息处理器[module: {"+ module +"}, cmd: {"+ cmd +"}]被覆盖！");
+			logger.error("响应消息处理器[module: {}, cmd: {}]被覆盖！", new Object[] {module, cmd});
 		}		
 	}
 	
@@ -56,9 +57,9 @@ public class ResponseProcessors {
 	 * @param cmd 命令ID
 	 * @return ResponseProcessor
 	 */
-	public ResponseProcessor getProcessor(int module, int cmd) {
+	public ResponseProcessor getProcessor(byte module, byte cmd) {
 		ResponseProcessor processor = null;
-		ConcurrentMap<Integer, ResponseProcessor> cmds = this.processorMap.get(module);
+		ConcurrentMap<Byte, ResponseProcessor> cmds = this.processorMap.get(module);
 		if (cmds != null) {
 			processor = cmds.get(cmd);
 		}
@@ -70,10 +71,10 @@ public class ResponseProcessors {
 	 * @return List<ResponseProcessor>ResponseProcessors.java
 	 */
 	public List<ResponseProcessor> getResponseProcessorList() {
-		int capacity = this.processorMap.size() * 20;
+		int capacity = this.processorMap.size() * 5;
 		List<ResponseProcessor> result = new ArrayList<ResponseProcessor> (capacity);
 		
-		for (ConcurrentMap<Integer, ResponseProcessor> cmdProcessor: this.processorMap.values()) {
+		for (ConcurrentMap<Byte, ResponseProcessor> cmdProcessor: this.processorMap.values()) {
 			result.addAll(cmdProcessor.values());
 		}
 		

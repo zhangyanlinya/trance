@@ -2,21 +2,21 @@ package com.trance.empire.modules.army.handler;
 
 public interface ArmyCmd {
 	
-	int GET_ARMYS = 1;
+	byte GET_ARMYS = 1;
 	
 	
-	int UPGRADE_LEVEL = 2;
+	byte UPGRADE_LEVEL = 2;
 	
 	/**
 	 * type
 	 * amount
 	 * 
 	 */
-	int TRAIN_ARMY = 3;
+	byte TRAIN_ARMY = 3;
 	
 	/**
 	 * obtain amry
 	 */
-	int OBTAIN_ARMY = 4;
+	byte OBTAIN_ARMY = 4;
 }
 

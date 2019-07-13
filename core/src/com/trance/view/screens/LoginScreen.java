@@ -145,8 +145,8 @@ public class LoginScreen extends BaseScreen {
 		reqLogin.setServerId(1);
 		reqLogin.setUserName(Player.userName);
 //		params.put("loginKey", loginMD5); //TODO 暂时不校验
-		int module = Module.PLAYER;
-		int cmd = PlayerCmd.LOGIN;
+		byte module = Module.PLAYER;
+		byte cmd = PlayerCmd.LOGIN;
 		Response response = SocketUtil.send(Request.valueOf(module, cmd, reqLogin),true);
 		if(response == null){
 			return;

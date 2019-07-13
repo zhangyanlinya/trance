@@ -103,7 +103,7 @@ public class ClientHandler extends IoHandlerAdapter {
     /**
      * 请求上下文 {sn: ClientContext}
      */
-    private Map<Integer, Request> requestContext;
+    private Map<Short, Request> requestContext;
 
     /**
      * 取得响应消息处理器集合
@@ -124,11 +124,11 @@ public class ClientHandler extends IoHandlerAdapter {
     }
 
 
-    public Map<Integer, Request> getRequestContext() {
+    public Map<Short, Request> getRequestContext() {
         return requestContext;
     }
 
-    public void setRequestContext(Map<Integer, Request> requestContext) {
+    public void setRequestContext(Map<Short, Request> requestContext) {
         this.requestContext = requestContext;
     }
 

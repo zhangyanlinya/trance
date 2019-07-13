@@ -28,15 +28,10 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 	private static final Logger logger = LoggerFactory.getLogger(RequestDecoder.class);
 	
 	
-	/**
-	 * 上下文
-	 */
-	private final AttributeKey DECODER_CONTEXT  = new AttributeKey(RequestDecoder.class, "context");
-	
-	/**
-	 * flash策略
-	 */
-	private final AttributeKey FLASH_POLICY = new AttributeKey(RequestDecoder.class, "FLASH_POLICY");
+//	/**
+//	 * 上下文
+//	 */
+//	private final AttributeKey DECODER_CONTEXT  = new AttributeKey(RequestDecoder.class, "context");
 	
 	
 	/**
@@ -140,21 +135,21 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 //		return true;
 	}
 	
-
-	
-	/**
-	 * 获取上下文
-	 * @param session IoSession
-	 * @return Context
-	 */
-	private CodecContext getContext(IoSession session) {
-		CodecContext ctx = (CodecContext) session.getAttribute(DECODER_CONTEXT);
-		if (ctx == null) {
-			ctx = new CodecContext();
-			session.setAttribute(DECODER_CONTEXT, ctx);
-		}
-		
-		return ctx;
-	}
+//
+//	
+//	/**
+//	 * 获取上下文
+//	 * @param session IoSession
+//	 * @return Context
+//	 */
+//	private CodecContext getContext(IoSession session) {
+//		CodecContext ctx = (CodecContext) session.getAttribute(DECODER_CONTEXT);
+//		if (ctx == null) {
+//			ctx = new CodecContext();
+//			session.setAttribute(DECODER_CONTEXT, ctx);
+//		}
+//		
+//		return ctx;
+//	}
 	
 }

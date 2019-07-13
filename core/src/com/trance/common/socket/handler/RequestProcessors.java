@@ -1,27 +1,28 @@
 package com.trance.common.socket.handler;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 
 /**
  * 请求处理器集合
  * 
- * @author zhangyl
+ * @author trance
  */
 public class RequestProcessors {
 	
-
-	private Logger logger = LoggerFactory.getLogger(RequestProcessors.class);
-
+	/**
+	 * logger
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(RequestProcessors.class);
+	
 	/**
 	 * 请求处理器集合 {module： {cmd：RequestProcessor}}
 	 */
-	private final ConcurrentMap<Integer, ConcurrentMap<Integer, RequestProcessor>> processorMap = new ConcurrentHashMap<Integer, ConcurrentMap<Integer, RequestProcessor>>();
+	private final ConcurrentMap<Byte, ConcurrentMap<Byte, RequestProcessor>> processorMap = new ConcurrentHashMap<Byte, ConcurrentMap<Byte, RequestProcessor>>();
 	
 	
 	public RequestProcessors() {
@@ -37,11 +38,11 @@ public class RequestProcessors {
 			return;
 		}
 		
-		int module = processor.getModule();
-		ConcurrentMap<Integer, RequestProcessor> cmds = this.processorMap.get(module);
+		byte module = processor.getModule();
+		ConcurrentMap<Byte, RequestProcessor> cmds = this.processorMap.get(module);
 		if (cmds == null) {
-			cmds = new ConcurrentHashMap<Integer, RequestProcessor>();
-			ConcurrentMap<Integer, RequestProcessor> existsCmds = this.processorMap.putIfAbsent(module, cmds);
+			cmds = new ConcurrentHashMap<Byte, RequestProcessor>();
+			ConcurrentMap<Byte, RequestProcessor> existsCmds = this.processorMap.putIfAbsent(module, cmds);
 			if (existsCmds != null) {
 				cmds = existsCmds;
 			}
@@ -50,7 +51,7 @@ public class RequestProcessors {
 		int cmd = processor.getCmd();
 		RequestProcessor existsProcess = cmds.put(processor.getCmd(), processor);
 		if (existsProcess != null) {
-			logger.error("响应消息处理器[module: {"+ module +"}, cmd: {"+ cmd +"}]被覆盖！");
+			logger.error("请求处理器[module: {}, cmd: {}]被覆盖！", new Object[] {module, cmd});
 		}		
 	}
 	
@@ -60,9 +61,9 @@ public class RequestProcessors {
 	 * @param cmd 命令ID
 	 * @return RequestProcessor
 	 */
-	public RequestProcessor getProcessor(int module, int cmd) {
+	public RequestProcessor getProcessor(byte module, byte cmd) {
 		RequestProcessor processor = null;
-		ConcurrentMap<Integer, RequestProcessor> cmds = this.processorMap.get(module);
+		ConcurrentMap<Byte, RequestProcessor> cmds = this.processorMap.get(module);
 		if (cmds != null) {
 			processor = cmds.get(cmd);
 		}

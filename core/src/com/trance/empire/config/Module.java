@@ -16,71 +16,71 @@ public interface Module {
 	/**
 	 * 管理后台
 	 */
-	int MIS = 0;
+	byte MIS = 0;
 
 	/**
 	 * 主公
 	 */
-	int PLAYER = 1;
+	byte PLAYER = 1;
 
 	/**
 	 * 地图
 	 */
-	int MAP_DATA = 2;
+	byte MAP_DATA = 2;
 	
 	/**
 	 * 地图
 	 */
-	int WORLD = 3;
+	byte WORLD = 3;
 	
 	/**
 	 * RANKING
 	 */
-	int RANKING = 4;
+	byte RANKING = 4;
 	
 	/**
 	 * army
 	 */
-	int ARMY = 5;
+	byte ARMY = 5;
 	
 	/**
 	 * coolqueue
 	 */
-	int COOLQUEUE = 6;
+	byte COOLQUEUE = 6;
 	
 	/**
 	 * building
 	 */
-	int BUILDING = 7;
+	byte BUILDING = 7;
 	
 	/**
 	 * battle
 	 */
-	int BATTLE = 8;
+	byte BATTLE = 8;
 	
 	/**
 	 * daily reward
 	 */
-	int DAILY_REWARD = 9;
+	byte DAILY_REWARD = 9;
 
     /**
      * replay
      */
-    int REPLAY = 10;
+    byte REPLAY = 10;
 
 	/**
 	 * 通用模块
 	 */
-	int COMMON_MODULE = 1000;
+	byte COMMON_MODULE = 100;
 
 	/**
 	 * 充值模块
 	 */
-	int CHARGE = 1001;
+	byte CHARGE = 101;
 
 	/**
 	 * 补丁模块
 	 */
-	int PATCH = 1002;
+	byte PATCH = 102;
 
 }
