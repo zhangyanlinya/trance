@@ -48,7 +48,7 @@ public class RequestProcessors {
 			}
 		}
 		
-		int cmd = processor.getCmd();
+		byte cmd = processor.getCmd();
 		RequestProcessor existsProcess = cmds.put(processor.getCmd(), processor);
 		if (existsProcess != null) {
 			logger.error("请求处理器[module: {}, cmd: {}]被覆盖！", new Object[] {module, cmd});

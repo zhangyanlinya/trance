@@ -65,7 +65,7 @@ public class DialogRankUpStage extends BaseStage {
     }
     
     public void show(){
-    	if(!init){
+    	if(!init || players == null || players.isEmpty()){
     		init();
     	}
     	

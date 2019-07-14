@@ -44,7 +44,7 @@ public class ResponseProcessors {
 			}
 		}
 		
-		int cmd = processor.getCmd();
+		byte cmd = processor.getCmd();
 		ResponseProcessor existsProcess = cmds.put(processor.getCmd(), processor);
 		if (existsProcess != null) {
 			logger.error("响应消息处理器[module: {}, cmd: {}]被覆盖！", new Object[] {module, cmd});

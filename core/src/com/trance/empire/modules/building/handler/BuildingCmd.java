@@ -9,8 +9,6 @@ package com.trance.empire.modules.building.handler;
  */
 public interface BuildingCmd {
 
-	final String MODULE_NAME = "BUILDING";
-
 	/**
 	 * 返回主城开放的建筑
  	 * @return {@link List<PlayerBuildingDto>}
