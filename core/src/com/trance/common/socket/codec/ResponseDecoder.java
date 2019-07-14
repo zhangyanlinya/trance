@@ -11,6 +11,7 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.Gdx;
 import com.trance.common.socket.model.Request;
 import com.trance.common.socket.model.Response;
 
@@ -39,9 +40,11 @@ public class ResponseDecoder extends CumulativeProtocolDecoder {
 //		if (!session.isConnected() || session.isClosing()) {
 //			return false;
 //		}
-		
+
+        Gdx.app.error("gdx","收到服务端字节数组了");
+
 		if (in.remaining() < 4) {
-			in.reset();
+//			in.reset();
 			return false;// 继续接收数据，以待数据完整
 		}
 
@@ -64,7 +67,7 @@ public class ResponseDecoder extends CumulativeProtocolDecoder {
 		}
 
 		if (in.remaining() > 0) {
-			in.mark();
+//			in.mark();
 			return true;// 如果读取内容后还粘了包，就让父类再给俺 一次，进行下一次解析
 		}
 

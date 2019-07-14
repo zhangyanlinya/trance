@@ -29,9 +29,9 @@ public class ClientServiceImpl implements ClientService{
 	/**
 	 * 远程主机ip
 	 */
-//	private String ip = "47.91.208.119";
-//	private String ip = "192.168.0.101";
-	private String ip = "192.168.1.108";
+	private String ip = "47.91.208.119";
+//	private String ip = "192.168.0.102";
+//	private String ip = "192.168.1.108";
 	
 	/**
 	 * 远程主机端口号

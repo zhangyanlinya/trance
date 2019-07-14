@@ -78,7 +78,6 @@ import com.trance.view.utils.SocketUtil;
 import com.trance.view.utils.TimeUtil;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -378,14 +377,22 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		
 		super.render(delta);
 	}
-	
-	public void onBackPressed() {
-		hideDialog();
-		
-		if (dialogs.isEmpty()){
-		   //dispose(); //不用这样做。
-//		   tranceGame.setScreen(tranceGame.worldScreen);
-		}
+
+	private int clickcount;
+
+	private void onBackPressed() {
+		boolean hasAction = hideDialog();
+		if(hasAction){
+		    return;
+        }
+
+		if(clickcount < 6){
+		    clickcount++;
+		    return;
+        }
+
+        clickcount = 0;
+        tranceGame.setScreen(tranceGame.worldScreen);
 	}
 	
 	
@@ -1037,8 +1044,9 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 //    		inputMultiplexer.addProcessor(stage);
 //    		inputMultiplexer.addProcessor(this);
     		inputMultiplexer.removeProcessor(s);
+    		return true; //有操作
     	}
-    	return dialogs.size() == 0;
+    	return false;
     }
 
     /**

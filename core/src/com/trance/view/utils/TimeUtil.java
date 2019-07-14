@@ -1,9 +1,9 @@
 package com.trance.view.utils;
 
 public class TimeUtil {
-	
+
 	private static long deltaTime;
-	
+
 	public static void init(long serverTime){
 //		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //		String strBeginDate = format.format(new Date(serverTime));
