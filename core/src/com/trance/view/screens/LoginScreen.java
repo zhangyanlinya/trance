@@ -152,8 +152,8 @@ public class LoginScreen extends BaseScreen {
 			return;
 		}
 		
-		ResponseStatus status = response.getStatus();
-		if (status == ResponseStatus.SUCCESS) {
+		byte status = response.getStatus();
+		if (status == 0) {
 			byte[] bytes = response.getValueBytes();
 //			String text = new String(bytes);
 			Result<ResLogin> result = ProtostuffUtil.parseObject(bytes, Result.class);

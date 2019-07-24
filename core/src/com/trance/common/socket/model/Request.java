@@ -26,14 +26,9 @@ public class Request {
 	private byte cmd;
 	
 	/**
-	 * 是否压缩
-	 */
-	private boolean isCompressed = false;
-	
-	/**
 	 * 验证码
 	 */
-	private int authCode;
+	private byte authCode;
 	
 	/**
 	 * 请求对象信息字节数组
@@ -55,17 +50,11 @@ public class Request {
 	 */
 	private Response response = null;
 	
-	
-	public Request() {
-		
-	}
-
-	public static Request valueOf(short sn, byte module, byte cmd, boolean isCompressed, int authCode, byte[] valueBytes) {
+	public static Request valueOf(short sn, byte module, byte cmd, byte authCode, byte[] valueBytes) {
 		Request q = new Request();
 		q.sn = sn;
 		q.module = module;
 		q.cmd = cmd;
-		q.isCompressed = isCompressed;
 		q.authCode = authCode;
 		q.valueBytes = valueBytes;
 		return q;
@@ -89,11 +78,11 @@ public class Request {
 		module = 0;
 		cmd = 0;
 		value = 0;
-		isCompressed = false;
 		valueBytes = null;
 		authCode = 0;
 		latch = new CountDownLatch(1);
 		response = null;
+		value = null;
 	}
 	
 	public void await(long timeout, TimeUnit unit) throws InterruptedException {
@@ -144,19 +133,11 @@ public class Request {
 		this.value = value;
 	}
 
-	public boolean isCompressed() {
-		return isCompressed;
-	}
-
-	public void setCompressed(boolean isCompressed) {
-		this.isCompressed = isCompressed;
-	}
-
-	public int getAuthCode() {
+	public byte getAuthCode() {
 		return authCode;
 	}
 
-	public void setAuthCode(int authCode) {
+	public void setAuthCode(byte authCode) {
 		this.authCode = authCode;
 	}
 

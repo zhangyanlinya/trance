@@ -50,7 +50,7 @@ public class RegisterInputListener implements TextInputListener {
 //		parms.put("loginKey","");
 
 		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.CREATE_PLAYER, req),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return;
 		}
 

@@ -64,7 +64,7 @@ public class ClientHandler extends IoHandlerAdapter {
 
         Response response = (Response) message;
 
-        if (response.isCompressed()) {
+        if (response.getCompressed() == 1) {
             // 解压
             //System.out.println("解压前 " + response.getValueBytes().length);
             response.setValueBytes(GZIPUtil.uncompress(response.getValueBytes()));

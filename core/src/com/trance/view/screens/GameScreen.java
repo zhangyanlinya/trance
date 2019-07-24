@@ -357,8 +357,8 @@ public class GameScreen extends BaseScreen implements ContactListener, InputProc
             return;
         }
 
-        ResponseStatus status = response.getStatus();
-        if (status != ResponseStatus.SUCCESS) {
+        byte status = response.getStatus();
+        if (status != 0) {
             return;
         }
 

@@ -6,7 +6,7 @@ package com.trance.common.socket.model;
  * @author trance
  */
 public class Response {
-	
+
 	/**
 	 * 流水号
 	 */
@@ -21,30 +21,27 @@ public class Response {
 	 * 命令ID
 	 */
 	private byte cmd;
-	
+
 	/**
 	 * 是否压缩
 	 */
-	private boolean isCompressed = false;
-	
+	private byte compressed;
+
 	/**
 	 * 请求对象信息字节数组
 	 */
 	private byte[] valueBytes;
-	
+
 	/**
 	 * 请求对象信息
 	 */
 	private Object value;
-	
+
 	/**
-	 * 响应标识
+	 * 响应标识{@link ResponseStatus}
 	 */
-	private ResponseStatus status = ResponseStatus.SUCCESS;
+	private byte status;
 	
-	public Response() {
-		
-	}
 
 	public static Response valueOf(short sn, byte module, byte cmd) {
 		Response p = new Response();
@@ -61,12 +58,12 @@ public class Response {
 	}
 
 	public static Response valueOf(short sn, byte module, byte cmd,
-			boolean isCompressed, byte[] valueBytes, ResponseStatus status) {
+			byte compressed, byte[] valueBytes, byte status) {
 		Response res = new Response();
 		res.sn = sn;
 		res.module = module;
 		res.cmd = cmd;
-		res.isCompressed = isCompressed;
+		res.compressed = compressed;
 		res.valueBytes = valueBytes;
 		res.status = status;
 		return res;
@@ -76,24 +73,13 @@ public class Response {
 		sn = -1;
 		module = 0;
 		cmd = 0;
-		isCompressed = false;
+		compressed = 0;
 		valueBytes = null;
-		status = ResponseStatus.SUCCESS;
+		status = 0;
+		value = 0;
 	}
 	
-	/**
-	 * 生成Response
-	 * @param request Request
-	 * @return Response
-	 */
-	public static Response wrap(Request request) {
-		Response response = new Response();
-		response.sn = request.getSn();
-		response.module = request.getModule();
-		response.cmd = request.getCmd();
-		return response;
-	}
-	
+
 	public short getSn() {
 		return sn;
 	}
@@ -118,12 +104,12 @@ public class Response {
 		this.cmd = cmd;
 	}
 
-	public boolean isCompressed() {
-		return isCompressed;
+	public byte getCompressed() {
+		return compressed;
 	}
 
-	public void setCompressed(boolean isCompressed) {
-		this.isCompressed = isCompressed;
+	public void setCompressed(byte compressed) {
+		this.compressed = compressed;
 	}
 
 	public byte[] getValueBytes() {
@@ -142,11 +128,11 @@ public class Response {
 		this.value = value;
 	}
 
-	public ResponseStatus getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
-	public void setStatus(ResponseStatus status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 }

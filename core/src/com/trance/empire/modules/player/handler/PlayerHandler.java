@@ -47,7 +47,7 @@ public class PlayerHandler extends HandlerSupport {
 			@Override
 			public void callback(IoSession session, Response response) {
 				if(response != null){ 
-					if(response.getStatus() == ResponseStatus.SUCCESS){
+					if(response.getStatus() == 0){
 //						System.out.println("连接还活着...");
 						return;//还活着
 					}
@@ -77,7 +77,7 @@ public class PlayerHandler extends HandlerSupport {
 
 			@Override
 			public void callback(IoSession session, Response response) {
-				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+				if(response == null || response.getStatus() != 0){
 					return;
 				}
 				int newLevel = (Integer) response.getValue();
@@ -104,7 +104,7 @@ public class PlayerHandler extends HandlerSupport {
 			
 			@Override
 			public void callback(IoSession session, Response response) {
-				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+				if(response == null || response.getStatus() != 0){
 					return;
 				}
 				
@@ -154,7 +154,7 @@ public class PlayerHandler extends HandlerSupport {
 
 			@Override
 			public void callback(IoSession session, Response response) {
-				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+				if(response == null || response.getStatus() != 0){
 					return;
 				}
 

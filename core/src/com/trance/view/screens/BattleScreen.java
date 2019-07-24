@@ -353,8 +353,8 @@ public class BattleScreen extends BaseScreen implements ContactListener, InputPr
             return;
         }
 
-        ResponseStatus status = response.getStatus();
-        if (status != ResponseStatus.SUCCESS) {
+        byte status = response.getStatus();
+        if (status != 0) {
             return;
         }
 

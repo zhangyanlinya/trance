@@ -173,7 +173,7 @@ public class DialogOperateStage extends BaseStage {
             cmd = BuildingCmd.UPGRADE_BUILDING_LEVEL_BY_GOLD;
         }
         Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, cmd, req), true);
-        if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
+        if (response == null || response.getStatus() != 0) {
             return;
         }
 

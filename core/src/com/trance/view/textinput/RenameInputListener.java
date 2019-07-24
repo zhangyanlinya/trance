@@ -47,7 +47,7 @@ public class RenameInputListener implements TextInputListener {
 		ReqRename req = new ReqRename();
 		req.setName(text);
 		Response response = SocketUtil.send(Request.valueOf(Module.PLAYER, PlayerCmd.RENAME, req),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return;
 		}
 		

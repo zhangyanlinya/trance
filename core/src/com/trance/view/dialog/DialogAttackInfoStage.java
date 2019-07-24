@@ -124,7 +124,7 @@ public class DialogAttackInfoStage extends BaseStage {
 
     private List<AttackInfoDto> getAttackInfo(){
     	Response response = SocketUtil.send(Request.valueOf(Module.BATTLE, BattleCmd.GET_ATTACK_INFO, null),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return null;
 		}
 		
@@ -140,7 +140,7 @@ public class DialogAttackInfoStage extends BaseStage {
         	req.setReportId(reportId);
             Request request = Request.valueOf(Module.REPLAY, ReplayCmd.GET_PLAYER_REPLAY, req);
             Response response = SocketUtil.send(request, true);
-            if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
+            if (response == null || response.getStatus() != 0) {
                 return;
             }
 

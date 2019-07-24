@@ -243,7 +243,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
                                 req.setX(ox);
                                 req.setY(oy);
 								Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY, req),true);
-								if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+								if(response == null || response.getStatus() != 0){
 									return;
 								}
 								byte[] bytes = response.getValueBytes();
@@ -281,7 +281,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
                             req.setX(ox);
                             req.setY(oy);
 							Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.ALLOCATION, req),true);
-							if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+							if(response == null || response.getStatus() != 0){
 								return;
 							}
 							byte[] bytes = response.getValueBytes();
@@ -341,7 +341,7 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Response response = SocketUtil.send(Request.valueOf(Module.DAILY_REWARD, DailyRewardCmd.GET_DAILY_REWARD, null),true);
-				if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+				if(response == null || response.getStatus() != 0){
 					return;
 				}
 				

@@ -149,7 +149,7 @@ public class DialogBuildingStage extends BaseStage {
     @SuppressWarnings("unchecked")
 	private void updateBuilding(int buildingId){
 		Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.UPGRADE_BUILDING_LEVEL, buildingId),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return;
 		}
 		

@@ -65,7 +65,7 @@ public class SocketUtil {
             return null;
         }
 
-        if (response.getStatus() == ResponseStatus.NO_RIGHT) {
+        if (response.getStatus() == 3) {
             if (!heartbeat) {//心跳死了。
                 MsgUtil.getInstance().showMsg("please login again");
                 return null;
@@ -107,7 +107,7 @@ public class SocketUtil {
         req.setServer(1);
 //		params.put("loginKey", LoginMD5); //TODO 暂时不校验
         Response response = send(Request.valueOf(Module.PLAYER, PlayerCmd.OFFLINE_RECONNECT, req), false, false);
-        if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
+        if (response == null || response.getStatus() != 0) {
             return false;
         }
         byte[] bytes = response.getValueBytes();

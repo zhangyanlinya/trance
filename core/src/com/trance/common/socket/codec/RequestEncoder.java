@@ -7,7 +7,6 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trance.common.socket.converter.JsonConverter;
 import com.trance.common.socket.converter.ProtostuffConverter;
 import com.trance.common.socket.model.Request;
 
@@ -24,19 +23,15 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(RequestEncoder.class);
 	
-	public RequestEncoder() {
-		
-	}
-
 	@Override
-	public void encode(IoSession session, Object message, ProtocolEncoderOutput out){
+	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
 		if (message == null) {
 			return;
 		}
 		
-		if(!session.isConnected() || session.isClosing()) {
-			return;
-		}
+//		if(!session.isConnected() || session.isClosing()) {
+//			return;
+//		}
 		
 		IoBuffer buffer = null;
 		if (message instanceof IoBuffer) {
@@ -75,14 +70,6 @@ public class RequestEncoder extends ProtocolEncoderAdapter {
 		byte[] data = ProtostuffConverter.encode(request.getValue());
 		request.setValueBytes(data);
 				
-//		//需要压缩 
-//		if (data != null && data.length > 128) {
-//			logger.error("压缩前 " + data.length);
-//			request.setValueBytes(GZIPUtil.compress(data));
-//			logger.error("压缩后 " + request.getValueBytes().length);
-//			request.setCompressed(true);
-//		}
-		
 		byte[] reqData = CodecHelper.toByteArray(request);
 		if (reqData == null) {
 			return null;

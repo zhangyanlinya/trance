@@ -175,7 +175,7 @@ public class DialogArmyStage extends BaseStage {
     	ReqArmyUp req = new ReqArmyUp();
     	req.setArmyId(armyId);
 		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.UPGRADE_LEVEL, req),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return;
 		}
 		
@@ -217,7 +217,7 @@ public class DialogArmyStage extends BaseStage {
 		req.setArmyId(armyId);
 		req.setAmount(addAmount);
 		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.TRAIN_ARMY, req),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return;
 		}
 		
@@ -253,7 +253,7 @@ public class DialogArmyStage extends BaseStage {
 		ReqObtainArmy req = new ReqObtainArmy();
 		req.setArmyId(armyId);
 		Response response = SocketUtil.send(Request.valueOf(Module.ARMY, ArmyCmd.OBTAIN_ARMY, req),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return;
 		}
 		

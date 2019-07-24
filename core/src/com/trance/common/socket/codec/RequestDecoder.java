@@ -1,17 +1,11 @@
 package com.trance.common.socket.codec;
 
-import com.trance.common.socket.model.Request;
-
 import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.session.AttributeKey;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-
+import com.trance.common.socket.model.Request;
 
 
 
@@ -22,12 +16,12 @@ import java.util.Arrays;
  */
 public class RequestDecoder extends CumulativeProtocolDecoder {
 
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(RequestDecoder.class);
+//	/**
+//	 * logger
+//	 */
+//	private static final Logger logger = LoggerFactory.getLogger(RequestDecoder.class);
 	
-	
+//	
 //	/**
 //	 * 上下文
 //	 */
@@ -46,38 +40,53 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 //		if (!session.isConnected() || session.isClosing()) {
 //			return false;
 //		}
+//		System.out.println("收到客户端发来的字节数组了");
 
-		if (in.remaining() < 4) {
-			in.reset();
+		if (in.remaining() < 2) {
 			return false;// 继续接收数据，以待数据完整
 		}
 
 		in.mark();// 标记当前位置，以便reset
-		int size = in.getInt();// 读取4字节判断消息长度
+		int size = in.getShort();// 读取2字节判断消息长度
 
 		int remain = in.remaining();
 		if (remain < size) {// 如果消息内容不够，则重置，相当于不读取size
 			in.reset();
 			return false;// 接收新数据，以拼凑成完整数据
-		} else {
-			// 读取指定长度的字节数
-			byte[] bytes = new byte[size];
-			in.get(bytes);
-			
-			Request request = CodecHelper.toRequest(bytes);
-			if (request != null) {
-				out.write(request);				
-			}  
+		} 
+		
+		//====从方法中移过来===
+		short sn = in.getShort();
+		byte authCode = in.get();
+		byte module = in.get();
+		byte cmd = in.get();
+		
+		int datalen = size - 5;
+		byte[] valueBytes = null;
+		if (datalen > 0) {
+			valueBytes = new byte[datalen];
+			in.get(valueBytes);
 		}
+
+		Request request = Request.valueOf(sn, module, cmd, authCode, valueBytes);
+		out.write(request);
+		//====从方法中移过来===
+		
+//		// 读取指定长度的字节数
+//		byte[] bytes = new byte[size];
+//		in.get(bytes);
+//
+//		Request request = CodecHelper.toRequest(bytes);
+//		if (request != null) {
+//			out.write(request);
+//			System.out.println("解析成功");
+//		}
 
 		if (in.remaining() > 0) {
-			in.mark();
 			return true;// 如果读取内容后还粘了包，就让父类再给俺 一次，进行下一次解析
 		}
-
+		
 		return false;
-
-	
 		
 		
 //		
@@ -135,13 +144,12 @@ public class RequestDecoder extends CumulativeProtocolDecoder {
 //		return true;
 	}
 	
-//
-//	
 //	/**
 //	 * 获取上下文
 //	 * @param session IoSession
 //	 * @return Context
 //	 */
+//	@SuppressWarnings("unused")
 //	private CodecContext getContext(IoSession session) {
 //		CodecContext ctx = (CodecContext) session.getAttribute(DECODER_CONTEXT);
 //		if (ctx == null) {

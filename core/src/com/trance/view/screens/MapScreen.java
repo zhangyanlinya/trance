@@ -1072,7 +1072,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		req.setX(dto.getX());
 		req.setY(dto.getY());
         Response response = SocketUtil.send(Request.valueOf(Module.BUILDING, BuildingCmd.HARVIST, req),true);
-        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+        if(response == null || response.getStatus() != 0){
             return;
         }
 
@@ -1132,7 +1132,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
        	req.setY(playerDto.getY());
         Request request = Request.valueOf(Module.BATTLE, BattleCmd.START_BATTLE, req);
         Response response = SocketUtil.send(request, true);
-        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+        if(response == null || response.getStatus() != 0){
             return;
         }
 
@@ -1162,7 +1162,7 @@ public class MapScreen extends BaseScreen implements InputProcessor {
 		req.setY(playerDto.getY());
         Request request = Request.valueOf(Module.WORLD, WorldCmd.CHANGE_PLAYER, req);
         Response response = SocketUtil.send(request, true);
-        if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+        if(response == null || response.getStatus() != 0){
             return;
         }
         byte[] bytes = response.getValueBytes();

@@ -48,8 +48,8 @@ public class MapDataHandler extends HandlerSupport {
 
             @Override
             public void callback(IoSession session, Response response) {
-                ResponseStatus status = response.getStatus();
-                if (status == ResponseStatus.SUCCESS) {
+                byte status = response.getStatus();
+                if (status == 0) {
                     Result<String> result = (Result<String>) response.getValue();
                     int code = result.getCode();
                     if (code != Result.SUCCESS) {

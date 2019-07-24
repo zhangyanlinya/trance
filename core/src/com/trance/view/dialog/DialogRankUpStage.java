@@ -124,7 +124,7 @@ public class DialogRankUpStage extends BaseStage {
 					ReqSpyAnyOne req = new ReqSpyAnyOne();
 					req.setTargetId(dto.getId());
 					Response response = SocketUtil.send(Request.valueOf(Module.WORLD, WorldCmd.SPY_ANYONE, req),true);
-					if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+					if(response == null || response.getStatus() != 0){
 						return;
 					}
 					byte[] bytes = response.getValueBytes();
@@ -161,7 +161,7 @@ public class DialogRankUpStage extends BaseStage {
 
     private List<PlayerDto> getUpRank(){
     	Response response = SocketUtil.send(Request.valueOf(Module.RANKING, RankingCmd.GET_PLAYER_UP_RANKING, null),true);
-		if(response == null || response.getStatus() != ResponseStatus.SUCCESS){
+		if(response == null || response.getStatus() != 0){
 			return null;
 		}
 		
