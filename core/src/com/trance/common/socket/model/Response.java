@@ -52,17 +52,14 @@ public class Response {
 	}
 	
 	public static Response valueOf(short sn, byte module, byte cmd, Object value) {
-		Response p = new Response();
+		Response p = valueOf(sn, module, cmd);
 		p.setValue(value);
 		return p;
 	}
 
 	public static Response valueOf(short sn, byte module, byte cmd,
 			byte compressed, byte[] valueBytes, byte status) {
-		Response res = new Response();
-		res.sn = sn;
-		res.module = module;
-		res.cmd = cmd;
+		Response res = valueOf(sn, module, cmd);
 		res.compressed = compressed;
 		res.valueBytes = valueBytes;
 		res.status = status;
