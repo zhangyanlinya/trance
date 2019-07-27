@@ -61,35 +61,31 @@ public class ClientHandler extends IoHandlerAdapter {
 //            MsgUtil.getInstance().showLog("a123！");
 //            return;
 //        }
-
         Response response = (Response) message;
 
         if (response.getCompressed() == 1) {
             // 解压
-            //System.out.println("解压前 " + response.getValueBytes().length);
             response.setValueBytes(GZIPUtil.uncompress(response.getValueBytes()));
-            //System.out.println("解压后 " + response.getValueBytes().length);
         }
 
-//		System.out.println("收到消息：module[" +response.getModule() + " ]  cmd [" +response.getCmd()+"]");
-        ResponseProcessor processor = this.responseProcessors.getProcessor(response.getModule(), response.getCmd());
-        if (processor != null && processor.getType() != null) {
-            //对象转换
-            Object obj = ProtostuffConverter.decode(response.getValueBytes(), processor.getType());
-            response.setValue(obj);
-        }
-
-        Request ctx = this.requestContext.remove(response.getSn());
-        if (ctx != null) {
-            //同步返回
-            ctx.setResponse(response);
-            ctx.release();
-        } else {//没有sn
-            if (processor == null) {
-                logger.error("没有对应的响应消息处理器[module:" + response.getModule() + ", cmd:" + response.getCmd() + "]！");
-            } else {
-                //响应回调
+        short sn = response.getSn();
+        if (response.getSn() > -1) { // sync
+            Request ctx = this.requestContext.remove(sn);
+            if (ctx != null) {
+                // 同步返回
+                ctx.setResponse(response);
+                ctx.release();
+            }
+        } else { // async
+            ResponseProcessor processor = this.responseProcessors.getProcessor(response.getModule(), response.getCmd());
+            if (processor != null && processor.getType() != null) {
+                // 对象转换
+                Object obj = ProtostuffConverter.decode(response.getValueBytes(), processor.getType());
+                response.setValue(obj);
                 processor.callback(session, response);
+            } else {
+                logger.error("没有对应的响应消息处理器[module:{}, cmd:{}]！",
+                        new Object[] { response.getModule(), response.getCmd() });
             }
         }
     }
