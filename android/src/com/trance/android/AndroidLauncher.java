@@ -213,8 +213,8 @@ public class AndroidLauncher extends AndroidApplication {
 					.show();
 			return;
 		}
-		moveTaskToBack(true);//隐藏至后台
-//		super.onBackPressed();
+//		moveTaskToBack(true);//隐藏至后台
+		super.onBackPressed();
 	}
 
 	@Override
